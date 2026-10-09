@@ -1,0 +1,41 @@
+version = 1
+revision = 3
+requires-python = ">=3.10"
+
+[[package]]
+name = "pycontrolcharts"
+version = "0.1.0"
+source = { editable = "." }
+dependencies = [
+    { name = "quickjs-ng" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "quickjs-ng" }]
+
+[[package]]
+name = "quickjs-ng"
+version = "0.17.0.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/9d/f0/34285112767f07aa2df4f4f8741b00fc6bae80124162245f2901fba1f2e7/quickjs_ng-0.17.0.1.tar.gz", hash = "sha256:a1f7352b7e508346c8254f5ae790799898ebd1b2df2538bf9b7070a757faf903", size = 537979, upload-time = "2026-10-01T13:15:39.127Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/29/6e/8934b81ccb8974c57a385bd1ea63f5d46acef25a7a0ec93850a591966656/quickjs_ng-0.17.0.1-cp310-abi3-macosx_11_0_arm64.whl", hash = "sha256:330f6bdb61ebf8102d650af799dd093924f34cc8be449fed97102147e133f685", size = 533433, upload-time = "2026-10-01T13:15:11.248Z" },
+    { url = "https://files.pythonhosted.org/packages/66/1e/bf364ef846a1d36f2e7c424699d5b01b5c0eb852a0d7bae183e521742184/quickjs_ng-0.17.0.1-cp310-abi3-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:b8f41e2230d96925e69d40c7bbb66a81535ca63a1941d0ac8a2456c53085bafe", size = 2470407, upload-time = "2026-10-01T13:15:12.698Z" },
+    { url = "https://files.pythonhosted.org/packages/95/e3/a5acb921a5400f98e568afe4b77d14c31f0c6af974ac8db86d001c2289bb/quickjs_ng-0.17.0.1-cp310-abi3-manylinux2014_i686.manylinux_2_17_i686.manylinux_2_28_i686.whl", hash = "sha256:91b1bb7b05168027c7a62cf85e7a21af2c00bbd6eb7134f2afbb4785a7c1c664", size = 2415230, upload-time = "2026-10-01T13:15:14.056Z" },
+    { url = "https://files.pythonhosted.org/packages/db/d7/95ad035994e03478ad83275895ea218c3c1c7adc821aa1e2f3de4ed38d72/quickjs_ng-0.17.0.1-cp310-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:096486a0bb5467e3934d62d8a228f2ad04d9c71e1f70a31a05b20d1b5018702a", size = 2550955, upload-time = "2026-10-01T13:15:15.69Z" },
+    { url = "https://files.pythonhosted.org/packages/3f/3f/e40c1d6c968b2401964fa90c738a0732cd07f8c3e9e0d2e28d3662ce7f6f/quickjs_ng-0.17.0.1-cp310-abi3-musllinux_1_2_aarch64.whl", hash = "sha256:74c5394c02fb777c0e4098468fa49bf1648230d42b6f8c0762d2e05e40e480e7", size = 2454105, upload-time = "2026-10-01T13:15:17.414Z" },
+    { url = "https://files.pythonhosted.org/packages/a6/cf/170b9e25155e18b94e7ee9365047c0f309ab60324dfc27aa69ea4051a3da/quickjs_ng-0.17.0.1-cp310-abi3-musllinux_1_2_i686.whl", hash = "sha256:84fd50e1472318e95eef8aa6a4ce7a3126baa9536991f11c96b03e402b27aa6c", size = 2444583, upload-time = "2026-10-01T13:15:19.134Z" },
+    { url = "https://files.pythonhosted.org/packages/0a/c3/c0609ff4474a7c64aa2b92ae153ddf2738d4b06491cff0e4a3c85949e918/quickjs_ng-0.17.0.1-cp310-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:181a649d9169e8ac9c8efeb79a9e36ea7a5e13020ceccf181a6b6907c03885c3", size = 2539090, upload-time = "2026-10-01T13:15:20.592Z" },
+    { url = "https://files.pythonhosted.org/packages/5c/5b/ab3945b98bb78040bdd96a3ae47731bd5665d6201709b9953f41e499e1c4/quickjs_ng-0.17.0.1-cp310-abi3-win32.whl", hash = "sha256:f61260b0b1f20a7d5b226c1b23939a5420866d11bea188b15d29ae98a7eb52b1", size = 395430, upload-time = "2026-10-01T13:15:21.911Z" },
+    { url = "https://files.pythonhosted.org/packages/5b/67/623df580c13e7cc3bbce5b15c41658dfb753d99839fab25695eef99df34a/quickjs_ng-0.17.0.1-cp310-abi3-win_amd64.whl", hash = "sha256:355511615baa17bc98092680f068e3536ea1ee5a650b16f59bf6871f497f3780", size = 519389, upload-time = "2026-10-01T13:15:23.15Z" },
+    { url = "https://files.pythonhosted.org/packages/3b/2b/8ac5df71c823245ea870c66813695af8741123e19eeba6716811e2d8f904/quickjs_ng-0.17.0.1-pp310-pypy310_pp73-macosx_11_0_arm64.whl", hash = "sha256:512b863583681c21cb9dc174cadb6aa46aa9afc371900daa9ddf8fbd45425a63", size = 477594, upload-time = "2026-10-01T13:15:24.471Z" },
+    { url = "https://files.pythonhosted.org/packages/b6/60/902224be9ffe5d31797a2aac1e450bbf93839d6e693dd4845a0f6dab2b21/quickjs_ng-0.17.0.1-pp310-pypy310_pp73-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:e803e8115075151d19506b30a928e2d9e621e74a1aa60ea4d74e3252db4ece71", size = 524382, upload-time = "2026-10-01T13:15:25.803Z" },
+    { url = "https://files.pythonhosted.org/packages/80/a9/32c1f10c1831a34192140d30892bef01a4679c38fb747a4841df958ba80d/quickjs_ng-0.17.0.1-pp310-pypy310_pp73-manylinux2014_i686.manylinux_2_17_i686.manylinux_2_28_i686.whl", hash = "sha256:2c65ba337dae0f1a19d3e2cc94e13968fbb29ee10d93b9dce720768054e1c3f8", size = 597432, upload-time = "2026-10-01T13:15:27.269Z" },
+    { url = "https://files.pythonhosted.org/packages/1a/bd/4d7a2efacb42f5f52add14a294604f006b8ce6668cf2095ff683b0ee09cf/quickjs_ng-0.17.0.1-pp310-pypy310_pp73-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:4e2eca50e82756c8015032c70474d3aa2489216df6da34bf7f487ad55ceee580", size = 556825, upload-time = "2026-10-01T13:15:28.516Z" },
+    { url = "https://files.pythonhosted.org/packages/e8/2a/5eec44435b221b775288017f16ff7ebbdde6d13added3eb45cdcf143a8ed/quickjs_ng-0.17.0.1-pp310-pypy310_pp73-win_amd64.whl", hash = "sha256:7f9d558bd4f434e329e5dba0f98c5794ad3893e7722aa035fe8344df49aa57b7", size = 519509, upload-time = "2026-10-01T13:15:29.798Z" },
+    { url = "https://files.pythonhosted.org/packages/a7/71/cb2a5793e9f3e3da1c14c8c6af3373624cacb283cd05b1ec056852dac97f/quickjs_ng-0.17.0.1-pp311-pypy311_pp73-macosx_11_0_arm64.whl", hash = "sha256:95e074944b873f70662241b3f6984fc91814bdb312ad9262781ff4933be75a1a", size = 477514, upload-time = "2026-10-01T13:15:31.1Z" },
+    { url = "https://files.pythonhosted.org/packages/09/5c/906600b5b5ed22cf5d7d4b5f4ce6f4375f57bbacfabcf9b60e34e9b2c7d2/quickjs_ng-0.17.0.1-pp311-pypy311_pp73-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:bfafc55e481dd29ffe9212913b6c0da0f9ab26743f4ca853b00265e94c1c4a25", size = 524383, upload-time = "2026-10-01T13:15:32.51Z" },
+    { url = "https://files.pythonhosted.org/packages/00/19/32d1f8acf90a69651ee2b1717f70f0bed83e2010f624c9a2c0eafbe21f23/quickjs_ng-0.17.0.1-pp311-pypy311_pp73-manylinux2014_i686.manylinux_2_17_i686.manylinux_2_28_i686.whl", hash = "sha256:f4598af5c80c70a776790556fb22d9a2d53df23ad52bfe6f1238b92f57f40a2e", size = 597430, upload-time = "2026-10-01T13:15:33.892Z" },
+    { url = "https://files.pythonhosted.org/packages/12/79/e54b9ec78f26d24af18b1b035d9786f2de0ad85b4620e409014bcf705064/quickjs_ng-0.17.0.1-pp311-pypy311_pp73-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:c88afd4487b663f041ec7f7d2f7f203ffc3bcd2b26a4008268e48496656dda94", size = 556825, upload-time = "2026-10-01T13:15:36.271Z" },
+    { url = "https://files.pythonhosted.org/packages/28/cc/4dd30a6210340091dcb6b23755b7efc25ab8538bedfde1d873fee98824bd/quickjs_ng-0.17.0.1-pp311-pypy311_pp73-win_amd64.whl", hash = "sha256:43fba14a3769466a927ba283df202f1053d113dad8d93ef53c19c0e2175aca64", size = 519511, upload-time = "2026-10-01T13:15:37.671Z" },
+]

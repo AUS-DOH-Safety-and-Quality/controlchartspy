@@ -1,0 +1,137 @@
+{
+  "type": "spc",
+  "input": {
+    "data": {
+      "key": ["2024-01-01", "2024-02-01", "2024-03-01", "2024-04-01", "2024-05-01", "2024-06-01", "2024-07-01", "2024-08-01"],
+      "numerator": [8, 11, 10, 12, 9, 13, 8, 10],
+      "denominator": [80, 95, 90, 105, 85, 110, 75, 100],
+      "sd": [2, 3, 2, 4, 3, 2, 4, 3]
+    },
+    "keys": "key",
+    "numerators": "numerator",
+    "denominators": "denominator",
+    "spc_settings": {
+      "chart_type": "pp"
+    },
+    "return_objs": ["limits", "static_plot"]
+  },
+  "expected": {
+    "limits": [
+      {
+        "date": "01/01/2024",
+        "numerator": 8,
+        "denominator": 80,
+        "value": 10,
+        "target": 10.9459459459459,
+        "ll99": 8.3161511889759,
+        "ll95": 9.19274944129925,
+        "ll68": 10.0693476936226,
+        "ul68": 11.8225441982693,
+        "ul95": 12.6991424505926,
+        "ul99": 13.575740702916,
+        "trend_line": 0.110356528576343
+      },
+      {
+        "date": "01/02/2024",
+        "numerator": 11,
+        "denominator": 95,
+        "value": 11.5789473684211,
+        "target": 10.9459459459459,
+        "ll99": 8.53268076954899,
+        "ll95": 9.33710249501465,
+        "ll68": 10.1415242204803,
+        "ul68": 11.7503676714116,
+        "ul95": 12.5547893968772,
+        "ul99": 13.3592111223429,
+        "trend_line": 0.109965989585627
+      },
+      {
+        "date": "01/03/2024",
+        "numerator": 10,
+        "denominator": 90,
+        "value": 11.1111111111111,
+        "target": 10.9459459459459,
+        "ll99": 8.46655167156949,
+        "ll95": 9.29301642969497,
+        "ll68": 10.1194811878205,
+        "ul68": 11.7724107040714,
+        "ul95": 12.5988754621969,
+        "ul99": 13.4253402203224,
+        "trend_line": 0.109575450594911
+      },
+      {
+        "date": "01/04/2024",
+        "numerator": 12,
+        "denominator": 105,
+        "value": 11.4285714285714,
+        "target": 10.9459459459459,
+        "ll99": 8.65047289146724,
+        "ll95": 9.41563057629347,
+        "ll68": 10.1807882611197,
+        "ul68": 11.7111036307722,
+        "ul95": 12.4762613155984,
+        "ul99": 13.2414190004247,
+        "trend_line": 0.109184911604195
+      },
+      {
+        "date": "01/05/2024",
+        "numerator": 9,
+        "denominator": 85,
+        "value": 10.5882352941176,
+        "target": 10.9459459459459,
+        "ll99": 8.39467028554994,
+        "ll95": 9.24509550568194,
+        "ll68": 10.0955207258139,
+        "ul68": 11.7963711660779,
+        "ul95": 12.6467963862099,
+        "ul99": 13.497221606342,
+        "trend_line": 0.108794372613479
+      },
+      {
+        "date": "01/06/2024",
+        "numerator": 13,
+        "denominator": 110,
+        "value": 11.8181818181818,
+        "target": 10.9459459459459,
+        "ll99": 8.70324944172898,
+        "ll95": 9.45081494313464,
+        "ll68": 10.1983804445403,
+        "ul68": 11.6935114473516,
+        "ul95": 12.4410769487573,
+        "ul99": 13.1886424501629,
+        "trend_line": 0.108403833622763
+      },
+      {
+        "date": "01/07/2024",
+        "numerator": 8,
+        "denominator": 75,
+        "value": 10.6666666666667,
+        "target": 10.9459459459459,
+        "ll99": 8.22990559989566,
+        "ll95": 9.13525238191243,
+        "ll68": 10.0405991639292,
+        "ul68": 11.8512927279627,
+        "ul95": 12.7566395099795,
+        "ul99": 13.6619862919962,
+        "trend_line": 0.108013294632047
+      },
+      {
+        "date": "01/08/2024",
+        "numerator": 10,
+        "denominator": 100,
+        "value": 10,
+        "target": 10.9459459459459,
+        "ll99": 8.59378600856292,
+        "ll95": 9.37783932102393,
+        "ll68": 10.1618926334849,
+        "ul68": 11.729999258407,
+        "ul95": 12.514052570868,
+        "ul99": 13.298105883329,
+        "trend_line": 0.107622755641332
+      }
+    ],
+    "limit_lines": null,
+    "svg": "<svg viewBox=\"0 0 640 400\" width=\"640px\" height=\"400px\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100%\" height=\"100%\" fill=\"white\"/><line style=\"stroke-opacity:0\" class=\"ttip-line-x\" x1=\"0\" x2=\"0\" y1=\"10\" y2=\"355\" stroke-width=\"1px\" stroke=\"black\" /><line style=\"stroke-opacity:0\" class=\"ttip-line-y\" x1=\"60\" x2=\"630\" y1=\"0\" y2=\"0\" stroke-width=\"1px\" stroke=\"black\" /><g class=\"gridgroup\" /><g class=\"xaxisgroup\" fill=\"none\" font-size=\"10\" font-family=\"sans-serif\" text-anchor=\"middle\" color=\"#000000\" transform=\"translate(0, 355)\"><path class=\"domain\" stroke=\"currentColor\" d=\"M60.5,6V0.5H630.5V6\" /><g class=\"tick\" opacity=\"1\" transform=\"translate(60.5,0)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" y2=\"6\" /><text style=\"text-anchor:end;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" y=\"9\" dy=\"-.15em\" dx=\"-.8em\" transform=\"rotate(-35)\"> 01/01/2024<\/text><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(101.21428571428572,0)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" y2=\"6\" /><text style=\"text-anchor:end;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" y=\"9\" dy=\"-.15em\" dx=\"-.8em\" transform=\"rotate(-35)\" /><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(141.92857142857144,0)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" y2=\"6\" /><text style=\"text-anchor:end;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" y=\"9\" dy=\"-.15em\" dx=\"-.8em\" transform=\"rotate(-35)\"> 01/02/2024<\/text><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(182.64285714285714,0)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" y2=\"6\" /><text style=\"text-anchor:end;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" y=\"9\" dy=\"-.15em\" dx=\"-.8em\" transform=\"rotate(-35)\" /><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(223.35714285714286,0)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" y2=\"6\" /><text style=\"text-anchor:end;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" y=\"9\" dy=\"-.15em\" dx=\"-.8em\" transform=\"rotate(-35)\"> 01/03/2024<\/text><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(264.07142857142856,0)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" y2=\"6\" /><text style=\"text-anchor:end;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" y=\"9\" dy=\"-.15em\" dx=\"-.8em\" transform=\"rotate(-35)\" /><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(304.7857142857143,0)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" y2=\"6\" /><text style=\"text-anchor:end;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" y=\"9\" dy=\"-.15em\" dx=\"-.8em\" transform=\"rotate(-35)\"> 01/04/2024<\/text><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(345.5,0)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" y2=\"6\" /><text style=\"text-anchor:end;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" y=\"9\" dy=\"-.15em\" dx=\"-.8em\" transform=\"rotate(-35)\" /><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(386.2142857142857,0)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" y2=\"6\" /><text style=\"text-anchor:end;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" y=\"9\" dy=\"-.15em\" dx=\"-.8em\" transform=\"rotate(-35)\"> 01/05/2024<\/text><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(426.92857142857144,0)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" y2=\"6\" /><text style=\"text-anchor:end;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" y=\"9\" dy=\"-.15em\" dx=\"-.8em\" transform=\"rotate(-35)\" /><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(467.64285714285717,0)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" y2=\"6\" /><text style=\"text-anchor:end;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" y=\"9\" dy=\"-.15em\" dx=\"-.8em\" transform=\"rotate(-35)\"> 01/06/2024<\/text><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(508.35714285714283,0)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" y2=\"6\" /><text style=\"text-anchor:end;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" y=\"9\" dy=\"-.15em\" dx=\"-.8em\" transform=\"rotate(-35)\" /><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(549.0714285714286,0)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" y2=\"6\" /><text style=\"text-anchor:end;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" y=\"9\" dy=\"-.15em\" dx=\"-.8em\" transform=\"rotate(-35)\"> 01/07/2024<\/text><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(589.7857142857143,0)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" y2=\"6\" /><text style=\"text-anchor:end;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" y=\"9\" dy=\"-.15em\" dx=\"-.8em\" transform=\"rotate(-35)\" /><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(630.5,0)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" y2=\"6\" /><text style=\"text-anchor:end;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" y=\"9\" dy=\"-.15em\" dx=\"-.8em\" transform=\"rotate(-35)\"> 01/08/2024<\/text><\/g><\/g><text style=\"text-anchor:middle;font-size:10px;font-style:normal;font-family:'Arial', sans-serif;fill:#000000\" class=\"xaxislabel\" x=\"320\" y=\"385\" /><g class=\"yaxisgroup\" fill=\"none\" font-size=\"10\" font-family=\"sans-serif\" text-anchor=\"end\" color=\"#000000\" transform=\"translate(60, 0)\"><path class=\"domain\" stroke=\"currentColor\" d=\"M-6,355.5H0.5V10.5H-6\" /><g class=\"tick\" opacity=\"1\" transform=\"translate(0,350.0754944578363)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" x2=\"-6\" /><text style=\"text-anchor:right;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" x=\"-9\" dy=\"0.32em\" transform=\"rotate(0)\">7.00%<\/text><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(0,307.7344444924943)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" x2=\"-6\" /><text style=\"text-anchor:right;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" x=\"-9\" dy=\"0.32em\" transform=\"rotate(0)\">8.00%<\/text><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(0,265.39339452715217)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" x2=\"-6\" /><text style=\"text-anchor:right;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" x=\"-9\" dy=\"0.32em\" transform=\"rotate(0)\">9.00%<\/text><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(0,223.0523445618101)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" x2=\"-6\" /><text style=\"text-anchor:right;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" x=\"-9\" dy=\"0.32em\" transform=\"rotate(0)\">10.00%<\/text><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(0,180.71129459646804)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" x2=\"-6\" /><text style=\"text-anchor:right;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" x=\"-9\" dy=\"0.32em\" transform=\"rotate(0)\">11.00%<\/text><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(0,138.37024463112596)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" x2=\"-6\" /><text style=\"text-anchor:right;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" x=\"-9\" dy=\"0.32em\" transform=\"rotate(0)\">12.00%<\/text><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(0,96.02919466578385)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" x2=\"-6\" /><text style=\"text-anchor:right;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" x=\"-9\" dy=\"0.32em\" transform=\"rotate(0)\">13.00%<\/text><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(0,53.688144700441796)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" x2=\"-6\" /><text style=\"text-anchor:right;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" x=\"-9\" dy=\"0.32em\" transform=\"rotate(0)\">14.00%<\/text><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(0,11.347094735099745)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" x2=\"-6\" /><text style=\"text-anchor:right;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" x=\"-9\" dy=\"0.32em\" transform=\"rotate(0)\">15.00%<\/text><\/g><\/g><text style=\"text-anchor:middle;font-size:10px;font-style:normal;font-family:'Arial', sans-serif;fill:#000000\" class=\"yaxislabel\" x=\"30\" y=\"200\" transform=\"rotate(-90, 30, 200)\" /><g class=\"linesgroup\"><g style=\"stroke-opacity:1\" class=\"values-linegroup\"><path d=\"M60,222.552L141.429,155.698L222.857,175.507L304.286,162.065L385.714,197.646L467.143,145.569L548.571,194.325L630,222.552\" fill=\"none\" stroke=\"#A6A6A6\" stroke-dasharray=\"10 0\" stroke-width=\"1\" /><\/g><g style=\"stroke-opacity:1\" class=\"targets-linegroup\"><path d=\"M60,182.5L141.429,182.5L222.857,182.5L304.286,182.5L385.714,182.5L467.143,182.5L548.571,182.5L630,182.5\" fill=\"none\" stroke=\"#000000\" stroke-dasharray=\"10 0\" stroke-width=\"1.5\" /><\/g><g style=\"stroke-opacity:1\" class=\"ll99-linegroup\"><path d=\"M60,293.848L141.429,284.68L222.857,287.48L304.286,279.693L385.714,290.524L467.143,277.458L548.571,297.5L630,282.093\" fill=\"none\" stroke=\"#6495ED\" stroke-dasharray=\"10 10\" stroke-width=\"2\" /><\/g><g style=\"stroke-opacity:1\" class=\"ul99-linegroup\"><path d=\"M60,71.152L141.429,80.32L222.857,77.52L304.286,85.307L385.714,74.476L467.143,87.542L548.571,67.5L630,82.907\" fill=\"none\" stroke=\"#6495ED\" stroke-dasharray=\"10 10\" stroke-width=\"2\" /><\/g><g style=\"stroke-opacity:1\" class=\"ll95-linegroup\"><path d=\"M60,256.732L141.429,250.62L222.857,252.487L304.286,247.295L385.714,254.516L467.143,245.805L548.571,259.167L630,248.895\" fill=\"none\" stroke=\"#6495ED\" stroke-dasharray=\"2 5\" stroke-width=\"2\" /><\/g><g style=\"stroke-opacity:1\" class=\"ul95-linegroup\"><path d=\"M60,108.268L141.429,114.38L222.857,112.513L304.286,117.705L385.714,110.484L467.143,119.195L548.571,105.833L630,116.105\" fill=\"none\" stroke=\"#6495ED\" stroke-dasharray=\"2 5\" stroke-width=\"2\" /><\/g><text x=\"630\" y=\"222.5523445618101\" fill=\"#000000\" font-size=\"10px\" font-family=\"'Arial', sans-serif\" text-anchor=\"start\" dx=\"10px\" dy=\"0px\" /><text x=\"630\" y=\"182.49999999999997\" fill=\"#000000\" font-size=\"10px\" font-family=\"'Arial', sans-serif\" text-anchor=\"start\" dx=\"10px\" dy=\"0px\" /><text x=\"630\" y=\"282.0929214352104\" fill=\"#000000\" font-size=\"10px\" font-family=\"'Arial', sans-serif\" text-anchor=\"start\" dx=\"10px\" dy=\"0px\" /><text x=\"630\" y=\"82.90707856478963\" fill=\"#000000\" font-size=\"10px\" font-family=\"'Arial', sans-serif\" text-anchor=\"start\" dx=\"10px\" dy=\"0px\" /><text x=\"630\" y=\"248.895280956807\" fill=\"#000000\" font-size=\"10px\" font-family=\"'Arial', sans-serif\" text-anchor=\"start\" dx=\"10px\" dy=\"0px\" /><text x=\"630\" y=\"116.10471904319303\" fill=\"#000000\" font-size=\"10px\" font-family=\"'Arial', sans-serif\" text-anchor=\"start\" dx=\"10px\" dy=\"0px\" /><\/g><g class=\"dotsgroup\"><path style=\"fill:#A6A6A6;stroke:#A6A6A6;stroke-width:1;fill-opacity:1;stroke-opacity:1\" d=\"M2.5,0A2.5,2.5,0,1,1,-2.5,0A2.5,2.5,0,1,1,2.5,0\" transform=\"translate(60, 222.5523445618101)\" /><path style=\"fill:#A6A6A6;stroke:#A6A6A6;stroke-width:1;fill-opacity:1;stroke-opacity:1\" d=\"M2.5,0A2.5,2.5,0,1,1,-2.5,0A2.5,2.5,0,1,1,2.5,0\" transform=\"translate(141.42857142857144, 155.6980551428489)\" /><path style=\"fill:#A6A6A6;stroke:#A6A6A6;stroke-width:1;fill-opacity:1;stroke-opacity:1\" d=\"M2.5,0A2.5,2.5,0,1,1,-2.5,0A2.5,2.5,0,1,1,2.5,0\" transform=\"translate(222.85714285714286, 175.50673348920782)\" /><path style=\"fill:#A6A6A6;stroke:#A6A6A6;stroke-width:1;fill-opacity:1;stroke-opacity:1\" d=\"M2.5,0A2.5,2.5,0,1,1,-2.5,0A2.5,2.5,0,1,1,2.5,0\" transform=\"translate(304.2857142857143, 162.0651303256071)\" /><path style=\"fill:#A6A6A6;stroke:#A6A6A6;stroke-width:1;fill-opacity:1;stroke-opacity:1\" d=\"M2.5,0A2.5,2.5,0,1,1,-2.5,0A2.5,2.5,0,1,1,2.5,0\" transform=\"translate(385.7142857142857, 197.64584458219713)\" /><path style=\"fill:#A6A6A6;stroke:#A6A6A6;stroke-width:1;fill-opacity:1;stroke-opacity:1\" d=\"M2.5,0A2.5,2.5,0,1,1,-2.5,0A2.5,2.5,0,1,1,2.5,0\" transform=\"translate(467.14285714285717, 145.56861735209725)\" /><path style=\"fill:#A6A6A6;stroke:#A6A6A6;stroke-width:1;fill-opacity:1;stroke-opacity:1\" d=\"M2.5,0A2.5,2.5,0,1,1,-2.5,0A2.5,2.5,0,1,1,2.5,0\" transform=\"translate(548.5714285714286, 194.32497791824866)\" /><path style=\"fill:#A6A6A6;stroke:#A6A6A6;stroke-width:1;fill-opacity:1;stroke-opacity:1\" d=\"M2.5,0A2.5,2.5,0,1,1,-2.5,0A2.5,2.5,0,1,1,2.5,0\" transform=\"translate(630, 222.5523445618101)\" /><\/g><\/svg>",
+    "indicator_names": null
+  }
+}

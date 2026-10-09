@@ -1,0 +1,120 @@
+{
+  "type": "spc",
+  "input": {
+    "data": {
+      "key": ["2024-01-01", "2024-02-01", "2024-03-01", "2024-04-01", "2024-05-01", "2024-06-01", "2024-07-01", "2024-08-01"],
+      "numerator": [8, 11, 10, 12, 9, 13, 8, 10],
+      "denominator": [80, 95, 90, 105, 85, 110, 75, 100],
+      "sd": [2, 3, 2, 4, 3, 2, 4, 3]
+    },
+    "keys": "key",
+    "numerators": "numerator",
+    "spc_settings": {
+      "chart_type": "g"
+    },
+    "return_objs": ["limits", "static_plot"]
+  },
+  "expected": {
+    "limits": [
+      {
+        "date": "0",
+        "value": 8,
+        "target": 10,
+        "ll99": 0,
+        "ll95": 0,
+        "ll68": 0,
+        "ul68": 20.7382287735637,
+        "ul95": 31.3514575471274,
+        "ul99": 41.964686320691,
+        "trend_line": 9.91666666666667
+      },
+      {
+        "date": "1",
+        "value": 11,
+        "target": 10,
+        "ll99": 0,
+        "ll95": 0,
+        "ll68": 0,
+        "ul68": 20.7382287735637,
+        "ul95": 31.3514575471274,
+        "ul99": 41.964686320691,
+        "trend_line": 9.97619047619048
+      },
+      {
+        "date": "2",
+        "value": 10,
+        "target": 10,
+        "ll99": 0,
+        "ll95": 0,
+        "ll68": 0,
+        "ul68": 20.7382287735637,
+        "ul95": 31.3514575471274,
+        "ul99": 41.964686320691,
+        "trend_line": 10.0357142857143
+      },
+      {
+        "date": "3",
+        "value": 12,
+        "target": 10,
+        "ll99": 0,
+        "ll95": 0,
+        "ll68": 0,
+        "ul68": 20.7382287735637,
+        "ul95": 31.3514575471274,
+        "ul99": 41.964686320691,
+        "trend_line": 10.0952380952381
+      },
+      {
+        "date": "4",
+        "value": 9,
+        "target": 10,
+        "ll99": 0,
+        "ll95": 0,
+        "ll68": 0,
+        "ul68": 20.7382287735637,
+        "ul95": 31.3514575471274,
+        "ul99": 41.964686320691,
+        "trend_line": 10.1547619047619
+      },
+      {
+        "date": "5",
+        "value": 13,
+        "target": 10,
+        "ll99": 0,
+        "ll95": 0,
+        "ll68": 0,
+        "ul68": 20.7382287735637,
+        "ul95": 31.3514575471274,
+        "ul99": 41.964686320691,
+        "trend_line": 10.2142857142857
+      },
+      {
+        "date": "6",
+        "value": 8,
+        "target": 10,
+        "ll99": 0,
+        "ll95": 0,
+        "ll68": 0,
+        "ul68": 20.7382287735637,
+        "ul95": 31.3514575471274,
+        "ul99": 41.964686320691,
+        "trend_line": 10.2738095238095
+      },
+      {
+        "date": "7",
+        "value": 10,
+        "target": 10,
+        "ll99": 0,
+        "ll95": 0,
+        "ll68": 0,
+        "ul68": 20.7382287735637,
+        "ul95": 31.3514575471274,
+        "ul99": 41.964686320691,
+        "trend_line": 10.3333333333333
+      }
+    ],
+    "limit_lines": null,
+    "svg": "<svg viewBox=\"0 0 640 400\" width=\"640px\" height=\"400px\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100%\" height=\"100%\" fill=\"white\"/><line style=\"stroke-opacity:0\" class=\"ttip-line-x\" x1=\"0\" x2=\"0\" y1=\"10\" y2=\"355\" stroke-width=\"1px\" stroke=\"black\" /><line style=\"stroke-opacity:0\" class=\"ttip-line-y\" x1=\"60\" x2=\"630\" y1=\"0\" y2=\"0\" stroke-width=\"1px\" stroke=\"black\" /><g class=\"gridgroup\" /><g class=\"xaxisgroup\" fill=\"none\" font-size=\"10\" font-family=\"sans-serif\" text-anchor=\"middle\" color=\"#000000\" transform=\"translate(0, 355)\"><path class=\"domain\" stroke=\"currentColor\" d=\"M60.5,6V0.5H630.5V6\" /><g class=\"tick\" opacity=\"1\" transform=\"translate(60.5,0)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" y2=\"6\" /><text style=\"text-anchor:end;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" y=\"9\" dy=\"-.15em\" dx=\"-.8em\" transform=\"rotate(-35)\">0<\/text><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(101.21428571428572,0)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" y2=\"6\" /><text style=\"text-anchor:end;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" y=\"9\" dy=\"-.15em\" dx=\"-.8em\" transform=\"rotate(-35)\" /><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(141.92857142857144,0)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" y2=\"6\" /><text style=\"text-anchor:end;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" y=\"9\" dy=\"-.15em\" dx=\"-.8em\" transform=\"rotate(-35)\">1<\/text><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(182.64285714285714,0)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" y2=\"6\" /><text style=\"text-anchor:end;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" y=\"9\" dy=\"-.15em\" dx=\"-.8em\" transform=\"rotate(-35)\" /><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(223.35714285714286,0)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" y2=\"6\" /><text style=\"text-anchor:end;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" y=\"9\" dy=\"-.15em\" dx=\"-.8em\" transform=\"rotate(-35)\">2<\/text><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(264.07142857142856,0)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" y2=\"6\" /><text style=\"text-anchor:end;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" y=\"9\" dy=\"-.15em\" dx=\"-.8em\" transform=\"rotate(-35)\" /><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(304.7857142857143,0)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" y2=\"6\" /><text style=\"text-anchor:end;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" y=\"9\" dy=\"-.15em\" dx=\"-.8em\" transform=\"rotate(-35)\">3<\/text><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(345.5,0)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" y2=\"6\" /><text style=\"text-anchor:end;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" y=\"9\" dy=\"-.15em\" dx=\"-.8em\" transform=\"rotate(-35)\" /><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(386.2142857142857,0)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" y2=\"6\" /><text style=\"text-anchor:end;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" y=\"9\" dy=\"-.15em\" dx=\"-.8em\" transform=\"rotate(-35)\">4<\/text><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(426.92857142857144,0)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" y2=\"6\" /><text style=\"text-anchor:end;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" y=\"9\" dy=\"-.15em\" dx=\"-.8em\" transform=\"rotate(-35)\" /><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(467.64285714285717,0)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" y2=\"6\" /><text style=\"text-anchor:end;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" y=\"9\" dy=\"-.15em\" dx=\"-.8em\" transform=\"rotate(-35)\">5<\/text><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(508.35714285714283,0)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" y2=\"6\" /><text style=\"text-anchor:end;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" y=\"9\" dy=\"-.15em\" dx=\"-.8em\" transform=\"rotate(-35)\" /><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(549.0714285714286,0)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" y2=\"6\" /><text style=\"text-anchor:end;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" y=\"9\" dy=\"-.15em\" dx=\"-.8em\" transform=\"rotate(-35)\">6<\/text><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(589.7857142857143,0)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" y2=\"6\" /><text style=\"text-anchor:end;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" y=\"9\" dy=\"-.15em\" dx=\"-.8em\" transform=\"rotate(-35)\" /><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(630.5,0)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" y2=\"6\" /><text style=\"text-anchor:end;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" y=\"9\" dy=\"-.15em\" dx=\"-.8em\" transform=\"rotate(-35)\">7<\/text><\/g><\/g><text style=\"text-anchor:middle;font-size:10px;font-style:normal;font-family:'Arial', sans-serif;fill:#000000\" class=\"xaxislabel\" x=\"320\" y=\"385\" /><g class=\"yaxisgroup\" fill=\"none\" font-size=\"10\" font-family=\"sans-serif\" text-anchor=\"end\" color=\"#000000\" transform=\"translate(60, 0)\"><path class=\"domain\" stroke=\"currentColor\" d=\"M-6,355.5H0.5V10.5H-6\" /><g class=\"tick\" opacity=\"1\" transform=\"translate(0,355.5)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" x2=\"-6\" /><text style=\"text-anchor:right;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" x=\"-9\" dy=\"0.32em\" transform=\"rotate(0)\">-5.00<\/text><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(0,328.0960062893885)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" x2=\"-6\" /><text style=\"text-anchor:right;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" x=\"-9\" dy=\"0.32em\" transform=\"rotate(0)\">0.00<\/text><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(0,300.69201257877705)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" x2=\"-6\" /><text style=\"text-anchor:right;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" x=\"-9\" dy=\"0.32em\" transform=\"rotate(0)\">5.00<\/text><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(0,273.28801886816564)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" x2=\"-6\" /><text style=\"text-anchor:right;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" x=\"-9\" dy=\"0.32em\" transform=\"rotate(0)\">10.00<\/text><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(0,245.88402515755416)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" x2=\"-6\" /><text style=\"text-anchor:right;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" x=\"-9\" dy=\"0.32em\" transform=\"rotate(0)\">15.00<\/text><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(0,218.48003144694272)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" x2=\"-6\" /><text style=\"text-anchor:right;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" x=\"-9\" dy=\"0.32em\" transform=\"rotate(0)\">20.00<\/text><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(0,191.07603773633124)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" x2=\"-6\" /><text style=\"text-anchor:right;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" x=\"-9\" dy=\"0.32em\" transform=\"rotate(0)\">25.00<\/text><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(0,163.6720440257198)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" x2=\"-6\" /><text style=\"text-anchor:right;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" x=\"-9\" dy=\"0.32em\" transform=\"rotate(0)\">30.00<\/text><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(0,136.26805031510833)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" x2=\"-6\" /><text style=\"text-anchor:right;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" x=\"-9\" dy=\"0.32em\" transform=\"rotate(0)\">35.00<\/text><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(0,108.86405660449691)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" x2=\"-6\" /><text style=\"text-anchor:right;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" x=\"-9\" dy=\"0.32em\" transform=\"rotate(0)\">40.00<\/text><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(0,81.46006289388544)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" x2=\"-6\" /><text style=\"text-anchor:right;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" x=\"-9\" dy=\"0.32em\" transform=\"rotate(0)\">45.00<\/text><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(0,54.05606918327396)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" x2=\"-6\" /><text style=\"text-anchor:right;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" x=\"-9\" dy=\"0.32em\" transform=\"rotate(0)\">50.00<\/text><\/g><g class=\"tick\" opacity=\"1\" transform=\"translate(0,26.65207547266249)\"><line style=\"stroke:currentColor\" stroke=\"currentColor\" x2=\"-6\" /><text style=\"text-anchor:right;font-size:10px;font-family:'Arial', sans-serif;fill:#000000\" fill=\"currentColor\" x=\"-9\" dy=\"0.32em\" transform=\"rotate(0)\">55.00<\/text><\/g><\/g><text style=\"text-anchor:middle;font-size:10px;font-style:normal;font-family:'Arial', sans-serif;fill:#000000\" class=\"yaxislabel\" x=\"30\" y=\"200\" transform=\"rotate(-90, 30, 200)\" /><g class=\"linesgroup\"><g style=\"stroke-opacity:1\" class=\"values-linegroup\"><path d=\"M60,283.75L141.429,267.307L222.857,272.788L304.286,261.826L385.714,278.269L467.143,256.346L548.571,283.75L630,272.788\" fill=\"none\" stroke=\"#A6A6A6\" stroke-dasharray=\"10 0\" stroke-width=\"1\" /><\/g><g style=\"stroke-opacity:1\" class=\"targets-linegroup\"><path d=\"M60,272.788L141.429,272.788L222.857,272.788L304.286,272.788L385.714,272.788L467.143,272.788L548.571,272.788L630,272.788\" fill=\"none\" stroke=\"#000000\" stroke-dasharray=\"10 0\" stroke-width=\"1.5\" /><\/g><g style=\"stroke-opacity:1\" class=\"ll99-linegroup\"><path d=\"M60,327.596L141.429,327.596L222.857,327.596L304.286,327.596L385.714,327.596L467.143,327.596L548.571,327.596L630,327.596\" fill=\"none\" stroke=\"#6495ED\" stroke-dasharray=\"10 10\" stroke-width=\"2\" /><\/g><g style=\"stroke-opacity:1\" class=\"ul99-linegroup\"><path d=\"M60,97.596L141.429,97.596L222.857,97.596L304.286,97.596L385.714,97.596L467.143,97.596L548.571,97.596L630,97.596\" fill=\"none\" stroke=\"#6495ED\" stroke-dasharray=\"10 10\" stroke-width=\"2\" /><\/g><g style=\"stroke-opacity:1\" class=\"ll95-linegroup\"><path d=\"M60,327.596L141.429,327.596L222.857,327.596L304.286,327.596L385.714,327.596L467.143,327.596L548.571,327.596L630,327.596\" fill=\"none\" stroke=\"#6495ED\" stroke-dasharray=\"2 5\" stroke-width=\"2\" /><\/g><g style=\"stroke-opacity:1\" class=\"ul95-linegroup\"><path d=\"M60,155.765L141.429,155.765L222.857,155.765L304.286,155.765L385.714,155.765L467.143,155.765L548.571,155.765L630,155.765\" fill=\"none\" stroke=\"#6495ED\" stroke-dasharray=\"2 5\" stroke-width=\"2\" /><\/g><text x=\"630\" y=\"272.78801886816564\" fill=\"#000000\" font-size=\"10px\" font-family=\"'Arial', sans-serif\" text-anchor=\"start\" dx=\"10px\" dy=\"0px\" /><text x=\"630\" y=\"272.78801886816564\" fill=\"#000000\" font-size=\"10px\" font-family=\"'Arial', sans-serif\" text-anchor=\"start\" dx=\"10px\" dy=\"0px\" /><text x=\"630\" y=\"327.5960062893885\" fill=\"#000000\" font-size=\"10px\" font-family=\"'Arial', sans-serif\" text-anchor=\"start\" dx=\"10px\" dy=\"0px\" /><text x=\"630\" y=\"97.59600628938853\" fill=\"#000000\" font-size=\"10px\" font-family=\"'Arial', sans-serif\" text-anchor=\"start\" dx=\"10px\" dy=\"0px\" /><text x=\"630\" y=\"327.5960062893885\" fill=\"#000000\" font-size=\"10px\" font-family=\"'Arial', sans-serif\" text-anchor=\"start\" dx=\"10px\" dy=\"0px\" /><text x=\"630\" y=\"155.76497720139247\" fill=\"#000000\" font-size=\"10px\" font-family=\"'Arial', sans-serif\" text-anchor=\"start\" dx=\"10px\" dy=\"0px\" /><\/g><g class=\"dotsgroup\"><path style=\"fill:#A6A6A6;stroke:#A6A6A6;stroke-width:1;fill-opacity:1;stroke-opacity:1\" d=\"M2.5,0A2.5,2.5,0,1,1,-2.5,0A2.5,2.5,0,1,1,2.5,0\" transform=\"translate(60, 283.7496163524102)\" /><path style=\"fill:#A6A6A6;stroke:#A6A6A6;stroke-width:1;fill-opacity:1;stroke-opacity:1\" d=\"M2.5,0A2.5,2.5,0,1,1,-2.5,0A2.5,2.5,0,1,1,2.5,0\" transform=\"translate(141.42857142857144, 267.3072201260433)\" /><path style=\"fill:#A6A6A6;stroke:#A6A6A6;stroke-width:1;fill-opacity:1;stroke-opacity:1\" d=\"M2.5,0A2.5,2.5,0,1,1,-2.5,0A2.5,2.5,0,1,1,2.5,0\" transform=\"translate(222.85714285714286, 272.78801886816564)\" /><path style=\"fill:#A6A6A6;stroke:#A6A6A6;stroke-width:1;fill-opacity:1;stroke-opacity:1\" d=\"M2.5,0A2.5,2.5,0,1,1,-2.5,0A2.5,2.5,0,1,1,2.5,0\" transform=\"translate(304.2857142857143, 261.82642138392106)\" /><path style=\"fill:#A6A6A6;stroke:#A6A6A6;stroke-width:1;fill-opacity:1;stroke-opacity:1\" d=\"M2.5,0A2.5,2.5,0,1,1,-2.5,0A2.5,2.5,0,1,1,2.5,0\" transform=\"translate(385.7142857142857, 278.2688176102879)\" /><path style=\"fill:#A6A6A6;stroke:#A6A6A6;stroke-width:1;fill-opacity:1;stroke-opacity:1\" d=\"M2.5,0A2.5,2.5,0,1,1,-2.5,0A2.5,2.5,0,1,1,2.5,0\" transform=\"translate(467.14285714285717, 256.34562264179874)\" /><path style=\"fill:#A6A6A6;stroke:#A6A6A6;stroke-width:1;fill-opacity:1;stroke-opacity:1\" d=\"M2.5,0A2.5,2.5,0,1,1,-2.5,0A2.5,2.5,0,1,1,2.5,0\" transform=\"translate(548.5714285714286, 283.7496163524102)\" /><path style=\"fill:#A6A6A6;stroke:#A6A6A6;stroke-width:1;fill-opacity:1;stroke-opacity:1\" d=\"M2.5,0A2.5,2.5,0,1,1,-2.5,0A2.5,2.5,0,1,1,2.5,0\" transform=\"translate(630, 272.78801886816564)\" /><\/g><\/svg>",
+    "indicator_names": null
+  }
+}
