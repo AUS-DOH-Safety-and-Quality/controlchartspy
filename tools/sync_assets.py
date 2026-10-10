@@ -3,7 +3,7 @@
 import argparse
 import hashlib
 import json
-import shutil
+import subprocess
 from pathlib import Path
 
 ASSETS = {
@@ -21,16 +21,26 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("controlcharts", type=Path)
     args = parser.parse_args()
-    destination = Path(__file__).resolve().parents[1] / "src/pycontrolcharts/_vendor"
+    root = Path(__file__).resolve().parents[1]
+    destination = root / "src/pycontrolcharts/_vendor"
     destination.mkdir(parents=True, exist_ok=True)
-    manifest = {}
+    git = ["git", "-C", str(args.controlcharts)]
+    revision = subprocess.check_output(git + ["rev-parse", "HEAD"], text=True).strip()
+    repository = subprocess.check_output(
+        git + ["remote", "get-url", "origin"], text=True
+    ).strip()
+    manifest = {"repository": repository, "revision": revision, "assets": {}}
     for name, relative in ASSETS.items():
-        source = args.controlcharts / relative
-        shutil.copyfile(source, destination / name)
-        manifest[name] = {
+        source = subprocess.check_output(git + ["show", f"{revision}:{relative}"])
+        (destination / name).write_bytes(source)
+        manifest["assets"][name] = {
             "source": relative,
-            "sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
+            "sha256": hashlib.sha256(source).hexdigest(),
         }
+    license_text = subprocess.check_output(git + ["show", f"{revision}:LICENSE.md"])
+    licenses = root / "licenses"
+    licenses.mkdir(exist_ok=True)
+    (licenses / "controlcharts-LICENSE.txt").write_bytes(license_text)
     (destination / "manifest.json").write_text(
         json.dumps(manifest, indent=2) + "\n", encoding="utf-8"
     )

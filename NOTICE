@@ -1,0 +1,19 @@
+pycontrolcharts is licensed under GNU GPL version 3 only. See LICENSE.
+Copyright (c) 2026 Andrew Johnson.
+
+The JavaScript assets in src/pycontrolcharts/_vendor are distributed from
+https://github.com/AUS-DOH-Safety-and-Quality/controlcharts.
+Their source revision and SHA-256 hashes are recorded in _vendor/manifest.json.
+The controlcharts wrapper is MIT licensed; its copyright and permission notice
+are reproduced in licenses/controlcharts-LICENSE.txt.
+
+PBISPC.js and PBIFUN.js contain code from the GPLv3 projects PowerBI-SPC and
+PowerBI-Funnels, authored by the Healthcare Quality Intelligence Unit,
+Western Australia Health:
+https://github.com/AUS-DOH-Safety-and-Quality/PowerBI-SPC
+https://github.com/AUS-DOH-Safety-and-Quality/PowerBI-Funnels
+The GPLv3 license text is reproduced in LICENSE.
+
+ccD3.js bundles d3-axis 3.0.0, d3-selection 3.0.0, d3-shape 3.2.0, and
+d3-path 3.1.0, authored by Mike Bostock and distributed under the ISC license.
+Their copyright and permission notices are reproduced in licenses/d3-*-LICENSE.txt.

@@ -1,0 +1,57 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      index:
+        description: Package index
+        type: choice
+        options: [testpypi, pypi]
+        default: testpypi
+
+permissions:
+  contents: read
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v7
+      - name: Check the release tag
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+          REF_TYPE: ${{ github.ref_type }}
+        run: |
+          uv run --no-project python - <<'PY'
+          import os
+          import tomllib
+          from pathlib import Path
+
+          project = tomllib.loads(Path("pyproject.toml").read_text())["project"]
+          if os.environ["REF_TYPE"] != "tag" or os.environ["RELEASE_TAG"] != "v" + project["version"]:
+              raise SystemExit("Select the tag matching the package version: v" + project["version"])
+          PY
+
+  test:
+    needs: version
+    uses: ./.github/workflows/test.yml
+
+  publish:
+    needs: test
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.index || 'pypi' }}
+    permissions:
+      id-token: write
+    steps:
+      - uses: astral-sh/setup-uv@v7
+      - uses: actions/download-artifact@v5
+        with:
+          name: distributions
+          path: dist
+      - name: Publish tested distributions
+        env:
+          UV_PUBLISH_URL: ${{ inputs.index == 'testpypi' && 'https://test.pypi.org/legacy/' || 'https://upload.pypi.org/legacy/' }}
+        run: uv publish --trusted-publishing always

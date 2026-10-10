@@ -5,11 +5,32 @@ build-backend = "uv_build"
 [project]
 name = "pycontrolcharts"
 version = "0.1.0"
-description = "SPC and funnel calculations and static SVG charts using QuickJS"
+description = "SPC and funnel calculations and static SVG charts"
 readme = "README.md"
-license-files = ["licenses/*", "NOTICE"]
+license = "GPL-3.0-only"
+license-files = ["LICENSE", "licenses/*", "NOTICE"]
+authors = [{ name = "Andrew Johnson", email = "andrew.johnson@arjohnsonau.com" }]
 requires-python = ">=3.10"
 dependencies = ["quickjs-ng"]
+keywords = ["spc", "control-charts", "funnel-plots", "statistics"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Typing :: Typed",
+]
+
+[project.urls]
+Documentation = "https://github.com/AUS-DOH-Safety-and-Quality/pycontrolcharts#readme"
+Repository = "https://github.com/AUS-DOH-Safety-and-Quality/pycontrolcharts"
+Issues = "https://github.com/AUS-DOH-Safety-and-Quality/pycontrolcharts/issues"
+Changelog = "https://github.com/AUS-DOH-Safety-and-Quality/pycontrolcharts/blob/main/CHANGELOG.md"
 
 [tool.uv.build-backend]
-source-include = ["tests/**", "tools/**", "NOTICE", "licenses/**"]
+source-include = ["tests/**", "tools/**", "CHANGELOG.md"]

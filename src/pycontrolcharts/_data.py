@@ -143,7 +143,10 @@ def prepare_data(
 
     def sort_key(index: int) -> tuple[tuple[bool, Any], ...]:
         values: list[Any] = [values[index] for values in groups.values()]
-        values.append(keys[index])
+        key = keys[index]
+        if date_keys:
+            key = label(key)
+        values.append(key)
         return tuple((missing(value), value) for value in values)
 
     order = sorted(range(n), key=sort_key)

@@ -21,6 +21,15 @@ def sample_data():
 
 
 class APITests(unittest.TestCase):
+    def test_mixed_dates_and_iso_strings_keep_row_alignment(self):
+        data = sample_data()
+        expected = spc(data, "month", "value", labels="label")
+        data["month"][1] = data["month"][1].isoformat()
+        data["month"][3] = data["month"][3].isoformat()
+        actual = spc(data, "month", "value", labels="label")
+        self.assertEqual(actual.limits, expected.limits)
+        self.assertEqual(actual.static_plot.svg, expected.static_plot.svg)
+
     def test_columns_and_sequences_keep_original_row_alignment(self):
         data = sample_data()
         expected = spc(data, "month", "value", labels="label")

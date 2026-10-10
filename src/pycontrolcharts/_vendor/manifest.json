@@ -1,30 +1,34 @@
 {
-  "minidom.js": {
-    "source": "inst/js/minidom.js",
-    "sha256": "b82938a75243589626e7d48f084efc3435c2ffe1c008b8a47d52873df9f68199"
-  },
-  "ccD3.js": {
-    "source": "inst/htmlwidgets/lib/UTILS/ccD3.js",
-    "sha256": "58b80508d848f8c7783871711229951e2f86f2d3269b0fed06c1c9a6cff69ca9"
-  },
-  "PBISPC.js": {
-    "source": "inst/htmlwidgets/lib/PBISPC/PBISPC.js",
-    "sha256": "439152e00c1fefb7203785eea2150e5996fce93ad7f138fd30877a58c35c1880"
-  },
-  "PBIFUN.js": {
-    "source": "inst/htmlwidgets/lib/PBIFUN/PBIFUN.js",
-    "sha256": "7dc7200ac0c100f93164f9de05a823a1a309339211390390cdd66102db1ab694"
-  },
-  "MISC.js": {
-    "source": "inst/htmlwidgets/lib/MISC/MISC.js",
-    "sha256": "3c9da4fff17bfa3e8eafdf388ea7bbc3014b5f4c1a31dae9482f0f39d4e00ac3"
-  },
-  "commonUtils.js": {
-    "source": "inst/htmlwidgets/lib/UTILS/commonUtils.js",
-    "sha256": "beeb51586a998a1fc61b5d9829c1f3b838d12f2280e48a2e6815fc355991f8c3"
-  },
-  "headlessUtils.js": {
-    "source": "inst/htmlwidgets/lib/UTILS/headlessUtils.js",
-    "sha256": "61c2b86d93e8577267e06579415e5de834a1cd7f852f6bf4f27a0828fed6e816"
+  "repository": "https://github.com/AUS-DOH-Safety-and-Quality/controlcharts",
+  "revision": "57fb8268d8ddb7659dbe77d6cc9a3a9a59fa2da1",
+  "assets": {
+    "minidom.js": {
+      "source": "inst/js/minidom.js",
+      "sha256": "b82938a75243589626e7d48f084efc3435c2ffe1c008b8a47d52873df9f68199"
+    },
+    "ccD3.js": {
+      "source": "inst/htmlwidgets/lib/UTILS/ccD3.js",
+      "sha256": "58b80508d848f8c7783871711229951e2f86f2d3269b0fed06c1c9a6cff69ca9"
+    },
+    "PBISPC.js": {
+      "source": "inst/htmlwidgets/lib/PBISPC/PBISPC.js",
+      "sha256": "439152e00c1fefb7203785eea2150e5996fce93ad7f138fd30877a58c35c1880"
+    },
+    "PBIFUN.js": {
+      "source": "inst/htmlwidgets/lib/PBIFUN/PBIFUN.js",
+      "sha256": "7dc7200ac0c100f93164f9de05a823a1a309339211390390cdd66102db1ab694"
+    },
+    "MISC.js": {
+      "source": "inst/htmlwidgets/lib/MISC/MISC.js",
+      "sha256": "3c9da4fff17bfa3e8eafdf388ea7bbc3014b5f4c1a31dae9482f0f39d4e00ac3"
+    },
+    "commonUtils.js": {
+      "source": "inst/htmlwidgets/lib/UTILS/commonUtils.js",
+      "sha256": "beeb51586a998a1fc61b5d9829c1f3b838d12f2280e48a2e6815fc355991f8c3"
+    },
+    "headlessUtils.js": {
+      "source": "inst/htmlwidgets/lib/UTILS/headlessUtils.js",
+      "sha256": "61c2b86d93e8577267e06579415e5de834a1cd7f852f6bf4f27a0828fed6e816"
+    }
   }
 }

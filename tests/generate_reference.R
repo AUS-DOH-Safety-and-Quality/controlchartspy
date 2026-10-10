@@ -1,5 +1,21 @@
 args <- commandArgs(trailingOnly = TRUE)
+stopifnot(length(args) == 2L)
 destination <- args[1]
+upstream <- normalizePath(args[2])
+manifest <- jsonlite::read_json("src/pycontrolcharts/_vendor/manifest.json")
+revision <- system2("git", c("-C", shQuote(upstream), "rev-parse", "HEAD"), stdout = TRUE)
+version <- as.character(utils::packageVersion("controlcharts"))
+stopifnot(identical(revision, manifest$revision))
+stopifnot(version == read.dcf(file.path(upstream, "DESCRIPTION"), fields = "Version")[1])
+for (name in names(manifest$assets)) {
+  relative <- sub("^inst/", "", manifest$assets[[name]]$source)
+  installed <- system.file(relative, package = "controlcharts", mustWork = TRUE)
+  vendored <- file.path("src/pycontrolcharts/_vendor", name)
+  stopifnot(identical(
+    readBin(installed, "raw", n = file.info(installed)$size),
+    readBin(vendored, "raw", n = file.info(vendored)$size)
+  ))
+}
 dir.create(destination, recursive = TRUE, showWarnings = FALSE)
 
 data <- data.frame(
@@ -127,5 +143,12 @@ jsonlite::write_json(
        funnel = controlcharts::funnel_default_settings()),
   file.path(destination, "defaults.json"), auto_unbox = TRUE, null = "null",
   digits = NA, pretty = TRUE
+)
+jsonlite::write_json(
+  list(repository = manifest$repository, revision = revision,
+       package_version = version, r_version = R.version.string,
+       assets = manifest$assets),
+  file.path(dirname(destination), "reference_manifest.json"),
+  auto_unbox = TRUE, pretty = TRUE
 )
 cat("Generated", length(cases), "reference cases\n")
