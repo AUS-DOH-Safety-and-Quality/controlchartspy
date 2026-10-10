@@ -9,7 +9,7 @@ from pathlib import Path
 
 class ResourceTests(unittest.TestCase):
     def test_vendored_assets_match_the_recorded_hashes(self):
-        package = files("pycontrolcharts")
+        package = files("controlchartspy")
         self.assertTrue(package.joinpath("py.typed").is_file())
         vendor = package.joinpath("_vendor")
         manifest = json.loads(vendor.joinpath("manifest.json").read_text())
@@ -19,7 +19,7 @@ class ResourceTests(unittest.TestCase):
                 self.assertEqual(actual, metadata["sha256"])
 
     def test_reference_cases_use_the_same_upstream_assets(self):
-        vendor = files("pycontrolcharts").joinpath("_vendor", "manifest.json")
+        vendor = files("controlchartspy").joinpath("_vendor", "manifest.json")
         actual = json.loads(vendor.read_text())
         path = Path(__file__).parent / "reference_manifest.json"
         expected = json.loads(path.read_text())

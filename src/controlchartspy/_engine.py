@@ -47,7 +47,7 @@ class Engine:
                 return JSON.stringify(globalThis[type].defaultSettings, pythonReplacer);
             }
         """)
-        assets = files("pycontrolcharts").joinpath("_vendor")
+        assets = files("controlchartspy").joinpath("_vendor")
         for name in _SCRIPTS:
             self.context.eval(assets.joinpath(name).read_text(encoding="utf-8"))
         self.context.eval("initialiseHeadless()")

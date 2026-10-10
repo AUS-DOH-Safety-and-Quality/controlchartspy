@@ -3,7 +3,7 @@ requires = ["uv_build<0.14"]
 build-backend = "uv_build"
 
 [project]
-name = "pycontrolcharts"
+name = "controlchartspy"
 version = "0.1.0"
 description = "Calculate and visualise statistical process control (SPC) charts and funnel plots"
 readme = "README.md"
@@ -28,10 +28,10 @@ classifiers = [
 ]
 
 [project.urls]
-Documentation = "https://github.com/AUS-DOH-Safety-and-Quality/pycontrolcharts#readme"
-Repository = "https://github.com/AUS-DOH-Safety-and-Quality/pycontrolcharts"
-Issues = "https://github.com/AUS-DOH-Safety-and-Quality/pycontrolcharts/issues"
-Changelog = "https://github.com/AUS-DOH-Safety-and-Quality/pycontrolcharts/blob/main/CHANGELOG.md"
+Documentation = "https://github.com/AUS-DOH-Safety-and-Quality/controlchartspy#readme"
+Repository = "https://github.com/AUS-DOH-Safety-and-Quality/controlchartspy"
+Issues = "https://github.com/AUS-DOH-Safety-and-Quality/controlchartspy/issues"
+Changelog = "https://github.com/AUS-DOH-Safety-and-Quality/controlchartspy/blob/main/CHANGELOG.md"
 
 [tool.uv.build-backend]
 source-include = ["tests/**", "tools/**", "CHANGELOG.md"]

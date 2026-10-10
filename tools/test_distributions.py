@@ -9,10 +9,10 @@ from pathlib import Path
 
 
 def check_files(names, prefix, root):
-    required = {prefix + "pycontrolcharts/py.typed"}
-    vendor = root / "src/pycontrolcharts/_vendor"
+    required = {prefix + "controlchartspy/py.typed"}
+    vendor = root / "src/controlchartspy/_vendor"
     for path in vendor.iterdir():
-        required.add(prefix + "pycontrolcharts/_vendor/" + path.name)
+        required.add(prefix + "controlchartspy/_vendor/" + path.name)
     missing = required - names
     if missing:
         raise ValueError(f"Missing package files: {sorted(missing)}")

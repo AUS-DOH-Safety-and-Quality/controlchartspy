@@ -5,7 +5,7 @@ import math
 import unittest
 from pathlib import Path
 
-import pycontrolcharts as charts
+import controlchartspy as charts
 
 REFERENCE = Path(__file__).parent / "reference"
 

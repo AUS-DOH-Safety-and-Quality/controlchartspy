@@ -3,7 +3,7 @@
 import math
 import unittest
 
-from pycontrolcharts import spc
+from controlchartspy import spc
 
 
 class NumericalTests(unittest.TestCase):

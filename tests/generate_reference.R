@@ -2,7 +2,7 @@ args <- commandArgs(trailingOnly = TRUE)
 stopifnot(length(args) == 2L)
 destination <- args[1]
 upstream <- normalizePath(args[2])
-manifest <- jsonlite::read_json("src/pycontrolcharts/_vendor/manifest.json")
+manifest <- jsonlite::read_json("src/controlchartspy/_vendor/manifest.json")
 revision <- system2("git", c("-C", shQuote(upstream), "rev-parse", "HEAD"), stdout = TRUE)
 version <- as.character(utils::packageVersion("controlcharts"))
 stopifnot(identical(revision, manifest$revision))
@@ -10,7 +10,7 @@ stopifnot(version == read.dcf(file.path(upstream, "DESCRIPTION"), fields = "Vers
 for (name in names(manifest$assets)) {
   relative <- sub("^inst/", "", manifest$assets[[name]]$source)
   installed <- system.file(relative, package = "controlcharts", mustWork = TRUE)
-  vendored <- file.path("src/pycontrolcharts/_vendor", name)
+  vendored <- file.path("src/controlchartspy/_vendor", name)
   stopifnot(identical(
     readBin(installed, "raw", n = file.info(installed)$size),
     readBin(vendored, "raw", n = file.info(vendored)$size)

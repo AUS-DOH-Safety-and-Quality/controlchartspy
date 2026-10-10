@@ -22,7 +22,7 @@ def main():
     parser.add_argument("controlcharts", type=Path)
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
-    destination = root / "src/pycontrolcharts/_vendor"
+    destination = root / "src/controlchartspy/_vendor"
     destination.mkdir(parents=True, exist_ok=True)
     git = ["git", "-C", str(args.controlcharts)]
     revision = subprocess.check_output(git + ["rev-parse", "HEAD"], text=True).strip()

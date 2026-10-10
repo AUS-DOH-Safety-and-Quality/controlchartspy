@@ -1,6 +1,6 @@
-# pycontrolcharts
+# controlchartspy
 
-The `pycontrolcharts` package provides tools for both calculating and visualising
+The `controlchartspy` package provides tools for both calculating and visualising
 statistical process control (SPC) charts and funnel plots in Python. It is based on
 the R [controlcharts](https://github.com/AUS-DOH-Safety-and-Quality/controlcharts)
 package.
@@ -11,11 +11,11 @@ Python 3.10 or later is required. Once the package is published on PyPI, you can
 install it with:
 
 ```sh
-uv add pycontrolcharts
+uv add controlchartspy
 ```
 
 You can install the development version from a local checkout with
-`uv add /path/to/pycontrolcharts`.
+`uv add /path/to/controlchartspy`.
 
 ## Getting Started
 
@@ -27,7 +27,7 @@ Consider a basic time series comprising two years of monthly data:
 from datetime import date
 from random import Random
 
-from pycontrolcharts import spc, funnel
+from controlchartspy import spc, funnel
 
 rng = Random(12324)
 dat = {
@@ -130,7 +130,7 @@ To see the full list of available options, retrieve the complete defaults or
 one group:
 
 ```python
-from pycontrolcharts import spc_default_settings, funnel_default_settings
+from controlchartspy import spc_default_settings, funnel_default_settings
 
 spc_defaults = spc_default_settings()
 x_axis_defaults = spc_default_settings("x_axis")

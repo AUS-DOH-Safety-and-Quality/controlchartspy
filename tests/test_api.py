@@ -8,7 +8,7 @@ from datetime import date
 from pathlib import Path
 from xml.etree import ElementTree
 
-from pycontrolcharts import funnel, funnel_default_settings, spc, spc_default_settings
+from controlchartspy import funnel, funnel_default_settings, spc, spc_default_settings
 
 
 def sample_data():
