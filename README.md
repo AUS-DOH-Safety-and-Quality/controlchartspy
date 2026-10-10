@@ -7,15 +7,17 @@ package.
 
 ## Installation
 
-Python 3.10 or later is required. Once the package is published on PyPI, you can
-install it with:
+Install from PyPi with:
 
 ```sh
 uv add controlchartspy
 ```
 
-You can install the development version from a local checkout with
-`uv add /path/to/controlchartspy`.
+Or install the development version from GitHub with:
+
+```sh
+uv add --git https://github.com/AUS-DOH-Safety-and-Quality/controlchartspy/
+```
 
 ## Getting Started
 
