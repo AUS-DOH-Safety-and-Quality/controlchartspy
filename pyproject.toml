@@ -5,7 +5,7 @@ build-backend = "uv_build"
 [project]
 name = "pycontrolcharts"
 version = "0.1.0"
-description = "SPC and funnel calculations and static SVG charts"
+description = "Calculate and visualise statistical process control (SPC) charts and funnel plots"
 readme = "README.md"
 license = "GPL-3.0-only"
 license-files = ["LICENSE", "licenses/*", "NOTICE"]

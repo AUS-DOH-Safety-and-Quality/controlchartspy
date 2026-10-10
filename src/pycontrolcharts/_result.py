@@ -34,7 +34,7 @@ def svg_string(svg: str, width: float, height: float) -> str:
 
 @dataclass
 class StaticPlot:
-    """An R-style SVG fragment, its dimensions, and its rendering inputs."""
+    """A static SVG plot with its dimensions and rendering settings."""
 
     type: str
     svg: str
@@ -69,7 +69,7 @@ class StaticPlot:
 
 @dataclass
 class ControlChart:
-    """Requested chart outputs; unrequested outputs are None."""
+    """A control chart containing the requested plot and calculated limits."""
 
     static_plot: StaticPlot | None = None
     limits: list[Record] | dict[str, Any] | None = None

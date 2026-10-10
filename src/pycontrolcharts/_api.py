@@ -35,12 +35,12 @@ def _defaults(chart_type: str, group: str | None) -> dict[str, Any]:
 
 
 def spc_default_settings(group: str | None = None) -> dict[str, Any]:
-    """Return all SPC defaults, or one settings group, as a fresh dictionary."""
+    """Return the default settings for SPC charts, optionally for one group."""
     return _defaults("spc", group)
 
 
 def funnel_default_settings(group: str | None = None) -> dict[str, Any]:
-    """Return all funnel defaults, or one settings group, as a fresh dictionary."""
+    """Return the default settings for funnel plots, optionally for one group."""
     return _defaults("funnel", group)
 
 
@@ -152,7 +152,7 @@ def spc(
     height: float | None = None,
     return_objs: ReturnObjs = ("static_plot", "limits"),
 ) -> ControlChart:
-    """Calculate SPC limits and/or a static SVG using R's argument and settings names."""
+    """Generate a statistical process control (SPC) chart and calculate control limits."""
     return _create(
         "spc",
         data,
@@ -209,7 +209,7 @@ def funnel(
     height: float | None = None,
     return_objs: ReturnObjs = ("static_plot", "limits"),
 ) -> ControlChart:
-    """Calculate funnel limits, limit lines, and/or a static SVG using R's settings."""
+    """Generate a funnel plot and calculate control limits."""
     return _create(
         "funnel",
         data,

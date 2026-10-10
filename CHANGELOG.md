@@ -2,7 +2,7 @@
 
 ## 0.1.0 — Unreleased
 
-- SPC and funnel calculations.
-- Static SVG rendering, export, and notebook display.
+- Calculation and visualisation of statistical process control (SPC) charts and funnel plots.
+- Static SVG plots, notebook display, and plot saving.
 - Column mappings, record sequences, phases, and grouped SPC limits.
 - Mixed Python dates and ISO date strings for SPC keys.

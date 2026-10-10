@@ -1,59 +1,117 @@
 # pycontrolcharts
 
-Python port of the R [controlcharts](https://github.com/AUS-DOH-Safety-and-Quality/controlcharts)
-package: SPC and funnel limits plus static SVG plots. Charts display in notebooks.
-Python 3.10 or later is required. R is needed only to regenerate reference fixtures.
+The `pycontrolcharts` package provides tools for both calculating and visualising
+statistical process control (SPC) charts and funnel plots in Python. It is based on
+the R [controlcharts](https://github.com/AUS-DOH-Safety-and-Quality/controlcharts)
+package.
 
 ## Installation
 
-After the first PyPI release:
+Python 3.10 or later is required. Once the package is published on PyPI, you can
+install it with:
 
 ```sh
 uv add pycontrolcharts
 ```
 
-For the current development version, use `uv add /path/to/pycontrolcharts`.
+You can install the development version from a local checkout with
+`uv add /path/to/pycontrolcharts`.
 
-## Usage
+## Getting Started
+
+### Constructing SPC Charts
+
+Consider a basic time series comprising two years of monthly data:
 
 ```python
 from datetime import date
+from random import Random
+
 from pycontrolcharts import spc, funnel
 
-chart = spc(
-    {"month": [date(2024, m, 1) for m in range(1, 7)], "n": [8, 11, 10, 12, 9, 13]},
-    keys="month", numerators="n", spc_settings={"chart_type": "i"},
-)
-chart.limits            # list of dicts, same columns as R
-chart.save_plot("spc.svg", width=960, height=600)
-
-chart = funnel(
-    {"org": ["A", "B", "C"], "n": [12, 18, 9], "d": [100, 150, 80]},
-    keys="org", numerators="n", denominators="d",
-    return_objs=("limits", "limit_lines"),
-)
+rng = Random(12324)
+dat = {
+    "month": [date(2024 + i // 12, i % 12 + 1, 1) for i in range(24)],
+    "y": [rng.gauss(0, 1) for _ in range(24)],
+}
 ```
 
-## Inputs and chart types
+By default, the `spc()` function constructs an `i`-chart (individuals chart,
+also referred to as an XmR chart):
 
-`data` accepts a mapping of columns or a sequence of records. Column arguments
-accept a column name or a sequence in the original row order. SPC keys accept
-Python `date` objects and ISO date strings (`YYYY-MM-DD`), including mixtures in
-one column. Rows are sorted by key, within indicator groups when supplied.
-Funnel keys identify organisations or other groups.
+```python
+spc_chart = spc(data=dat, keys="month", numerators="y")
+```
 
-Set `spc_settings={"chart_type": ...}` or `funnel_settings={"chart_type": ...}`:
+The result is a `ControlChart` containing:
 
-| Function | Chart types | Additional inputs |
+- `static_plot`: a static SVG plot of the SPC chart.
+- `limits`: a list of records containing the calculated control limits.
+
+Display the plot in a notebook and inspect the first six rows of control limits:
+
+```python
+spc_chart.static_plot
+spc_chart.limits[:6]
+```
+
+### Funnel Plot
+
+The same interface is provided for funnel charts. For this example, consider
+proportion data recorded by ten organisations:
+
+```python
+funnel_data = {
+    "organisation": list("abcdefghij"),
+    "numerators": [27, 23, 35, 26, 38, 22, 46, 26, 27, 35],
+    "denominators": [170, 122, 178, 184, 161, 105, 190, 121, 137, 197],
+}
+```
+
+For funnel plots, the default is a proportions (`PR`) chart:
+
+```python
+funnel_chart = funnel(
+    data=funnel_data,
+    keys="organisation",
+    numerators="numerators",
+    denominators="denominators",
+)
+funnel_chart.static_plot
+funnel_chart.limits
+```
+
+## Chart Types
+
+The package supports fourteen SPC chart types and three funnel plot types.
+Select a chart type with `spc_settings={"chart_type": ...}` or
+`funnel_settings={"chart_type": ...}`:
+
+| Function | Chart types | Additional required inputs |
 | --- | --- | --- |
 | `spc` | `run`, `i` (default), `i_m`, `i_mm`, `mr`, `c`, `g`, `t` | None |
 | `spc` | `p`, `pp` (proportions), `u`, `up` (rates) | `denominators` |
-| `spc` | `xbar` (sample means), `s` (sample standard deviations) | `denominators`, `xbar_sds` |
-| `funnel` | `PR` (proportions, default), `SR` (standardised ratios), `RC` (rates/counts) | `denominators` |
+| `spc` | `xbar` (sample means) | `denominators`, `xbar_sds` |
+| `spc` | `s` (sample standard deviations) | `denominators`; supply standard deviations as `numerators` |
+| `funnel` | `PR` (proportions, default), `SR` (indirectly standardised ratios), `RC` (rates) | `denominators` |
 
-`i_m` uses a median centreline; `i_mm` also uses median moving-range limits.
-`pp` and `up` apply a large-sample correction. Choose a chart type appropriate
-to your measure; calculations follow the R package.
+The individuals chart uses moving ranges to calculate control limits. `i_m`
+uses a median centreline; `i_mm` also uses median moving-range limits. `pp` and
+`up` are proportion and rate charts with large-sample correction.
+
+## Data and Arguments
+
+`data` accepts a mapping of columns or a sequence of records. Column arguments
+accept a column name or a sequence in the original row order:
+
+- `keys`: the categories of the chart; for SPC charts, these form the x-axis.
+- `numerators`: the numeric observations for each category.
+- `denominators`: the denominators for each category, where required.
+- `labels`: optional labels for each category.
+
+SPC keys accept Python `date` objects and ISO date strings (`YYYY-MM-DD`),
+including mixtures in one column. Rows are sorted by key, within indicator
+groups when supplied. Funnel keys identify organisations or other groups.
 
 Numeric `None` and `NaN` values are treated as missing. Infinite values are
 rejected. Repeated keys are aggregated: numerators and denominators
@@ -61,51 +119,88 @@ default to `sum`, while other input fields default to `first`. Override these
 with `aggregations`, using `first`, `last`, `sum`, `mean`, `min`, `max`, `median`,
 or `count`.
 
-## Settings
+## Aesthetic Options
 
-Settings use the R package's names. Retrieve the complete defaults or one group:
+Visual adjustments are handled through dedicated settings arguments. Each group
+of settings has its own argument, such as `canvas_settings`, `line_settings`,
+`scatter_settings`, `x_axis_settings`, or `y_axis_settings`. SPC charts also accept
+`date_settings`, while `label_settings` controls observation labels.
+
+To see the full list of available options, retrieve the complete defaults or
+one group:
 
 ```python
 from pycontrolcharts import spc_default_settings, funnel_default_settings
 
 spc_defaults = spc_default_settings()
-date_defaults = spc_default_settings("dates")
+x_axis_defaults = spc_default_settings("x_axis")
 funnel_defaults = funnel_default_settings("funnel")
 ```
 
-Common arguments include `spc_settings`/`funnel_settings` for calculations,
-`outlier_settings` for signal flags, `scatter_settings` for point appearance,
-`line_settings` for limit lines, and `x_axis_settings`/`y_axis_settings` for axes.
-SPC also accepts `date_settings` and `nhs_icon_settings`. Each settings argument
-is a mapping; values can be scalars, one-element sequences, or sequences aligned
-with the original input rows.
+Each settings argument is a mapping. Values can be scalars, one-element
+sequences, or sequences aligned with the original input rows.
 
-For example, show SPC signals and give each observation its own colour:
+For example, add a title and customise the x-axis:
 
 ```python
-chart = spc(
-    {"month": ["2024-01-01", "2024-02-01", "2024-03-01"], "n": [8, 11, 10]},
-    keys="month", numerators="n",
-    outlier_settings={"astronomical": True, "shift": True, "trend": True},
-    scatter_settings={"colour": ["#333333", "#336699", "#333333"]},
-    title={"text": "Monthly count", "subtitle": "Example SPC chart"},
+styled_chart = spc(
+    data=dat,
+    keys="month",
+    numerators="y",
+    title={"text": "Monthly Performance", "font_size": "20px"},
+    x_axis_settings={
+        "xlimit_tick_rotation": -45,
+        "xlimit_label": "Month of Observation",
+    },
 )
+styled_chart.static_plot
 ```
 
-## Phases and grouped limits
+## Outlier Detection
+
+Configure outlier detection through `outlier_settings`. SPC charts support
+astronomical points, shifts, trends, and two-in-three patterns. Use
+`spc_default_settings("outliers")` to see the available detection parameters.
+NHS variation and assurance icons are configured through `nhs_icon_settings`.
+
+```python
+spc_data = {
+    "date": [date(2023, month, 1) for month in range(1, 13)],
+    "value": [10, 12, 11, 15, 12, 11, 25, 12, 11, 10, 11, 12],
+}
+outlier_chart = spc(
+    data=spc_data,
+    keys="date",
+    numerators="value",
+    outlier_settings={
+        "astronomical": True,
+        "shift": True,
+        "trend": True,
+        "two_in_three": True,
+    },
+)
+outlier_chart.static_plot
+outlier_chart.limits
+```
+
+## Phases and Grouped Limits
 
 Use `groupings` to calculate separate limits for phases of one time series:
 
 ```python
-data = {
-    "month": ["2024-01-01", "2024-02-01", "2024-03-01", "2024-04-01"],
-    "n": [8, 11, 10, 12],
-    "phase": ["Before", "Before", "After", "After"],
-    "site": ["A", "A", "B", "B"],
+grouped_data = {
+    **dat,
+    "phase": ["Before"] * 12 + ["After"] * 12,
+    "site": ["A"] * 12 + ["B"] * 12,
 }
-phased = spc(data, "month", "n", groupings="phase")
-grouped = spc(data, "month", "n", indicators="site", return_objs="limits")
-site_a_limits = grouped.limits["A"]
+phased_chart = spc(
+    data=grouped_data, keys="month", numerators="y", groupings="phase",
+)
+grouped_chart = spc(
+    data=grouped_data, keys="month", numerators="y",
+    indicators="site", return_objs="limits",
+)
+site_a_limits = grouped_chart.limits["A"]
 ```
 
 `indicators` create separate series and nested limits. A mapping such as
@@ -113,7 +208,7 @@ site_a_limits = grouped.limits["A"]
 that order, with names available through `chart.indicator_names`. A single
 indicator group can render a plot; multiple groups require `return_objs="limits"`.
 
-## Results and export
+## Results and Saving Plots
 
 Both constructors return a `ControlChart`. `return_objs` accepts one output name
 or an iterable; its default is `("static_plot", "limits")`.
@@ -122,7 +217,7 @@ or an iterable; its default is `("static_plot", "limits")`.
 | --- | --- |
 | `static_plot` | `StaticPlot` with `to_svg()` and notebook SVG display |
 | `limits` | A list of records, or nested mappings for grouped SPC series |
-| `limit_lines` | Funnel limit-line records; request `"limit_lines"` explicitly |
+| `limit_lines` | Funnel control limits across the full range of denominators; request `"limit_lines"` explicitly |
 | `indicator_names` | SPC indicator names in nesting order |
 
 Unrequested outputs are `None`. SPC records include the formatted `date`,
@@ -131,9 +226,16 @@ Unrequested outputs are `None`. SPC records include the formatted `date`,
 Funnel records include `group`, `numerator`, `denominator`, `value`, `z`, `target`,
 and limits. Proportion charts use percentage values under the default settings.
 
-`chart.save_plot("chart.svg")` writes a complete SVG. Specify `width` and `height`
-to rerender at a different size, or use `chart.static_plot.to_svg()` to get the SVG
-as a string. The default size is 640 × 400; export supports SVG.
+Save a plot as SVG with `save_plot()`:
+
+```python
+spc_chart.save_plot("spc_chart.svg")
+funnel_chart.save_plot("funnel_chart.svg", width=960, height=600)
+```
+
+Specify `width` and `height` to render at a different size, or use
+`spc_chart.static_plot.to_svg()` to get the SVG as a string. The default size is
+640 × 400 pixels. Static plots display as SVGs in notebooks.
 
 The [R package documentation](https://aus-doh-safety-and-quality.github.io/controlcharts/)
 provides further information about the shared calculation and display settings.
