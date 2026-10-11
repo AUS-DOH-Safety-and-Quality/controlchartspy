@@ -35,3 +35,42 @@ Changelog = "https://github.com/AUS-DOH-Safety-and-Quality/controlchartspy/blob/
 
 [tool.uv.build-backend]
 source-include = ["tests/**", "tools/**", "CHANGELOG.md"]
+
+[tool.mypy]
+files = ["src", "tools", "tests"]
+mypy_path = "typings"
+python_version = "3.10"
+strict = true
+warn_unreachable = true
+disallow_any_unimported = true
+disallow_any_decorated = true
+enable_error_code = [
+    "deprecated",
+    "exhaustive-match",
+    "explicit-override",
+    "ignore-without-code",
+    "mutable-override",
+    "possibly-undefined",
+    "redundant-expr",
+    "redundant-self",
+    "truthy-bool",
+    "truthy-iterable",
+    "unimported-reveal",
+    "unused-awaitable",
+]
+
+[tool.pyright]
+include = ["src", "tools", "tests"]
+pythonVersion = "3.10"
+typeCheckingMode = "strict"
+deprecateTypingAliases = true
+enableReachabilityAnalysis = true
+reportCallInDefaultInitializer = "error"
+reportImplicitOverride = "error"
+reportImplicitStringConcatenation = "error"
+reportImportCycles = "error"
+reportMissingModuleSource = "error"
+reportPropertyTypeMismatch = "error"
+reportUninitializedInstanceVariable = "error"
+reportUnnecessaryTypeIgnoreComment = "error"
+reportUnreachable = "error"

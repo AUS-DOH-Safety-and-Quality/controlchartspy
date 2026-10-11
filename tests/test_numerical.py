@@ -27,7 +27,7 @@ class NumericalTests(unittest.TestCase):
             )
 
     def test_p_chart_uses_pooled_proportion_and_binomial_variance(self) -> None:
-        data = {
+        data: dict[str, list[str] | list[int]] = {
             "date": ["2024-01-01", "2024-02-01", "2024-03-01"],
             "count": [10, 30, 20],
             "population": [100, 200, 100],
