@@ -75,6 +75,7 @@ class ControlChart:
     limits: list[Record] | dict[str, Any] | None = None
     limit_lines: list[Record] | None = None
     indicator_names: list[str] = field(default_factory=list)
+    target: str | None = None
 
     def save_plot(
         self,

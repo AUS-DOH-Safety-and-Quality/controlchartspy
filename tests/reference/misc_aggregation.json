@@ -1,0 +1,71 @@
+{
+  "type": "misc",
+  "input": {
+    "data": {
+      "key": ["D", "B", "A", "A", "D", "B", "B", "C", "A", "A", "D", "C", "B", "D", "C", "C"],
+      "indicator": ["Lower is better", "Higher is better", "Higher is better", "Lower is better", "Higher is better", "Lower is better", "Higher is better", "Lower is better", "Higher is better", "Lower is better", "Lower is better", "Higher is better", "Lower is better", "Higher is better", "Lower is better", "Higher is better"],
+      "numerator": [15, 10, 40, 2, 15, 10, 10, 12, 40, 2, 15, 12, 10, 15, 12, 12],
+      "denominator": [50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50],
+      "direction": ["decrease", "increase", "increase", "decrease", "increase", "decrease", "increase", "decrease", "increase", "decrease", "decrease", "increase", "decrease", "increase", "decrease", "increase"],
+      "grouping": ["Safety", "Effectiveness", "Effectiveness", "Safety", "Effectiveness", "Safety", "Effectiveness", "Safety", "Effectiveness", "Safety", "Safety", "Effectiveness", "Safety", "Effectiveness", "Safety", "Effectiveness"],
+      "note": ["row-16", "row-3", "row-1", "row-10", "row-7", "row-12", "row-4", "row-14", "row-2", "row-9", "row-15", "row-5", "row-11", "row-8", "row-13", "row-6"]
+    },
+    "keys": "key",
+    "numerators": "numerator",
+    "denominators": "denominator",
+    "indicators": "indicator",
+    "groupings": "grouping",
+    "tooltips": {
+      "Note": "note"
+    },
+    "target": "A",
+    "aggregations": {
+      "tooltips": "last"
+    },
+    "outlier_settings": {
+      "improvement_direction": ["decrease", "increase", "increase", "decrease", "increase", "decrease", "increase", "decrease", "increase", "decrease", "decrease", "increase", "decrease", "increase", "decrease", "increase"],
+      "three_sigma": false
+    },
+    "bar_settings": {
+      "colour_improvement": ["#112233", "#445566"]
+    },
+    "title": "Aggregated indicators",
+    "return_objs": ["limits", "static_plot"]
+  },
+  "expected": {
+    "limits": [
+      {
+        "indicator": "Lower is better",
+        "grouping": "Safety",
+        "group": "A",
+        "z": -5.12019894289312,
+        "score": 5.12019894289312,
+        "outlier": "improvement",
+        "numerator": 4,
+        "denominator": 100,
+        "value": 4,
+        "ll99": 8.8951678538859,
+        "target": 19.5,
+        "ul99": 32.9943358101955
+      },
+      {
+        "indicator": "Higher is better",
+        "grouping": "Effectiveness",
+        "group": "A",
+        "z": 8.75578791655997,
+        "score": 8.75578791655997,
+        "outlier": "improvement",
+        "numerator": 80,
+        "denominator": 100,
+        "value": 80,
+        "ll99": 24.2460028528956,
+        "target": 38.5,
+        "ul99": 53.8434821352006
+      }
+    ],
+    "limit_lines": null,
+    "svg": "<svg viewBox=\"0 0 640 400\" width=\"640px\" height=\"400px\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100%\" height=\"100%\" fill=\"white\"/><g class=\"misc-root\"><line class=\"misc-grid-line\" x1=\"270\" x2=\"270\" y1=\"101\" y2=\"335\" stroke=\"#E5E5E5\" /><line class=\"misc-grid-line\" x1=\"305\" x2=\"305\" y1=\"101\" y2=\"335\" stroke=\"#E5E5E5\" /><line class=\"misc-grid-line\" x1=\"340\" x2=\"340\" y1=\"101\" y2=\"335\" stroke=\"#E5E5E5\" /><line class=\"misc-grid-line\" x1=\"375\" x2=\"375\" y1=\"101\" y2=\"335\" stroke=\"#E5E5E5\" /><line class=\"misc-grid-line\" x1=\"410\" x2=\"410\" y1=\"101\" y2=\"335\" stroke=\"#E5E5E5\" /><line class=\"misc-grid-line\" x1=\"445\" x2=\"445\" y1=\"101\" y2=\"335\" stroke=\"#E5E5E5\" /><line class=\"misc-grid-line\" x1=\"480\" x2=\"480\" y1=\"101\" y2=\"335\" stroke=\"#E5E5E5\" /><line class=\"misc-grid-line\" x1=\"515\" x2=\"515\" y1=\"101\" y2=\"335\" stroke=\"#E5E5E5\" /><line class=\"misc-grid-line\" x1=\"550\" x2=\"550\" y1=\"101\" y2=\"335\" stroke=\"#E5E5E5\" /><line class=\"misc-grid-line\" x1=\"585\" x2=\"585\" y1=\"101\" y2=\"335\" stroke=\"#E5E5E5\" /><line class=\"misc-grid-line\" x1=\"620\" x2=\"620\" y1=\"101\" y2=\"335\" stroke=\"#E5E5E5\" /><line class=\"misc-limit-99\" x1=\"336.8418692841265\" x2=\"336.8418692841265\" y1=\"101\" y2=\"335\" stroke=\"#00667B\" stroke-width=\"1.5\" stroke-dasharray=\"6,4\" /><line class=\"misc-limit-99\" x1=\"553.1581307158734\" x2=\"553.1581307158734\" y1=\"101\" y2=\"335\" stroke=\"#00667B\" stroke-width=\"1.5\" stroke-dasharray=\"6,4\" /><line class=\"misc-limit-95\" x1=\"376.4012605410981\" x2=\"376.4012605410981\" y1=\"101\" y2=\"335\" stroke=\"#00667B\" stroke-width=\"1.5\" stroke-dasharray=\"2,2\" /><line class=\"misc-limit-95\" x1=\"513.598739458902\" x2=\"513.598739458902\" y1=\"101\" y2=\"335\" stroke=\"#00667B\" stroke-width=\"1.5\" stroke-dasharray=\"2,2\" /><line class=\"misc-zero-line\" x1=\"445\" x2=\"445\" y1=\"101\" y2=\"335\" stroke=\"#00667B\" stroke-width=\"1.5\" /><line class=\"misc-axis\" x1=\"270\" x2=\"620\" y1=\"335\" y2=\"335\" stroke=\"#000000\" /><text style=\"font-family:Arial, sans-serif;font-size:10px;fill:#000000\" class=\"misc-x-tick\" x=\"270\" y=\"350\" text-anchor=\"middle\">-5<\/text><text style=\"font-family:Arial, sans-serif;font-size:10px;fill:#000000\" class=\"misc-x-tick\" x=\"305\" y=\"350\" text-anchor=\"middle\">-4<\/text><text style=\"font-family:Arial, sans-serif;font-size:10px;fill:#000000\" class=\"misc-x-tick\" x=\"340\" y=\"350\" text-anchor=\"middle\">-3<\/text><text style=\"font-family:Arial, sans-serif;font-size:10px;fill:#000000\" class=\"misc-x-tick\" x=\"375\" y=\"350\" text-anchor=\"middle\">-2<\/text><text style=\"font-family:Arial, sans-serif;font-size:10px;fill:#000000\" class=\"misc-x-tick\" x=\"410\" y=\"350\" text-anchor=\"middle\">-1<\/text><text style=\"font-family:Arial, sans-serif;font-size:10px;fill:#000000\" class=\"misc-x-tick\" x=\"445\" y=\"350\" text-anchor=\"middle\">0<\/text><text style=\"font-family:Arial, sans-serif;font-size:10px;fill:#000000\" class=\"misc-x-tick\" x=\"480\" y=\"350\" text-anchor=\"middle\">1<\/text><text style=\"font-family:Arial, sans-serif;font-size:10px;fill:#000000\" class=\"misc-x-tick\" x=\"515\" y=\"350\" text-anchor=\"middle\">2<\/text><text style=\"font-family:Arial, sans-serif;font-size:10px;fill:#000000\" class=\"misc-x-tick\" x=\"550\" y=\"350\" text-anchor=\"middle\">3<\/text><text style=\"font-family:Arial, sans-serif;font-size:10px;fill:#000000\" class=\"misc-x-tick\" x=\"585\" y=\"350\" text-anchor=\"middle\">4<\/text><text style=\"font-family:Arial, sans-serif;font-size:10px;fill:#000000\" class=\"misc-x-tick\" x=\"620\" y=\"350\" text-anchor=\"middle\">5<\/text><rect class=\"misc-bar\" x=\"445\" y=\"169.7375\" width=\"175\" height=\"38.025\" fill=\"#112233\" opacity=\"1\" /><rect class=\"misc-bar\" x=\"445\" y=\"286.7375\" width=\"175\" height=\"38.025\" fill=\"#445566\" opacity=\"1\" /><text style=\"font-family:Arial, sans-serif;font-size:11px;fill:#000000\" class=\"misc-y-tick\" x=\"262\" y=\"188.75\" text-anchor=\"end\" dy=\"0.35em\">Lower is better<\/text><text style=\"font-family:Arial, sans-serif;font-size:11px;font-weight:bold;fill:#000000\" class=\"misc-group-label\" x=\"5\" y=\"130.25\" dy=\"0.35em\">Safety<\/text><text style=\"font-family:Arial, sans-serif;font-size:11px;fill:#000000\" class=\"misc-y-tick\" x=\"262\" y=\"305.75\" text-anchor=\"end\" dy=\"0.35em\">Higher is better<\/text><text style=\"font-family:Arial, sans-serif;font-size:11px;font-weight:bold;fill:#000000\" class=\"misc-group-label\" x=\"5\" y=\"247.25\" dy=\"0.35em\">Effectiveness<\/text><text style=\"font-family:Arial, sans-serif;font-size:12px;font-weight:bold;font-style:italic;fill:#E46C0A\" class=\"misc-direction-unfavourable\" x=\"305\" y=\"91\" text-anchor=\"middle\">Unfavourable<\/text><text style=\"font-family:Arial, sans-serif;font-size:12px;font-weight:bold;font-style:italic;fill:#00B0F0\" class=\"misc-direction-favourable\" x=\"585\" y=\"91\" text-anchor=\"middle\">Favourable<\/text><line x1=\"403\" x2=\"423\" y1=\"66\" y2=\"66\" stroke=\"#00667B\" stroke-width=\"1.5\" stroke-dasharray=\"2,2\" /><text style=\"font-family:Arial, sans-serif;font-size:10px\" x=\"427\" y=\"66\" dy=\"0.35em\">95% Control Limits<\/text><line x1=\"480\" x2=\"500\" y1=\"66\" y2=\"66\" stroke=\"#00667B\" stroke-width=\"1.5\" stroke-dasharray=\"6,4\" /><text style=\"font-family:Arial, sans-serif;font-size:10px\" x=\"504\" y=\"66\" dy=\"0.35em\">99.8% Control Limits<\/text><\/g><text class=\"chart-title\" x=\"50%\" y=\"5\" text-anchor=\"middle\" dy=\"0.8em\" font-size=\"16px\" font-weight=\"bold\" font-family=\"'Arial', sans-serif\">Aggregated indicators<\/text><\/svg>",
+    "indicator_names": null,
+    "target": "A"
+  }
+}

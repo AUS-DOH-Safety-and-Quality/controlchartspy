@@ -276,7 +276,7 @@ def apply_padding(
         canvas["upper_padding"] += title_padding
         canvas["left_padding"] += 50
         pad = 10 + axis["xlimit_tick_size"]
-        if axis["xlimit_tick_rotation"] != 0:
+        if chart_type != "misc" and axis["xlimit_tick_rotation"] != 0:
             pad += 15
         if chart_type == "spc" and axis["xlimit_label"]:
             pad += 20

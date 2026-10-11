@@ -82,3 +82,11 @@ def funnel_limits(raw: Record, lines: list[Record], settings: Settings) -> list[
             record.update(line)
             result.append(record)
     return sorted(result, key=lambda row: row["denominator"])
+
+
+def misc_limits(raw: Record) -> list[Record]:
+    columns = (
+        "indicator", "grouping", "group", "z", "score", "outlier",
+        "numerator", "denominator", "value", "ll99", "target", "ul99",
+    )
+    return [{name: point[name] for name in columns} for point in raw["plotPoints"]]

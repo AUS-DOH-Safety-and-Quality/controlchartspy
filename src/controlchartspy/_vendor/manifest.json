@@ -4,7 +4,7 @@
   "assets": {
     "minidom.js": {
       "source": "inst/js/minidom.js",
-      "sha256": "b82938a75243589626e7d48f084efc3435c2ffe1c008b8a47d52873df9f68199"
+      "sha256": "9bd8adf4cfac6204bfb5adf0815849214bd9d4d2ab7aae88af7d672f52b5b3b9"
     },
     "ccD3.js": {
       "source": "inst/htmlwidgets/lib/UTILS/ccD3.js",

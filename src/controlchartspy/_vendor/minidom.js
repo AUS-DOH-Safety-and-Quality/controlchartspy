@@ -442,6 +442,15 @@ var minidom = (function() {
   };
 
   Element.prototype.matches = function(selector) {
+    if (selector.indexOf(',') !== -1) {
+      const selectors = selector.split(',');
+      for (let i = 0; i < selectors.length; i++) {
+        if (this.matches(selectors[i].trim())) {
+          return true;
+        }
+      }
+      return false;
+    }
     // Handle descendant selectors (e.g., ".tick text")
     if (selector.indexOf(' ') !== -1) {
       var parts = selector.split(' ');

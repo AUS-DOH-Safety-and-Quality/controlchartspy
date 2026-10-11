@@ -6,3 +6,4 @@
 - Static SVG plots, notebook display, and plot saving.
 - Column mappings, record sequences, phases, and grouped SPC limits.
 - Mixed Python dates and ISO date strings for SPC keys.
+- Multi-indicator sigma charts with `misc()` and `misc_default_settings()`.

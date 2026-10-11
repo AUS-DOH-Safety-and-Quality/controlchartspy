@@ -42,6 +42,8 @@ class ReferenceTests(unittest.TestCase):
                 self.assertEqual(
                     chart.indicator_names, expected["indicator_names"] or []
                 )
+                if "target" in expected:
+                    self.assertEqual(chart.target, expected["target"])
                 if "svg" in expected:
                     self.assertEqual(chart.static_plot.to_svg(), expected["svg"])
                 inputs = dict(case["input"], return_objs="limits")
@@ -53,6 +55,7 @@ class ReferenceTests(unittest.TestCase):
         expected = json.loads((REFERENCE / "defaults.json").read_text(encoding="utf-8"))
         self.assertEqual(charts.spc_default_settings(), expected["spc"])
         self.assertEqual(charts.funnel_default_settings(), expected["funnel"])
+        self.assert_records_equal(charts.misc_default_settings(), expected["misc"])
 
 
 if __name__ == "__main__":
