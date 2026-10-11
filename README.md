@@ -237,18 +237,21 @@ sigma_chart = misc(
 )
 sigma_chart.static_plot
 sigma_chart.limits
-misc_default_settings("bars")
+misc_default_settings("misc")
 ```
 
-`indicators` identifies one indicator per input row. `groupings` optionally groups
-indicator labels. Indicators retain their first appearance in the data; indicators
-without the selected target are omitted. Three-sigma outlier detection is always
-enabled.
+`misc()` delegates to `funnel()` with `indicators` and
+`misc_settings={"group": target}`. You can call `funnel()` directly with those
+arguments; omitting `group` selects the first group. `indicators` accepts one
+column or a mapping such as `{"Domain": "domain", "Measure": "indicator"}`.
+Rows are sorted by indicator columns and key; indicators without the selected
+target are omitted. Three-sigma outlier detection is always enabled.
 
-`funnel_settings` and `outlier_settings` accept scalars or sequences aligned with
-the input rows. Each indicator must have one `improvement_direction`. Display
-settings, including `bar_settings`, accept scalars or sequences aligned with the
-output indicators.
+All settings use the native Funnel options and align with the input rows. Each
+indicator must have one `improvement_direction`. Use `misc_settings` for sigma
+bounds and bar height, and `outlier_settings` for bar colours, such as
+`three_sigma_colour_improvement`. `misc_default_settings()` returns the same
+defaults as `funnel_default_settings()`.
 
 ## Results and Saving Plots
 
@@ -259,17 +262,17 @@ or an iterable; its default is `("static_plot", "limits")`.
 | --- | --- |
 | `static_plot` | `StaticPlot` with `to_svg()` and notebook SVG display |
 | `limits` | A list of records, or nested mappings for grouped SPC series |
-| `limit_lines` | Funnel control limits across the full range of denominators; request `"limit_lines"` explicitly |
+| `limit_lines` | Funnel control limits across the full range of denominators; available without `indicators`, by requesting `"limit_lines"` |
 | `indicator_names` | SPC indicator names in nesting order |
-| `target` | Selected organisation for a sigma chart |
 
 Unrequested outputs are `None`. SPC records include the formatted `date`,
 `value`, `target`, and applicable lower/upper limits (`ll68`, `ll95`, `ll99`,
 `ul68`, `ul95`, `ul99`). Columns depend on chart type and requested signal flags.
 Funnel records include `group`, `numerator`, `denominator`, `value`, `z`, `target`,
 and limits. Proportion charts use percentage values under the default settings.
-Sigma records include `indicator`, `grouping`, `group`, the original `z`, the
-direction-adjusted `score`, `outlier`, and the corresponding funnel values and limits.
+Sigma records include `indicator`, `group`, the original `z`, the
+direction-adjusted `score`, `three_sigma`, and the corresponding funnel values
+and limits. The selected organisation is recorded in `group`.
 
 Save a plot as SVG with `save_plot()`:
 

@@ -8,11 +8,11 @@ import quickjs
 
 
 class DOMTests(unittest.TestCase):
-    def test_selector_lists(self):
+    def test_selector_lists(self) -> None:
         context = quickjs.Context()
-        script = files("controlchartspy").joinpath("_vendor", "minidom.js")
+        script = files("controlchartspy").joinpath("_vendor").joinpath("minidom.js")
         context.eval(script.read_text(encoding="utf-8"))
-        actual = json.loads(context.eval("""
+        payload = context.eval("""
             const document = minidom.dummyDOM().document;
             const root = document.createElement('div');
             root.className = 'container';
@@ -41,7 +41,9 @@ class DOMTests(unittest.TestCase):
                 id: first.matches('#second, #first'),
                 absent: third.matches('.other, .item')
             });
-        """))
+        """)
+        assert isinstance(payload, str)
+        actual: dict[str, list[str] | str | bool] = json.loads(payload)
         self.assertEqual(actual, {
             "ids": ["first", "second"],
             "first": "first",

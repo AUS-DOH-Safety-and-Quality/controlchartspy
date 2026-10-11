@@ -13,7 +13,6 @@
     "numerators": "numerator",
     "denominators": "denominator",
     "indicators": "indicator",
-    "groupings": "grouping",
     "target": "A",
     "outlier_settings": {
       "improvement_direction": ["increase", "increase", "increase", "increase", "decrease", "decrease", "decrease", "decrease"]
@@ -24,36 +23,43 @@
     "limits": [
       {
         "indicator": "Higher is better",
-        "grouping": "Effectiveness",
         "group": "A",
         "z": 8.75578791655997,
         "score": 8.75578791655997,
-        "outlier": "improvement",
+        "three_sigma": "improvement",
         "numerator": 80,
         "denominator": 100,
         "value": 80,
-        "ll99": 24.2460028528956,
         "target": 38.5,
+        "alt_target": null,
+        "ll99": 24.2460028528956,
+        "ll95": 29.2440281864469,
+        "ll68": 33.725803997992,
+        "ul68": 43.3878311518181,
+        "ul95": 48.1963271936512,
         "ul99": 53.8434821352006
       },
       {
         "indicator": "Lower is better",
-        "grouping": "Safety",
         "group": "A",
         "z": -5.12019894289312,
         "score": 5.12019894289312,
-        "outlier": "improvement",
+        "three_sigma": "improvement",
         "numerator": 4,
         "denominator": 100,
         "value": 4,
-        "ll99": 8.8951678538859,
         "target": 19.5,
+        "alt_target": null,
+        "ll99": 8.8951678538859,
+        "ll95": 12.3681803452987,
+        "ll68": 15.7171318812149,
+        "ul68": 23.5842482987163,
+        "ul95": 27.7997187062657,
         "ul99": 32.9943358101955
       }
     ],
     "limit_lines": null,
-    "svg": "<svg viewBox=\"0 0 640 400\" width=\"640px\" height=\"400px\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100%\" height=\"100%\" fill=\"white\"/><g class=\"misc-root\"><line class=\"misc-grid-line\" x1=\"270\" x2=\"270\" y1=\"80\" y2=\"335\" stroke=\"#E5E5E5\" /><line class=\"misc-grid-line\" x1=\"305\" x2=\"305\" y1=\"80\" y2=\"335\" stroke=\"#E5E5E5\" /><line class=\"misc-grid-line\" x1=\"340\" x2=\"340\" y1=\"80\" y2=\"335\" stroke=\"#E5E5E5\" /><line class=\"misc-grid-line\" x1=\"375\" x2=\"375\" y1=\"80\" y2=\"335\" stroke=\"#E5E5E5\" /><line class=\"misc-grid-line\" x1=\"410\" x2=\"410\" y1=\"80\" y2=\"335\" stroke=\"#E5E5E5\" /><line class=\"misc-grid-line\" x1=\"445\" x2=\"445\" y1=\"80\" y2=\"335\" stroke=\"#E5E5E5\" /><line class=\"misc-grid-line\" x1=\"480\" x2=\"480\" y1=\"80\" y2=\"335\" stroke=\"#E5E5E5\" /><line class=\"misc-grid-line\" x1=\"515\" x2=\"515\" y1=\"80\" y2=\"335\" stroke=\"#E5E5E5\" /><line class=\"misc-grid-line\" x1=\"550\" x2=\"550\" y1=\"80\" y2=\"335\" stroke=\"#E5E5E5\" /><line class=\"misc-grid-line\" x1=\"585\" x2=\"585\" y1=\"80\" y2=\"335\" stroke=\"#E5E5E5\" /><line class=\"misc-grid-line\" x1=\"620\" x2=\"620\" y1=\"80\" y2=\"335\" stroke=\"#E5E5E5\" /><line class=\"misc-limit-99\" x1=\"336.8418692841265\" x2=\"336.8418692841265\" y1=\"80\" y2=\"335\" stroke=\"#00667B\" stroke-width=\"1.5\" stroke-dasharray=\"6,4\" /><line class=\"misc-limit-99\" x1=\"553.1581307158734\" x2=\"553.1581307158734\" y1=\"80\" y2=\"335\" stroke=\"#00667B\" stroke-width=\"1.5\" stroke-dasharray=\"6,4\" /><line class=\"misc-limit-95\" x1=\"376.4012605410981\" x2=\"376.4012605410981\" y1=\"80\" y2=\"335\" stroke=\"#00667B\" stroke-width=\"1.5\" stroke-dasharray=\"2,2\" /><line class=\"misc-limit-95\" x1=\"513.598739458902\" x2=\"513.598739458902\" y1=\"80\" y2=\"335\" stroke=\"#00667B\" stroke-width=\"1.5\" stroke-dasharray=\"2,2\" /><line class=\"misc-zero-line\" x1=\"445\" x2=\"445\" y1=\"80\" y2=\"335\" stroke=\"#00667B\" stroke-width=\"1.5\" /><line class=\"misc-axis\" x1=\"270\" x2=\"620\" y1=\"335\" y2=\"335\" stroke=\"#000000\" /><text style=\"font-family:Arial, sans-serif;font-size:10px;fill:#000000\" class=\"misc-x-tick\" x=\"270\" y=\"350\" text-anchor=\"middle\">-5<\/text><text style=\"font-family:Arial, sans-serif;font-size:10px;fill:#000000\" class=\"misc-x-tick\" x=\"305\" y=\"350\" text-anchor=\"middle\">-4<\/text><text style=\"font-family:Arial, sans-serif;font-size:10px;fill:#000000\" class=\"misc-x-tick\" x=\"340\" y=\"350\" text-anchor=\"middle\">-3<\/text><text style=\"font-family:Arial, sans-serif;font-size:10px;fill:#000000\" class=\"misc-x-tick\" x=\"375\" y=\"350\" text-anchor=\"middle\">-2<\/text><text style=\"font-family:Arial, sans-serif;font-size:10px;fill:#000000\" class=\"misc-x-tick\" x=\"410\" y=\"350\" text-anchor=\"middle\">-1<\/text><text style=\"font-family:Arial, sans-serif;font-size:10px;fill:#000000\" class=\"misc-x-tick\" x=\"445\" y=\"350\" text-anchor=\"middle\">0<\/text><text style=\"font-family:Arial, sans-serif;font-size:10px;fill:#000000\" class=\"misc-x-tick\" x=\"480\" y=\"350\" text-anchor=\"middle\">1<\/text><text style=\"font-family:Arial, sans-serif;font-size:10px;fill:#000000\" class=\"misc-x-tick\" x=\"515\" y=\"350\" text-anchor=\"middle\">2<\/text><text style=\"font-family:Arial, sans-serif;font-size:10px;fill:#000000\" class=\"misc-x-tick\" x=\"550\" y=\"350\" text-anchor=\"middle\">3<\/text><text style=\"font-family:Arial, sans-serif;font-size:10px;fill:#000000\" class=\"misc-x-tick\" x=\"585\" y=\"350\" text-anchor=\"middle\">4<\/text><text style=\"font-family:Arial, sans-serif;font-size:10px;fill:#000000\" class=\"misc-x-tick\" x=\"620\" y=\"350\" text-anchor=\"middle\">5<\/text><rect class=\"misc-bar\" x=\"445\" y=\"154.90625\" width=\"175\" height=\"41.4375\" fill=\"#00B0F0\" opacity=\"1\" /><rect class=\"misc-bar\" x=\"445\" y=\"282.40625\" width=\"175\" height=\"41.4375\" fill=\"#00B0F0\" opacity=\"1\" /><text style=\"font-family:Arial, sans-serif;font-size:11px;fill:#000000\" class=\"misc-y-tick\" x=\"262\" y=\"175.625\" text-anchor=\"end\" dy=\"0.35em\">Higher is better<\/text><text style=\"font-family:Arial, sans-serif;font-size:11px;font-weight:bold;fill:#000000\" class=\"misc-group-label\" x=\"5\" y=\"111.875\" dy=\"0.35em\">Effectiveness<\/text><text style=\"font-family:Arial, sans-serif;font-size:11px;fill:#000000\" class=\"misc-y-tick\" x=\"262\" y=\"303.125\" text-anchor=\"end\" dy=\"0.35em\">Lower is better<\/text><text style=\"font-family:Arial, sans-serif;font-size:11px;font-weight:bold;fill:#000000\" class=\"misc-group-label\" x=\"5\" y=\"239.375\" dy=\"0.35em\">Safety<\/text><text style=\"font-family:Arial, sans-serif;font-size:12px;font-weight:bold;font-style:italic;fill:#E46C0A\" class=\"misc-direction-unfavourable\" x=\"305\" y=\"70\" text-anchor=\"middle\">Unfavourable<\/text><text style=\"font-family:Arial, sans-serif;font-size:12px;font-weight:bold;font-style:italic;fill:#00B0F0\" class=\"misc-direction-favourable\" x=\"585\" y=\"70\" text-anchor=\"middle\">Favourable<\/text><line x1=\"403\" x2=\"423\" y1=\"45\" y2=\"45\" stroke=\"#00667B\" stroke-width=\"1.5\" stroke-dasharray=\"2,2\" /><text style=\"font-family:Arial, sans-serif;font-size:10px\" x=\"427\" y=\"45\" dy=\"0.35em\">95% Control Limits<\/text><line x1=\"480\" x2=\"500\" y1=\"45\" y2=\"45\" stroke=\"#00667B\" stroke-width=\"1.5\" stroke-dasharray=\"6,4\" /><text style=\"font-family:Arial, sans-serif;font-size:10px\" x=\"504\" y=\"45\" dy=\"0.35em\">99.8% Control Limits<\/text><\/g><\/svg>",
-    "indicator_names": null,
-    "target": "A"
+    "svg": "<svg viewBox=\"0 0 640 400\" width=\"640px\" height=\"400px\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"100%\" height=\"100%\" fill=\"white\"/><g class=\"misc-root\"><text class=\"misc-y-tick\" text-anchor=\"end\" dy=\"0.35em\" y=\"132.5\" style=\"font-family:'Arial', sans-serif;font-size:10px\" fill=\"#000000\" x=\"62\">Higher is better<\/text><text class=\"misc-y-tick\" text-anchor=\"end\" dy=\"0.35em\" y=\"267.5\" style=\"font-family:'Arial', sans-serif;font-size:10px\" fill=\"#000000\" x=\"62\">Lower is better<\/text><line class=\"misc-limit-99\" x1=\"176.94699085460246\" x2=\"176.94699085460246\" y1=\"65\" y2=\"335\" stroke=\"#6495ED\" stroke-width=\"2\" stroke-dasharray=\"10 10\" opacity=\"1\" /><line class=\"misc-limit-99\" x1=\"523.0530091453975\" x2=\"523.0530091453975\" y1=\"65\" y2=\"335\" stroke=\"#6495ED\" stroke-width=\"2\" stroke-dasharray=\"10 10\" opacity=\"1\" /><line class=\"misc-limit-95\" x1=\"240.24201686575697\" x2=\"240.24201686575697\" y1=\"65\" y2=\"335\" stroke=\"#6495ED\" stroke-width=\"2\" stroke-dasharray=\"2 5\" opacity=\"1\" /><line class=\"misc-limit-95\" x1=\"459.75798313424303\" x2=\"459.75798313424303\" y1=\"65\" y2=\"335\" stroke=\"#6495ED\" stroke-width=\"2\" stroke-dasharray=\"2 5\" opacity=\"1\" /><line class=\"misc-zero-line\" x1=\"350\" x2=\"350\" y1=\"65\" y2=\"335\" stroke=\"#000000\" stroke-width=\"1.5\" stroke-dasharray=\"10 0\" opacity=\"1\" /><line class=\"misc-axis\" x1=\"70\" x2=\"630\" y1=\"335\" y2=\"335\" stroke=\"#000000\" /><text class=\"misc-x-tick\" x=\"70\" y=\"350\" text-anchor=\"middle\" style=\"font-family:'Arial', sans-serif;font-size:10px\" fill=\"#000000\">-5<\/text><text class=\"misc-x-tick\" x=\"126\" y=\"350\" text-anchor=\"middle\" style=\"font-family:'Arial', sans-serif;font-size:10px\" fill=\"#000000\">-4<\/text><text class=\"misc-x-tick\" x=\"182\" y=\"350\" text-anchor=\"middle\" style=\"font-family:'Arial', sans-serif;font-size:10px\" fill=\"#000000\">-3<\/text><text class=\"misc-x-tick\" x=\"238\" y=\"350\" text-anchor=\"middle\" style=\"font-family:'Arial', sans-serif;font-size:10px\" fill=\"#000000\">-2<\/text><text class=\"misc-x-tick\" x=\"294\" y=\"350\" text-anchor=\"middle\" style=\"font-family:'Arial', sans-serif;font-size:10px\" fill=\"#000000\">-1<\/text><text class=\"misc-x-tick\" x=\"350\" y=\"350\" text-anchor=\"middle\" style=\"font-family:'Arial', sans-serif;font-size:10px\" fill=\"#000000\">0<\/text><text class=\"misc-x-tick\" x=\"406\" y=\"350\" text-anchor=\"middle\" style=\"font-family:'Arial', sans-serif;font-size:10px\" fill=\"#000000\">1<\/text><text class=\"misc-x-tick\" x=\"462\" y=\"350\" text-anchor=\"middle\" style=\"font-family:'Arial', sans-serif;font-size:10px\" fill=\"#000000\">2<\/text><text class=\"misc-x-tick\" x=\"518\" y=\"350\" text-anchor=\"middle\" style=\"font-family:'Arial', sans-serif;font-size:10px\" fill=\"#000000\">3<\/text><text class=\"misc-x-tick\" x=\"574\" y=\"350\" text-anchor=\"middle\" style=\"font-family:'Arial', sans-serif;font-size:10px\" fill=\"#000000\">4<\/text><text class=\"misc-x-tick\" x=\"630\" y=\"350\" text-anchor=\"middle\" style=\"font-family:'Arial', sans-serif;font-size:10px\" fill=\"#000000\">5<\/text><text x=\"350\" y=\"370\" text-anchor=\"middle\" style=\"font-family:'Arial', sans-serif;font-size:10px;font-style:normal\" fill=\"#000000\" /><text class=\"misc-direction\" x=\"210\" y=\"55\" text-anchor=\"middle\" style=\"font-family:'Arial', sans-serif;font-size:12px;font-weight:bold\" fill=\"#E46C0A\">Unfavourable<\/text><text class=\"misc-direction\" x=\"490\" y=\"55\" text-anchor=\"middle\" style=\"font-family:'Arial', sans-serif;font-size:12px;font-weight:bold\" fill=\"#00B0F0\">Favourable<\/text><line x1=\"70\" x2=\"90\" y1=\"30\" y2=\"30\" stroke=\"#6495ED\" stroke-width=\"2\" stroke-dasharray=\"2 5\" opacity=\"1\" /><text x=\"94\" y=\"30\" dy=\"0.35em\" style=\"font-family:'Arial', sans-serif;font-size:10px\" fill=\"#000000\">95% Control Limits<\/text><line x1=\"350\" x2=\"370\" y1=\"30\" y2=\"30\" stroke=\"#6495ED\" stroke-width=\"2\" stroke-dasharray=\"10 10\" opacity=\"1\" /><text x=\"374\" y=\"30\" dy=\"0.35em\" style=\"font-family:'Arial', sans-serif;font-size:10px\" fill=\"#000000\">99% Control Limits<\/text><rect class=\"misc-bar\" x=\"350\" y=\"88.625\" width=\"280\" height=\"87.75\" fill=\"#00B0F0\" opacity=\"1\" /><rect class=\"misc-bar\" x=\"350\" y=\"223.625\" width=\"280\" height=\"87.75\" fill=\"#00B0F0\" opacity=\"1\" /><\/g><\/svg>",
+    "indicator_names": null
   }
 }

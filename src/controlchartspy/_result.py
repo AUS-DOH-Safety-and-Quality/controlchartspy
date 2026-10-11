@@ -5,9 +5,8 @@ import os
 from dataclasses import dataclass, field
 from numbers import Real
 from pathlib import Path
-from typing import Any
 
-from ._data import Record
+from ._data import ChartType, DataView, Limits, Record, TitleSettings
 from ._engine import render
 
 
@@ -36,12 +35,12 @@ def svg_string(svg: str, width: float, height: float) -> str:
 class StaticPlot:
     """A static SVG plot with its dimensions and rendering settings."""
 
-    type: str
+    type: ChartType
     svg: str
     width: float
     height: float
-    data_views: list[Any] = field(repr=False)
-    title_settings: dict[str, Any] = field(repr=False)
+    data_views: list[DataView] = field(repr=False)
+    title_settings: TitleSettings = field(repr=False)
 
     def to_svg(self, width: float | None = None, height: float | None = None) -> str:
         """Return a complete SVG document, optionally rendered at a new size."""
@@ -72,10 +71,9 @@ class ControlChart:
     """A control chart containing the requested plot and calculated limits."""
 
     static_plot: StaticPlot | None = None
-    limits: list[Record] | dict[str, Any] | None = None
+    limits: Limits | None = None
     limit_lines: list[Record] | None = None
-    indicator_names: list[str] = field(default_factory=list)
-    target: str | None = None
+    indicator_names: list[str] = field(default_factory=list[str])
 
     def save_plot(
         self,

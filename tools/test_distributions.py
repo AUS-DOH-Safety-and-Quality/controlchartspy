@@ -8,7 +8,7 @@ import zipfile
 from pathlib import Path
 
 
-def check_files(names, prefix, root):
+def check_files(names: set[str], prefix: str, root: Path) -> None:
     required = {prefix + "controlchartspy/py.typed"}
     vendor = root / "src/controlchartspy/_vendor"
     for path in vendor.iterdir():
@@ -18,13 +18,14 @@ def check_files(names, prefix, root):
         raise ValueError(f"Missing package files: {sorted(missing)}")
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("dist", type=Path)
     args = parser.parse_args()
+    dist: Path = args.dist
     root = Path(__file__).resolve().parents[1]
-    wheels = list(args.dist.glob("*.whl"))
-    sources = list(args.dist.glob("*.tar.gz"))
+    wheels = list(dist.glob("*.whl"))
+    sources = list(dist.glob("*.tar.gz"))
     if len(wheels) != 1 or len(sources) != 1:
         raise ValueError("Expected one wheel and one source distribution.")
     licenses = {"LICENSE", "NOTICE"}

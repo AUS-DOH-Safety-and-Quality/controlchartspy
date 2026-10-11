@@ -46,9 +46,6 @@ add_case <- function(name, type, data, settings = list(), columns = list()) {
     expected$svg <- controlcharts:::svg_string(plot$svg, plot$width, plot$height)
   }
   expected["indicator_names"] <- list(attr(result$limits, "indicator_names"))
-  if (type == "misc") {
-    expected$target <- attr(result, "target")
-  }
   cases[[name]] <<- list(type = type, input = input, expected = expected)
 }
 
@@ -147,7 +144,7 @@ comparison <- data.frame(
 add_case("misc_PR", "misc", comparison,
          list(target = "A", outlier_settings = list(improvement_direction = comparison$direction),
               return_objs = c("limits", "static_plot")),
-         list(denominators = "denominator", indicators = "indicator", groupings = "grouping"))
+         list(denominators = "denominator", indicators = "indicator"))
 add_case("misc_single", "misc", comparison[1:4, ],
          list(target = "A", width = 720, height = 480,
               title = list(text = "MISC <chart> & scores", subtitle = "One indicator"),
@@ -161,10 +158,12 @@ repeated$note <- paste0("row-", seq_len(nrow(repeated)))
 repeated <- repeated[c(16, 3, 1, 10, 7, 12, 4, 14, 2, 9, 15, 5, 11, 8, 13, 6), ]
 add_case("misc_aggregation", "misc", repeated,
          list(target = "A", aggregations = list(tooltips = "last"),
-              outlier_settings = list(improvement_direction = repeated$direction, three_sigma = FALSE),
-              bar_settings = list(colour_improvement = c("#112233", "#445566")),
+              outlier_settings = list(
+                improvement_direction = repeated$direction, three_sigma = FALSE,
+                three_sigma_colour_improvement = ifelse(repeated$indicator == "Higher is better", "#112233", "#445566")
+              ),
               title = "Aggregated indicators", return_objs = c("limits", "static_plot")),
-         list(denominators = "denominator", indicators = "indicator", groupings = "grouping",
+         list(denominators = "denominator", indicators = "indicator",
               tooltips = list(Note = "note")))
 
 mixed <- data.frame(
@@ -192,6 +191,12 @@ partial$key[5] <- "E"
 add_case("misc_partial", "misc", partial,
          list(target = "A", return_objs = c("limits", "static_plot")),
          list(denominators = "denominator", indicators = "indicator"))
+
+add_case("funnel_indicators", "funnel", transform(comparison, key = as.integer(factor(key))),
+         list(misc_settings = list(group = "2", lower = -6, upper = 6),
+              outlier_settings = list(improvement_direction = comparison$direction),
+              return_objs = c("limits", "static_plot")),
+         list(denominators = "denominator", indicators = list(Domain = "grouping", Measure = "indicator")))
 
 for (name in names(cases)) {
   jsonlite::write_json(cases[[name]], file.path(destination, paste0(name, ".json")),
