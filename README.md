@@ -1,9 +1,9 @@
 # controlchartspy
 
 The `controlchartspy` package provides tools for both calculating and visualising
-statistical process control (SPC) charts and funnel plots in Python. It is based on
-the R [controlcharts](https://github.com/AUS-DOH-Safety-and-Quality/controlcharts)
-package.
+statistical process control (SPC), funnel, and multi-indicator sigma charts in
+Python. It is based on the R
+[controlcharts](https://github.com/AUS-DOH-Safety-and-Quality/controlcharts) package.
 
 ## Installation
 
@@ -210,16 +210,59 @@ site_a_limits = grouped_chart.limits["A"]
 that order, with names available through `chart.indicator_names`. A single
 indicator group can render a plot; multiple groups require `return_objs="limits"`.
 
+## Multi-indicator Sigma Charts
+
+Use `misc()` to compare one organisation across several indicators. Each indicator
+uses an independent funnel calculation over its comparison population. The chart
+shows the selected organisation's z-scores, with positive scores indicating
+favourable performance.
+
+```python
+from controlchartspy import misc, misc_default_settings
+
+comparison = {
+    "organisation": list("ABCDABCD"),
+    "indicator": ["Measure A"] * 4 + ["Measure B"] * 4,
+    "numerator": [8, 5, 4, 6, 2, 4, 5, 3],
+    "denominator": [10] * 8,
+}
+sigma_chart = misc(
+    comparison,
+    keys="organisation",
+    numerators="numerator",
+    denominators="denominator",
+    indicators="indicator",
+    target="A",
+    outlier_settings={"improvement_direction": ["increase"] * 4 + ["decrease"] * 4},
+)
+sigma_chart.static_plot
+sigma_chart.limits
+misc_default_settings("misc")
+```
+
+`misc()` delegates to `funnel()` with `indicators` and
+`misc_settings={"group": target}`. You can call `funnel()` directly with those
+arguments; omitting `group` selects the first group. `indicators` accepts one
+column or a mapping such as `{"Domain": "domain", "Measure": "indicator"}`.
+Rows are sorted by indicator columns and key; indicators without the selected
+target are omitted. Three-sigma outlier detection is always enabled.
+
+All settings use the native Funnel options and align with the input rows. Each
+indicator must have one `improvement_direction`. Use `misc_settings` for sigma
+bounds and bar height, and `outlier_settings` for bar colours, such as
+`three_sigma_colour_improvement`. `misc_default_settings()` returns the same
+defaults as `funnel_default_settings()`.
+
 ## Results and Saving Plots
 
-Both constructors return a `ControlChart`. `return_objs` accepts one output name
+All constructors return a `ControlChart`. `return_objs` accepts one output name
 or an iterable; its default is `("static_plot", "limits")`.
 
 | Attribute | Contents |
 | --- | --- |
 | `static_plot` | `StaticPlot` with `to_svg()` and notebook SVG display |
 | `limits` | A list of records, or nested mappings for grouped SPC series |
-| `limit_lines` | Funnel control limits across the full range of denominators; request `"limit_lines"` explicitly |
+| `limit_lines` | Funnel control limits across the full range of denominators; available without `indicators`, by requesting `"limit_lines"` |
 | `indicator_names` | SPC indicator names in nesting order |
 
 Unrequested outputs are `None`. SPC records include the formatted `date`,
@@ -227,6 +270,9 @@ Unrequested outputs are `None`. SPC records include the formatted `date`,
 `ul68`, `ul95`, `ul99`). Columns depend on chart type and requested signal flags.
 Funnel records include `group`, `numerator`, `denominator`, `value`, `z`, `target`,
 and limits. Proportion charts use percentage values under the default settings.
+Sigma records include `indicator`, `group`, the original `z`, the
+direction-adjusted `score`, `three_sigma`, and the corresponding funnel values
+and limits. The selected organisation is recorded in `group`.
 
 Save a plot as SVG with `save_plot()`:
 

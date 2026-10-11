@@ -3,25 +3,52 @@
 import json
 import math
 import unittest
+from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
+from typing import TypedDict
 
 import controlchartspy as charts
+from controlchartspy import ControlChart
 
 REFERENCE = Path(__file__).parent / "reference"
+JSON = str | int | float | bool | None | Sequence["JSON"] | Mapping[str, "JSON"]
+CONSTRUCTORS: dict[str, Callable[..., ControlChart]] = {
+    "spc": charts.spc,
+    "funnel": charts.funnel,
+    "misc": charts.misc,
+}
+
+
+class _Expected(TypedDict):
+    limits: JSON
+    limit_lines: JSON
+    indicator_names: list[str] | None
+
+
+class Expected(_Expected, total=False):
+    svg: str
+
+
+class Case(TypedDict):
+    type: str
+    input: dict[str, object]
+    expected: Expected
 
 
 class ReferenceTests(unittest.TestCase):
-    def assert_records_equal(self, actual, expected, path="result"):
+    def assert_records_equal(self, actual: JSON, expected: JSON, path: str = "result") -> None:
         if isinstance(expected, dict):
+            assert isinstance(actual, dict), path
             self.assertEqual(set(actual), set(expected), path)
             for key, value in expected.items():
                 self.assert_records_equal(actual[key], value, f"{path}.{key}")
         elif isinstance(expected, list):
+            assert isinstance(actual, list), path
             self.assertEqual(len(actual), len(expected), path)
             for index, value in enumerate(expected):
                 self.assert_records_equal(actual[index], value, f"{path}[{index}]")
         elif isinstance(expected, (int, float)) and not isinstance(expected, bool):
-            self.assertIsInstance(actual, (int, float), path)
+            assert isinstance(actual, (int, float)), path
             self.assertTrue(
                 math.isclose(actual, expected, rel_tol=1e-12, abs_tol=1e-12),
                 f"{path}: {actual} != {expected}",
@@ -29,13 +56,14 @@ class ReferenceTests(unittest.TestCase):
         else:
             self.assertEqual(actual, expected, path)
 
-    def test_r_reference_cases(self):
+    def test_r_reference_cases(self) -> None:
         for file in sorted(REFERENCE.glob("*.json")):
             if file.name == "defaults.json":
                 continue
             with self.subTest(case=file.stem):
-                case = json.loads(file.read_text(encoding="utf-8"))
-                chart = getattr(charts, case["type"])(**case["input"])
+                case: Case = json.loads(file.read_text(encoding="utf-8"))
+                constructor = CONSTRUCTORS[case["type"]]
+                chart = constructor(**case["input"])
                 expected = case["expected"]
                 self.assert_records_equal(chart.limits, expected["limits"])
                 self.assert_records_equal(chart.limit_lines, expected["limit_lines"])
@@ -43,16 +71,18 @@ class ReferenceTests(unittest.TestCase):
                     chart.indicator_names, expected["indicator_names"] or []
                 )
                 if "svg" in expected:
+                    assert chart.static_plot is not None
                     self.assertEqual(chart.static_plot.to_svg(), expected["svg"])
                 inputs = dict(case["input"], return_objs="limits")
-                self.assert_records_equal(
-                    getattr(charts, case["type"])(**inputs).limits, expected["limits"]
-                )
+                self.assert_records_equal(constructor(**inputs).limits, expected["limits"])
 
-    def test_default_settings_match_r(self):
-        expected = json.loads((REFERENCE / "defaults.json").read_text(encoding="utf-8"))
+    def test_default_settings_match_r(self) -> None:
+        expected: dict[str, JSON] = json.loads(
+            (REFERENCE / "defaults.json").read_text(encoding="utf-8")
+        )
         self.assertEqual(charts.spc_default_settings(), expected["spc"])
         self.assertEqual(charts.funnel_default_settings(), expected["funnel"])
+        self.assert_records_equal(charts.misc_default_settings(), expected["misc"])
 
 
 if __name__ == "__main__":

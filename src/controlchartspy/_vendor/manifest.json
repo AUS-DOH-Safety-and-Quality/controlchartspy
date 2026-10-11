@@ -1,34 +1,30 @@
 {
   "repository": "https://github.com/AUS-DOH-Safety-and-Quality/controlcharts",
-  "revision": "57fb8268d8ddb7659dbe77d6cc9a3a9a59fa2da1",
+  "revision": "6ee103a89aa5bb1367f5853a91c085e740a3385e",
   "assets": {
     "minidom.js": {
       "source": "inst/js/minidom.js",
-      "sha256": "b82938a75243589626e7d48f084efc3435c2ffe1c008b8a47d52873df9f68199"
+      "sha256": "79c2970d4a1a5ae2b7c5386545f2b91dac664a889408ba89eae9d9335e688b6b"
     },
-    "ccD3.js": {
-      "source": "inst/htmlwidgets/lib/UTILS/ccD3.js",
-      "sha256": "58b80508d848f8c7783871711229951e2f86f2d3269b0fed06c1c9a6cff69ca9"
+    "ccCore.js": {
+      "source": "inst/htmlwidgets/lib/UTILS/ccCore.js",
+      "sha256": "00cfe1f9574a6771f4da1b0319e8e9e910a6f83daa85437f5749a2d327b16b30"
     },
     "PBISPC.js": {
       "source": "inst/htmlwidgets/lib/PBISPC/PBISPC.js",
-      "sha256": "439152e00c1fefb7203785eea2150e5996fce93ad7f138fd30877a58c35c1880"
+      "sha256": "0edfa1aef45a26a9c882d788548f45bb0ce4371afa060a6c65ea0605e99ebaea"
     },
     "PBIFUN.js": {
       "source": "inst/htmlwidgets/lib/PBIFUN/PBIFUN.js",
-      "sha256": "7dc7200ac0c100f93164f9de05a823a1a309339211390390cdd66102db1ab694"
-    },
-    "MISC.js": {
-      "source": "inst/htmlwidgets/lib/MISC/MISC.js",
-      "sha256": "3c9da4fff17bfa3e8eafdf388ea7bbc3014b5f4c1a31dae9482f0f39d4e00ac3"
+      "sha256": "9a636ff80e0ca6e5376b685145919c8906706325ae81555e4bb942f621947958"
     },
     "commonUtils.js": {
       "source": "inst/htmlwidgets/lib/UTILS/commonUtils.js",
-      "sha256": "beeb51586a998a1fc61b5d9829c1f3b838d12f2280e48a2e6815fc355991f8c3"
+      "sha256": "10cf93cc082012b582961462ca0bf88af33f3972a390304de909833f5f3b20ca"
     },
     "headlessUtils.js": {
       "source": "inst/htmlwidgets/lib/UTILS/headlessUtils.js",
-      "sha256": "61c2b86d93e8577267e06579415e5de834a1cd7f852f6bf4f27a0828fed6e816"
+      "sha256": "dcd3edad8d8a3b1cb91b19c44a46dc42580128d308e32c7f38508c9d026b2271"
     }
   }
 }
