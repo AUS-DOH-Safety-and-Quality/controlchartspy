@@ -40,7 +40,7 @@ def main() -> None:
             if prefix + name not in names:
                 raise ValueError(f"Missing wheel license: {name}")
         metadata = email.parser.BytesParser().parsebytes(archive.read(metadata_name))
-        if metadata["License-Expression"] != "GPL-3.0-only":
+        if metadata.get("License-Expression") != "GPL-3.0-only":
             raise ValueError("Unexpected wheel license expression.")
     with tarfile.open(sources[0]) as archive:
         names = set(archive.getnames())

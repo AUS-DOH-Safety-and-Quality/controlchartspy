@@ -59,6 +59,7 @@ class _Result(TypedDict, total=False):
 # Keys other than error are only present for the requested outputs and chart mode.
 class SPCResult(_Result):
     svg: str
+    outlierSettings: list[SettingsGroup]
     plotPoints: list[SPCPoint]
     spcLimitRows: list[list[Record]]
     groupNames: list[list[str | None]]
@@ -67,6 +68,7 @@ class SPCResult(_Result):
 
 class FunnelResult(_Result):
     svg: str
+    outlierSettings: list[SettingsGroup]
     plotPoints: list[FunnelPoint]
     calculatedLimits: list[FunnelLimit]
     miscPoints: list[MiscPoint]
@@ -133,12 +135,11 @@ def update_values(
     input_settings: InputSettings,
     aggregations: Mapping[str, str],
     conditional: bool,
-    categories: list[str | None],
 ) -> list[DataView]:
     updates = cast(
         UpdateValues,
         engine().call(
-            "makeUpdateValues", raw_data, input_settings, aggregations, conditional, categories
+            "makeUpdateValues", raw_data, input_settings, aggregations, conditional
         ),
     )
     return updates["dataViews"]

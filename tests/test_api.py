@@ -58,11 +58,21 @@ class APITests(unittest.TestCase):
         assert expected.static_plot is not None
         self.assertEqual(actual.static_plot.svg, expected.static_plot.svg)
         assert isinstance(actual.limits, list)
-        self.assertEqual([row["value"] for row in actual.limits], [10, 8, 12, 11])
+        values = [row["value"] for row in actual.limits]
+        expected_values = [10, 8, 12, 11]
+        self.assertEqual(values, expected_values)
 
     def test_records_are_accepted(self) -> None:
         data = sample_data()
-        records = [dict(zip(data, values)) for values in zip(*data.values())]
+        records = [
+            {
+                "month": data["month"][index],
+                "value": data["value"][index],
+                "population": data["population"][index],
+                "label": data["label"][index],
+            }
+            for index in range(len(data["month"]))
+        ]
         actual = funnel(records, "label", "value", "population", return_objs="limits")
         expected = funnel(data, "label", "value", "population", return_objs="limits")
         self.assertEqual(actual.limits, expected.limits)
@@ -77,10 +87,9 @@ class APITests(unittest.TestCase):
         objects = chart.static_plot.data_views[0]["categorical"]["categories"][0][
             "objects"
         ]
-        self.assertEqual(
-            [value["scatter"]["colour"] for value in objects],
-            ["#111111", "#222222", "#333333", "#444444"],
-        )
+        colours = [value["scatter"]["colour"] for value in objects]
+        expected_colours = ["#111111", "#222222", "#333333", "#444444"]
+        self.assertEqual(colours, expected_colours)
 
     def test_settings_are_independent_copies(self) -> None:
         original = spc_default_settings("canvas")
@@ -133,7 +142,7 @@ class APITests(unittest.TestCase):
                 expected.static_plot.to_svg(),
             )
         self.assertEqual(chart.static_plot.svg, original)
-        self.assertEqual(getattr(chart, "_repr_svg_")(), chart.static_plot.to_svg())
+        self.assertEqual(chart._repr_svg_(), chart.static_plot.to_svg())
         with self.assertRaisesRegex(ValueError, "Only SVG"):
             chart.save_plot("unused.png")
 
@@ -143,14 +152,17 @@ class APITests(unittest.TestCase):
         data["site"] = ["A", "A", "B", "B"]
         indicators = {"Region": "region", "Site": "site"}
         chart = spc(data, "month", "value", indicators=indicators, return_objs="limits")
-        self.assertEqual(chart.indicator_names, ["Region", "Site"])
+        indicator_names = ["Region", "Site"]
+        self.assertEqual(chart.indicator_names, indicator_names)
         assert isinstance(chart.limits, dict)
-        self.assertEqual(set(chart.limits), {"North", "South"})
+        self.assertSetEqual(set(chart.limits), {"North", "South"})
         north = chart.limits["North"]
         assert isinstance(north, dict)
         rows = north["A"]
         assert isinstance(rows, list)
-        self.assertEqual([row["value"] for row in rows], [10, 12])
+        values = [row["value"] for row in rows]
+        expected_values = [10, 12]
+        self.assertEqual(values, expected_values)
         with self.assertRaisesRegex(
             ValueError, "Grouped SPC charts support limits only"
         ):
@@ -195,7 +207,9 @@ class APITests(unittest.TestCase):
             ).limits
             assert isinstance(limits, list)
             results.append(limits)
-        self.assertEqual(len(results[0]), 4)
+        actual_values = [row["value"] for row in results[0]]
+        expected_values = [8, 12, 11]
+        self.assertEqual(actual_values, expected_values)
         self.assertEqual(results[0], results[1])
 
     def test_invalid_inputs_are_rejected(self) -> None:

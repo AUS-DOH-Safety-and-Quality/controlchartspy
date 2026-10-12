@@ -121,6 +121,11 @@ default to `sum`, while other input fields default to `first`. Override these
 with `aggregations`, using `first`, `last`, `sum`, `mean`, `min`, `max`, `median`,
 or `count`.
 
+Numeric aggregations follow Power BI column aggregation: missing values are
+ignored, zeros are included, and an entirely missing group stays missing.
+`count` counts non-missing values. Numerators and denominators are aggregated
+independently. `first` and `last` select by input row order, including missing values.
+
 ## Aesthetic Options
 
 Visual adjustments are handled through dedicated settings arguments. Each group
@@ -164,6 +169,11 @@ Configure outlier detection through `outlier_settings`. SPC charts support
 astronomical points, shifts, trends, and two-in-three patterns. Use
 `spc_default_settings("outliers")` to see the available detection parameters.
 NHS variation and assurance icons are configured through `nhs_icon_settings`.
+
+Detection switches apply to the whole chart, separately for each SPC indicator.
+With row-aligned settings, the engine uses the first row with valid outlier
+settings after sorting and aggregating keys. Returned flag columns use those
+same settings.
 
 ```python
 spc_data = {

@@ -4,7 +4,6 @@ from collections.abc import Iterable, Mapping
 from typing import overload
 
 from ._data import (
-    TOOLTIPS,
     ChartType,
     Column,
     Columns,
@@ -20,7 +19,6 @@ from ._data import (
     prepare_data,
     prepare_settings,
     prepare_title,
-    validate_mapping,
 )
 from ._engine import FunnelResult, SPCResult, engine, render, update_values
 from ._limits import funnel_limits, funnel_lines, misc_limits, spc_limits
@@ -41,7 +39,6 @@ def _defaults(chart_type: ChartType, group: str) -> SettingsGroup: ...
 
 def _defaults(chart_type: ChartType, group: str | None) -> Defaults | SettingsGroup:
     settings = engine().defaults(chart_type)
-    settings["tooltips"] = TOOLTIPS.copy()
     if group is None:
         return settings
     if group not in settings:
@@ -99,31 +96,68 @@ def _create(
     aggregations: Mapping[str, str] | None,
     title: Title,
     settings: Mapping[str, Settings | None],
-    tooltip_settings: Settings | None,
     width: float | None,
     height: float | None,
     return_objs: ReturnObjs,
 ) -> ControlChart:
     if isinstance(return_objs, str):
-        return_objs = (return_objs,)
+        outputs = {return_objs}
     else:
-        return_objs = tuple(return_objs)
+        outputs = set(return_objs)
     prepared = prepare_data(
         data, keys, numerators, optional, indicators, tooltips, chart_type == "spc"
     )
     raw_data = prepared[0]
     order = prepared[1]
     indicator_columns = raw_data.get("indicators")
-    if chart_type == "spc" and "static_plot" in return_objs and indicator_columns:
-        groups = set(zip(*indicator_columns.values()))
-        if len(groups) > 1:
-            raise ValueError(
-                "Grouped SPC charts support limits only; use return_objs='limits'."
-            )
-    return _create_chart(
-        chart_type, raw_data, order, prepare_aggregations(aggregations), title, settings,
-        tooltip_settings, width, height, return_objs,
+    if (
+        chart_type == "spc"
+        and "static_plot" in outputs
+        and indicator_columns
+        and any(len(set(column)) > 1 for column in indicator_columns.values())
+    ):
+        raise ValueError(
+            "Grouped SPC charts support limits only; use return_objs='limits'."
+        )
+    aggregations = prepare_aggregations(aggregations)
+    valid = {"static_plot", "limits"}
+    if chart_type == "funnel" and not raw_data.get("indicators"):
+        valid.add("limit_lines")
+    if outputs - valid:
+        raise ValueError(f"Invalid return_objs: {', '.join(sorted(outputs - valid))}.")
+    width = dimension(width, 640)
+    height = dimension(height, 400)
+    prepared_views = _prepare_views(
+        chart_type, raw_data, order, aggregations, title, settings
     )
+    views = prepared_views[0]
+    title_settings = prepared_views[1]
+    result = ControlChart()
+    if not outputs:
+        return result
+    static = "static_plot" in outputs
+    limits = bool(outputs & {"limits", "limit_lines"})
+    raw: SPCResult | FunnelResult
+    if chart_type == "spc":
+        raw = render(chart_type, views, title_settings, width, height, static, limits)
+        if "limits" in outputs:
+            result.limits = spc_limits(raw)
+            result.indicator_names = raw["indicatorVarNames"]
+    else:
+        raw = render(chart_type, views, title_settings, width, height, static, limits)
+        if raw_data.get("indicators"):
+            if "limits" in outputs:
+                result.limits = misc_limits(raw)
+        elif limits:
+            if "limit_lines" in outputs:
+                result.limit_lines = funnel_lines(raw, settings.get("lines") or {})
+            if "limits" in outputs:
+                result.limits = funnel_limits(raw, settings.get("lines") or {})
+    if static:
+        result.static_plot = StaticPlot(
+            chart_type, raw["svg"], width, height, views, title_settings
+        )
+    return result
 
 
 def _prepare_views(
@@ -139,75 +173,9 @@ def _prepare_views(
     input_settings = prepared[0]
     conditional = prepared[1]
     title_settings = prepare_title(title)
-    views = update_values(
-        raw_data,
-        input_settings,
-        aggregations,
-        conditional,
-        list(dict.fromkeys(raw_data["categories"])),
-    )
+    views = update_values(raw_data, input_settings, aggregations, conditional)
     apply_padding(chart_type, views, defaults, title_settings)
     return views, title_settings
-
-
-def _create_chart(
-    chart_type: ChartType,
-    raw_data: RawData,
-    order: list[int],
-    aggregations: Mapping[str, str],
-    title: Title,
-    settings: Mapping[str, Settings | None],
-    tooltip_settings: Settings | None,
-    width: float | None,
-    height: float | None,
-    return_objs: ReturnObjs,
-) -> ControlChart:
-    if isinstance(return_objs, str):
-        return_objs = (return_objs,)
-    outputs = set(return_objs)
-    valid = {"static_plot", "limits"}
-    if chart_type == "funnel" and not raw_data.get("indicators"):
-        valid.add("limit_lines")
-    if outputs - valid:
-        raise ValueError(f"Invalid return_objs: {', '.join(sorted(outputs - valid))}.")
-    width = dimension(width, 640)
-    height = dimension(height, 400)
-    if tooltip_settings is not None:
-        validate_mapping(tooltip_settings, "tooltip_settings must be a mapping.")
-        if set(tooltip_settings) - TOOLTIPS.keys():
-            raise ValueError("Invalid tooltip setting.")
-    prepared = _prepare_views(
-        chart_type, raw_data, order, aggregations, title, settings
-    )
-    views = prepared[0]
-    title_settings = prepared[1]
-    result = ControlChart()
-    if not outputs:
-        return result
-    static = "static_plot" in outputs
-    limits = bool(outputs & {"limits", "limit_lines"})
-    raw: SPCResult | FunnelResult
-    if chart_type == "spc":
-        raw = render(chart_type, views, title_settings, width, height, static, limits)
-        if "limits" in outputs:
-            result.limits = spc_limits(raw, settings.get("outliers") or {})
-            result.indicator_names = raw["indicatorVarNames"]
-    else:
-        raw = render(chart_type, views, title_settings, width, height, static, limits)
-        if raw_data.get("indicators"):
-            if "limits" in outputs:
-                result.limits = misc_limits(raw)
-        elif limits:
-            lines = funnel_lines(raw, settings.get("lines") or {})
-            if "limit_lines" in outputs:
-                result.limit_lines = lines
-            if "limits" in outputs:
-                result.limits = funnel_limits(raw, lines, settings.get("outliers") or {})
-    if static:
-        result.static_plot = StaticPlot(
-            chart_type, raw["svg"], width, height, views, title_settings
-        )
-    return result
 
 
 def spc(
@@ -232,7 +200,6 @@ def spc(
     y_axis_settings: Settings | None = None,
     date_settings: Settings | None = None,
     label_settings: Settings | None = None,
-    tooltip_settings: Settings | None = None,
     width: float | None = None,
     height: float | None = None,
     return_objs: ReturnObjs = ("static_plot", "limits"),
@@ -265,7 +232,6 @@ def spc(
             "dates": date_settings,
             "labels": label_settings,
         },
-        tooltip_settings,
         width,
         height,
         return_objs,
@@ -291,7 +257,6 @@ def funnel(
     x_axis_settings: Settings | None = None,
     y_axis_settings: Settings | None = None,
     label_settings: Settings | None = None,
-    tooltip_settings: Settings | None = None,
     width: float | None = None,
     height: float | None = None,
     return_objs: ReturnObjs = ("static_plot", "limits"),
@@ -318,7 +283,6 @@ def funnel(
             "y_axis": y_axis_settings,
             "labels": label_settings,
         },
-        tooltip_settings,
         width,
         height,
         return_objs,

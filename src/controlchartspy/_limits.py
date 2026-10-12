@@ -2,8 +2,8 @@
 
 from typing import cast
 
-from ._data import Limits, Record, Scalar, Settings
-from ._engine import FunnelResult, SPCResult
+from ._data import Limits, Record, Settings
+from ._engine import FunnelPoint, FunnelResult, SPCResult
 
 
 def spc_rows(rows: list[Record], settings: Settings) -> list[Record]:
@@ -31,11 +31,15 @@ def spc_rows(rows: list[Record], settings: Settings) -> list[Record]:
     return result
 
 
-def spc_limits(raw: SPCResult, settings: Settings) -> Limits:
+def spc_limits(raw: SPCResult) -> Limits:
     if not raw["indicatorVarNames"]:
-        return spc_rows([point["table_row"] for point in raw["plotPoints"]], settings)
+        return spc_rows(
+            [point["table_row"] for point in raw["plotPoints"]], raw["outlierSettings"][0]
+        )
     result: dict[str, Limits] = {}
-    for groups, rows in zip(raw["groupNames"], raw["spcLimitRows"]):
+    for groups, rows, settings in zip(
+        raw["groupNames"], raw["spcLimitRows"], raw["outlierSettings"]
+    ):
         names: list[str] = []
         for name in groups:
             if name is None or name == "":
@@ -62,26 +66,29 @@ def funnel_lines(raw: FunnelResult, settings: Settings) -> list[Record]:
     return result
 
 
-def funnel_limits(raw: FunnelResult, lines: list[Record], settings: Settings) -> list[Record]:
-    by_denominator: dict[Scalar, list[Record]] = {}
-    for row in lines:
-        by_denominator.setdefault(row["denominator"], []).append(row)
+def funnel_limits(raw: FunnelResult, line_settings: Settings) -> list[Record]:
+    def denominator(point: FunnelPoint) -> float:
+        return point["x"]
+
     result: list[Record] = []
-    for point in sorted(raw["plotPoints"], key=lambda point: point["x"]):
-        for line in by_denominator.get(point["x"], []):
-            record: Record = {
-                "denominator": point["x"],
-                "group": point["group_text"],
-                "numerator": point["numerator"],
-                "value": point["value"],
-                "z": point["z"],
-            }
-            if settings.get("two_sigma", False):
-                record["two_sigma"] = point["two_sigma"]
-            if settings.get("three_sigma", False):
-                record["three_sigma"] = point["three_sigma"]
-            record.update(line)
-            result.append(record)
+    settings = raw["outlierSettings"][0]
+    for point in sorted(raw["plotPoints"], key=denominator):
+        record: Record = {
+            "denominator": point["x"],
+            "group": point["group_text"],
+            "numerator": point["numerator"],
+            "value": point["value"],
+            "z": point["z"],
+        }
+        if settings.get("two_sigma", False):
+            record["two_sigma"] = point["two_sigma"]
+        if settings.get("three_sigma", False):
+            record["three_sigma"] = point["three_sigma"]
+        record.update(point["limits"])
+        del record["denominators"]
+        if line_settings.get("alt_target") is None:
+            record.pop("alt_target", None)
+        result.append(record)
     return result
 
 

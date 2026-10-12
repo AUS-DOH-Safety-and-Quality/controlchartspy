@@ -56,16 +56,6 @@ AGGREGATIONS: dict[str, str] = {
     "tooltips": "first",
     "labels": "first",
 }
-TOOLTIPS: SettingsGroup = {
-    "ttip_font_size": 12,
-    "ttip_font": "Arial, sans-serif",
-    "ttip_font_color": "#000000",
-    "ttip_background_color": "#E0E0E0",
-    "ttip_opacity": 1,
-    "ttip_border_radius": 5,
-    "ttip_border_color": "#000000",
-    "ttip_border_width": 1,
-}
 TITLE: TitleSettings = {
     "text": None,
     "font_size": "16px",
