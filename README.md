@@ -50,11 +50,53 @@ The result is a `ControlChart` containing:
 - `static_plot`: a static SVG plot of the SPC chart.
 - `limits`: a list of records containing the calculated control limits.
 
-Display the plot in a notebook and inspect the first six rows of control limits:
+Display the plot in a notebook:
 
 ```python
 spc_chart.static_plot
-spc_chart.limits[:6]
+```
+
+![Individuals SPC chart for the 24 monthly observations](https://raw.githubusercontent.com/AUS-DOH-Safety-and-Quality/controlchartspy/main/docs/images/spc_chart.svg)
+
+Inspect the first three limit records:
+
+```python
+from pprint import pprint
+
+pprint(spc_chart.limits[:3], sort_dicts=False)
+```
+
+```text
+[{'date': '01/01/2024',
+  'value': 1.5421097574859834,
+  'target': -0.594252476265739,
+  'll99': -3.336604002943138,
+  'll95': -2.422486827384005,
+  'll68': -1.508369651824872,
+  'ul68': 0.3198646992933941,
+  'ul95': 1.2339818748525273,
+  'ul99': 2.1480990504116604,
+  'trend_line': -0.0438723999116986},
+ {'date': '01/02/2024',
+  'value': 0.8450795313134178,
+  'target': -0.594252476265739,
+  'll99': -3.336604002943138,
+  'll95': -2.422486827384005,
+  'll68': -1.508369651824872,
+  'ul68': 0.3198646992933941,
+  'ul95': 1.2339818748525273,
+  'ul99': 2.1480990504116604,
+  'trend_line': -0.09173153698596298},
+ {'date': '01/03/2024',
+  'value': -0.27791938061152177,
+  'target': -0.594252476265739,
+  'll99': -3.336604002943138,
+  'll95': -2.422486827384005,
+  'll68': -1.508369651824872,
+  'ul68': 0.3198646992933941,
+  'ul95': 1.2339818748525273,
+  'ul99': 2.1480990504116604,
+  'trend_line': -0.13959067406022735}]
 ```
 
 ### Funnel Plot
@@ -80,7 +122,54 @@ funnel_chart = funnel(
     denominators="denominators",
 )
 funnel_chart.static_plot
-funnel_chart.limits
+```
+
+![Funnel plot comparing proportions across ten organisations](https://raw.githubusercontent.com/AUS-DOH-Safety-and-Quality/controlchartspy/main/docs/images/funnel_chart.svg)
+
+Inspect the first three limit records. Values and limits are percentages;
+records are ordered by denominator.
+
+```python
+pprint(funnel_chart.limits[:3], sort_dicts=False)
+```
+
+```text
+[{'denominator': 105,
+  'group': 'f',
+  'numerator': 22,
+  'value': 20.952380952380953,
+  'z': 0.3734456258038048,
+  'target': 19.488817891373802,
+  'll99': 9.100195099772012,
+  'll95': 12.51476452678048,
+  'll68': 15.79416361293754,
+  'ul68': 23.470617415242504,
+  'ul95': 27.575733596704584,
+  'ul99': 32.631402897252705},
+ {'denominator': 121,
+  'group': 'h',
+  'numerator': 26,
+  'value': 21.487603305785125,
+  'z': 0.5448873656525446,
+  'target': 19.488817891373802,
+  'll99': 9.70266069838873,
+  'll95': 12.951239970877559,
+  'll68': 16.03721031743157,
+  'ul68': 23.189626957479458,
+  'ul95': 26.992492421239433,
+  'ul99': 31.66717662194669},
+ {'denominator': 122,
+  'group': 'b',
+  'numerator': 23,
+  'value': 18.852459016393443,
+  'z': -0.17856345913252486,
+  'target': 19.488817891373802,
+  'll99': 9.736836999381445,
+  'll95': 12.97581932678086,
+  'll68': 16.050836651226742,
+  'ul68': 23.173959368513962,
+  'ul95': 26.96001503043085,
+  'ul99': 31.613520185472975}]
 ```
 
 ## Chart Types
@@ -234,7 +323,7 @@ shows the selected organisation's z-scores, with positive scores indicating
 favourable performance.
 
 ```python
-from controlchartspy import misc, misc_default_settings
+from controlchartspy import misc
 
 comparison = {
     "organisation": list("ABCDABCD"),
@@ -252,9 +341,52 @@ sigma_chart = misc(
     outlier_settings={"improvement_direction": ["increase"] * 4 + ["decrease"] * 4},
 )
 sigma_chart.static_plot
-sigma_chart.limits
-misc_default_settings("misc")
 ```
+
+![Sigma chart showing organisation A's scores for two indicators](https://raw.githubusercontent.com/AUS-DOH-Safety-and-Quality/controlchartspy/main/docs/images/sigma_chart.svg)
+
+Inspect the returned records for the selected organisation:
+
+```python
+pprint(sigma_chart.limits, sort_dicts=False)
+```
+
+```text
+[{'indicator': 'Measure A',
+  'group': 'A',
+  'z': 1.558790495298732,
+  'score': 1.558790495298732,
+  'three_sigma': 'none',
+  'numerator': 8,
+  'denominator': 10,
+  'value': 80,
+  'target': 57.49999999999999,
+  'alt_target': None,
+  'll99': 13.216714304122751,
+  'll95': 27.39016233134321,
+  'll68': 41.84129995477897,
+  'ul68': 72.42308266420663,
+  'ul95': 84.81980066370618,
+  'ul99': 95.17325739282423},
+ {'indicator': 'Measure B',
+  'group': 'A',
+  'z': -1.07140640762028,
+  'score': 1.07140640762028,
+  'three_sigma': 'none',
+  'numerator': 2,
+  'denominator': 10,
+  'value': 20,
+  'target': 35,
+  'alt_target': None,
+  'll99': 2.071914317061943,
+  'll95': 10.084383484380846,
+  'll68': 20.982115523920374,
+  'ul68': 50.48911923810838,
+  'ul95': 65.49569052552037,
+  'ul99': 81.1481422890441}]
+```
+
+Measure B's score reverses its z-score because decreases indicate improvement.
 
 `misc()` delegates to `funnel()` with `indicators` and
 `misc_settings={"group": target}`. You can call `funnel()` directly with those
