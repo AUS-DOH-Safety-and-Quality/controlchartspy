@@ -18,11 +18,5 @@ jobs:
       - run: uvx ruff==0.17.0 check .
       - run: uvx ruff==0.17.0 format --check .
       - run: uvx ty==0.0.86 check
-      - run: uv build --no-sources
-      - run: uv run --no-project python tools/test_distributions.py dist
-      - uses: actions/upload-artifact@v7.0.2
-        with:
-          name: distributions
-          path: dist/*
-          if-no-files-found: error
+      - run: uv run python -m unittest discover -s tests
 
