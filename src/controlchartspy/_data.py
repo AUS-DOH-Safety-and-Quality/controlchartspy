@@ -56,16 +56,6 @@ AGGREGATIONS: dict[str, str] = {
     "tooltips": "first",
     "labels": "first",
 }
-TOOLTIPS: SettingsGroup = {
-    "ttip_font_size": 12,
-    "ttip_font": "Arial, sans-serif",
-    "ttip_font_color": "#000000",
-    "ttip_background_color": "#E0E0E0",
-    "ttip_opacity": 1,
-    "ttip_border_radius": 5,
-    "ttip_border_color": "#000000",
-    "ttip_border_width": 1,
-}
 TITLE: TitleSettings = {
     "text": None,
     "font_size": "16px",
@@ -253,9 +243,7 @@ def prepare_settings(
                     value = items[0]
                 elif len(items) == n:
                     conditional = True
-                    result[group][name] = {
-                        str(i + 1): scalar(items[i]) for i in order
-                    }
+                    result[group][name] = {str(i + 1): scalar(items[i]) for i in order}
                     continue
                 else:
                     raise ValueError(f"Setting '{name}' must have one or {n} values.")
@@ -300,7 +288,9 @@ def apply_padding(
 ) -> None:
     title_padding = 0.0
     if title["text"] is not None:
-        title_padding = float(str(title["font_size"]).removesuffix("px")) + number(title, "y")
+        title_padding = float(str(title["font_size"]).removesuffix("px")) + number(
+            title, "y"
+        )
         if title["subtitle"] is not None:
             title_padding += float(str(title["subtitle_font_size"]).removesuffix("px"))
     for settings in views[0]["categorical"]["categories"][0]["objects"]:

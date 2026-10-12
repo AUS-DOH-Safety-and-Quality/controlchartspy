@@ -3,20 +3,24 @@
 import json
 import math
 import unittest
-from collections.abc import Callable, Mapping, Sequence
+from collections.abc import Mapping, Sequence
 from pathlib import Path
-from typing import TypedDict
+from typing import Protocol, TypedDict, cast
 
 import controlchartspy as charts
 from controlchartspy import ControlChart
 
 REFERENCE = Path(__file__).parent / "reference"
 JSON = str | int | float | bool | None | Sequence["JSON"] | Mapping[str, "JSON"]
-CONSTRUCTORS: dict[str, Callable[..., ControlChart]] = {
+CONSTRUCTORS: dict[str, object] = {
     "spc": charts.spc,
     "funnel": charts.funnel,
     "misc": charts.misc,
 }
+
+
+class Constructor(Protocol):
+    def __call__(self, **kwargs: object) -> ControlChart: ...
 
 
 class _Expected(TypedDict):
@@ -36,14 +40,16 @@ class Case(TypedDict):
 
 
 class ReferenceTests(unittest.TestCase):
-    def assert_records_equal(self, actual: JSON, expected: JSON, path: str = "result") -> None:
-        if isinstance(expected, dict):
-            assert isinstance(actual, dict), path
-            self.assertEqual(set(actual), set(expected), path)
+    def assert_records_equal(
+        self, actual: JSON, expected: JSON, path: str = "result"
+    ) -> None:
+        if isinstance(expected, Mapping):
+            assert isinstance(actual, Mapping), path
+            self.assertSetEqual(set(actual), set(expected), path)
             for key, value in expected.items():
                 self.assert_records_equal(actual[key], value, f"{path}.{key}")
-        elif isinstance(expected, list):
-            assert isinstance(actual, list), path
+        elif isinstance(expected, Sequence) and not isinstance(expected, str):
+            assert isinstance(actual, Sequence) and not isinstance(actual, str), path
             self.assertEqual(len(actual), len(expected), path)
             for index, value in enumerate(expected):
                 self.assert_records_equal(actual[index], value, f"{path}[{index}]")
@@ -62,24 +68,28 @@ class ReferenceTests(unittest.TestCase):
                 continue
             with self.subTest(case=file.stem):
                 case: Case = json.loads(file.read_text(encoding="utf-8"))
-                constructor = CONSTRUCTORS[case["type"]]
+                constructor = cast(Constructor, CONSTRUCTORS[case["type"]])
                 chart = constructor(**case["input"])
                 expected = case["expected"]
                 self.assert_records_equal(chart.limits, expected["limits"])
                 self.assert_records_equal(chart.limit_lines, expected["limit_lines"])
-                self.assertEqual(
-                    chart.indicator_names, expected["indicator_names"] or []
-                )
+                indicator_names = expected["indicator_names"] or []
+                self.assertEqual(chart.indicator_names, indicator_names)
                 if "svg" in expected:
                     assert chart.static_plot is not None
                     self.assertEqual(chart.static_plot.to_svg(), expected["svg"])
                 inputs = dict(case["input"], return_objs="limits")
-                self.assert_records_equal(constructor(**inputs).limits, expected["limits"])
+                self.assert_records_equal(
+                    constructor(**inputs).limits, expected["limits"]
+                )
 
     def test_default_settings_match_r(self) -> None:
-        expected: dict[str, JSON] = json.loads(
+        expected: dict[str, dict[str, JSON]] = json.loads(
             (REFERENCE / "defaults.json").read_text(encoding="utf-8")
         )
+        # Tooltip styling only applies to the R package's interactive plots.
+        for settings in expected.values():
+            del settings["tooltips"]
         self.assertEqual(charts.spc_default_settings(), expected["spc"])
         self.assertEqual(charts.funnel_default_settings(), expected["funnel"])
         self.assert_records_equal(charts.misc_default_settings(), expected["misc"])

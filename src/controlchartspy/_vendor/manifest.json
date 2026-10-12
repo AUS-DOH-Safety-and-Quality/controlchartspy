@@ -1,6 +1,6 @@
 {
   "repository": "https://github.com/AUS-DOH-Safety-and-Quality/controlcharts",
-  "revision": "6ee103a89aa5bb1367f5853a91c085e740a3385e",
+  "revision": "7fd27e423816c20c6890032ecaecdd08db97f464",
   "assets": {
     "minidom.js": {
       "source": "inst/js/minidom.js",
@@ -20,11 +20,11 @@
     },
     "commonUtils.js": {
       "source": "inst/htmlwidgets/lib/UTILS/commonUtils.js",
-      "sha256": "10cf93cc082012b582961462ca0bf88af33f3972a390304de909833f5f3b20ca"
+      "sha256": "020dacdfe202384730ed5ae2506421fd824c5f24b0fd5de2f34dae5361d048f8"
     },
     "headlessUtils.js": {
       "source": "inst/htmlwidgets/lib/UTILS/headlessUtils.js",
-      "sha256": "dcd3edad8d8a3b1cb91b19c44a46dc42580128d308e32c7f38508c9d026b2271"
+      "sha256": "22925fa7c854478b9fb8a800ba355e938fdebb04b9d1266b86dbe300c3fd0cef"
     }
   }
 }

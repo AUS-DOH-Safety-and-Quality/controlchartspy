@@ -27,8 +27,8 @@ class ResourceTests(unittest.TestCase):
         self.assertTrue(package.joinpath("py.typed").is_file())
         vendor = package.joinpath("_vendor")
         manifest: Manifest = json.loads(vendor.joinpath("manifest.json").read_text())
-        self.assertEqual(set(manifest["assets"]), set(SCRIPTS))
-        self.assertEqual(
+        self.assertSetEqual(set(manifest["assets"]), set(SCRIPTS))
+        self.assertSetEqual(
             {path.name for path in vendor.iterdir() if path.name.endswith(".js")},
             set(SCRIPTS),
         )

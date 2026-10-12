@@ -44,11 +44,12 @@ class DOMTests(unittest.TestCase):
         """)
         assert isinstance(payload, str)
         actual: dict[str, list[str] | str | bool] = json.loads(payload)
-        self.assertEqual(actual, {
+        expected: dict[str, list[str] | str | bool] = {
             "ids": ["first", "second"],
             "first": "first",
             "descendant": True,
             "tag": True,
             "id": True,
             "absent": False,
-        })
+        }
+        self.assertEqual(actual, expected)
