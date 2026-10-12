@@ -34,11 +34,12 @@ def spc_rows(rows: list[Record], settings: Settings) -> list[Record]:
 def spc_limits(raw: SPCResult) -> Limits:
     if not raw["indicatorVarNames"]:
         return spc_rows(
-            [point["table_row"] for point in raw["plotPoints"]], raw["outlierSettings"][0]
+            [point["table_row"] for point in raw["plotPoints"]],
+            raw["outlierSettings"][0],
         )
     result: dict[str, Limits] = {}
     for groups, rows, settings in zip(
-        raw["groupNames"], raw["spcLimitRows"], raw["outlierSettings"]
+        raw["groupNames"], raw["spcLimitRows"], raw["outlierSettings"], strict=True
     ):
         names: list[str] = []
         for name in groups:

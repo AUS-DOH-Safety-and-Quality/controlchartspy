@@ -206,11 +206,17 @@ grouped_data = {
     "site": ["A"] * 12 + ["B"] * 12,
 }
 phased_chart = spc(
-    data=grouped_data, keys="month", numerators="y", groupings="phase",
+    data=grouped_data,
+    keys="month",
+    numerators="y",
+    groupings="phase",
 )
 grouped_chart = spc(
-    data=grouped_data, keys="month", numerators="y",
-    indicators="site", return_objs="limits",
+    data=grouped_data,
+    keys="month",
+    numerators="y",
+    indicators="site",
+    return_objs="limits",
 )
 site_a_limits = grouped_chart.limits["A"]
 ```

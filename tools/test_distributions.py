@@ -34,7 +34,9 @@ def main() -> None:
     with zipfile.ZipFile(wheels[0]) as archive:
         names = set(archive.namelist())
         check_files(names, "", root)
-        metadata_name = next(name for name in names if name.endswith(".dist-info/METADATA"))
+        metadata_name = next(
+            name for name in names if name.endswith(".dist-info/METADATA")
+        )
         prefix = metadata_name.removesuffix("METADATA") + "licenses/"
         for name in licenses:
             if prefix + name not in names:
@@ -44,7 +46,9 @@ def main() -> None:
             raise ValueError("Unexpected wheel license expression.")
     with tarfile.open(sources[0]) as archive:
         names = set(archive.getnames())
-        prefix = next(name for name in names if name.endswith("/PKG-INFO")).removesuffix("PKG-INFO")
+        prefix = next(
+            name for name in names if name.endswith("/PKG-INFO")
+        ).removesuffix("PKG-INFO")
         check_files(names, prefix + "src/", root)
         required = licenses | {"tests/reference_manifest.json", "CHANGELOG.md"}
         for name in required:
@@ -53,9 +57,19 @@ def main() -> None:
     for path in wheels + sources:
         print(f"Testing {path.name}", flush=True)
         subprocess.run(
-            ["uv", "run", "--no-project", "--with", str(path.resolve()),
-             "python", "-m", "unittest",
-             "discover", "-s", str(root / "tests")],
+            [
+                "uv",
+                "run",
+                "--no-project",
+                "--with",
+                str(path.resolve()),
+                "python",
+                "-m",
+                "unittest",
+                "discover",
+                "-s",
+                str(root / "tests"),
+            ],
             cwd=root,
             check=True,
         )

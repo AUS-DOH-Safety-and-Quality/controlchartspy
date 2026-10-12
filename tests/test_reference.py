@@ -40,7 +40,9 @@ class Case(TypedDict):
 
 
 class ReferenceTests(unittest.TestCase):
-    def assert_records_equal(self, actual: JSON, expected: JSON, path: str = "result") -> None:
+    def assert_records_equal(
+        self, actual: JSON, expected: JSON, path: str = "result"
+    ) -> None:
         if isinstance(expected, Mapping):
             assert isinstance(actual, Mapping), path
             self.assertSetEqual(set(actual), set(expected), path)
@@ -77,7 +79,9 @@ class ReferenceTests(unittest.TestCase):
                     assert chart.static_plot is not None
                     self.assertEqual(chart.static_plot.to_svg(), expected["svg"])
                 inputs = dict(case["input"], return_objs="limits")
-                self.assert_records_equal(constructor(**inputs).limits, expected["limits"])
+                self.assert_records_equal(
+                    constructor(**inputs).limits, expected["limits"]
+                )
 
     def test_default_settings_match_r(self) -> None:
         expected: dict[str, dict[str, JSON]] = json.loads(

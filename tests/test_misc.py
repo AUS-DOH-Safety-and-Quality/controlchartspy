@@ -125,7 +125,9 @@ class MiscTests(unittest.TestCase):
 
     def test_settings_and_tooltips_follow_their_respective_rows(self) -> None:
         data = comparison_data()
-        indices = [i for i in range(len(data["organisation"]) - 1, -1, -1) for _ in range(2)]
+        indices = [
+            i for i in range(len(data["organisation"]) - 1, -1, -1) for _ in range(2)
+        ]
         repeated: Comparison = {
             "organisation": [data["organisation"][i] for i in indices],
             "indicator": [data["indicator"][i] for i in indices],
@@ -155,15 +157,23 @@ class MiscTests(unittest.TestCase):
         expected_classifications = ["improvement"] * 2
         self.assertEqual(classifications, expected_classifications)
         root = ElementTree.fromstring(chart.static_plot.to_svg())
-        bars = [element for element in root.iter() if element.attrib.get("class") == "misc-bar"]
+        bars = [
+            element
+            for element in root.iter()
+            if element.attrib.get("class") == "misc-bar"
+        ]
         colours = [bar.attrib["fill"] for bar in bars]
         expected_colours = ["#112233", "#445566"]
         self.assertEqual(colours, expected_colours)
-        payload = engine().context.eval("JSON.stringify(funnelVisual.viewModel.miscPoints)")
+        payload = engine().context.eval(
+            "JSON.stringify(funnelVisual.viewModel.miscPoints)"
+        )
         assert isinstance(payload, str)
         points: list[Point] = json.loads(payload)
         notes = [
-            item["value"] for point in points for item in point["tooltip"]
+            item["value"]
+            for point in points
+            for item in point["tooltip"]
             if item["displayName"] == "Note"
         ]
         expected_notes = ["row-15", "row-7"]
@@ -186,7 +196,9 @@ class MiscTests(unittest.TestCase):
             resized: MiscArguments = {**arguments, "width": 720, "height": 480}
             expected = misc(**resized)
             assert expected.static_plot is not None
-            self.assertEqual(path.read_text().rstrip("\n"), expected.static_plot.to_svg())
+            self.assertEqual(
+                path.read_text().rstrip("\n"), expected.static_plot.to_svg()
+            )
         self.assertEqual(chart.static_plot.svg, original)
 
     def test_requested_outputs(self) -> None:
@@ -237,8 +249,18 @@ class MiscTests(unittest.TestCase):
             ({"target": ["A", "B"]}, "single non-missing"),
             ({"target": "missing"}, "Select a MISC group present"),
             ({"indicators": ["Only one"]}, "one value per observation"),
-            ({"outlier_settings": {"improvement_direction": "neutral"}}, "one improvement direction"),
-            ({"outlier_settings": {"improvement_direction": ["decrease"] + ["increase"] * 7}}, "one improvement direction"),
+            (
+                {"outlier_settings": {"improvement_direction": "neutral"}},
+                "one improvement direction",
+            ),
+            (
+                {
+                    "outlier_settings": {
+                        "improvement_direction": ["decrease"] + ["increase"] * 7
+                    }
+                },
+                "one improvement direction",
+            ),
             ({"funnel_settings": {"multiplier": [1, 100]}}, "one or 8 values"),
             ({"funnel_settings": {"unknown": 1}}, "Invalid setting"),
             ({"misc_settings": {"unknown": 1}}, "Invalid setting"),
@@ -253,7 +275,9 @@ class MiscTests(unittest.TestCase):
             ):
                 misc(**merged)
 
-    def test_funnel_delegation_with_multiple_indicators_and_numeric_target(self) -> None:
+    def test_funnel_delegation_with_multiple_indicators_and_numeric_target(
+        self,
+    ) -> None:
         data = comparison_data()
         data["organisation"] = [1, 2, 3, 4] * 2
         arguments = funnel_arguments(data)
@@ -273,7 +297,10 @@ class MiscTests(unittest.TestCase):
         expected_groups = ["2", "2"]
         self.assertEqual(groups, expected_groups)
         indicators = [row["indicator"] for row in wrapped.limits]
-        expected_indicators = ["Effectiveness / Higher is better", "Safety / Lower is better"]
+        expected_indicators = [
+            "Effectiveness / Higher is better",
+            "Safety / Lower is better",
+        ]
         self.assertEqual(indicators, expected_indicators)
         self.assertEqual(misc_default_settings(), funnel_default_settings())
 

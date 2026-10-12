@@ -24,11 +24,18 @@ class AggregationTests(unittest.TestCase):
             for method, values in expected.items():
                 with self.subTest(method=method, missing=missing):
                     spc_chart = spc(
-                        data, "key", "n", aggregations={"numerators": method},
+                        data,
+                        "key",
+                        "n",
+                        aggregations={"numerators": method},
                         return_objs="limits",
                     )
                     funnel_chart = funnel(
-                        data, "key", "n", "d", aggregations={"numerators": method},
+                        data,
+                        "key",
+                        "n",
+                        "d",
+                        aggregations={"numerators": method},
                         return_objs="limits",
                     )
                     assert isinstance(spc_chart.limits, list)
@@ -46,7 +53,10 @@ class AggregationTests(unittest.TestCase):
         for method, expected in (("min", [-20, -40]), ("max", [-10, -30])):
             with self.subTest(method=method):
                 chart = spc(
-                    data, "key", "n", aggregations={"numerators": method},
+                    data,
+                    "key",
+                    "n",
+                    aggregations={"numerators": method},
                     return_objs="limits",
                 )
                 assert isinstance(chart.limits, list)
@@ -61,7 +71,10 @@ class AggregationTests(unittest.TestCase):
         }
         expected = funnel(
             {"key": ["A", "B"], "n": [30, 40], "d": [300, 400]},
-            "key", "n", "d", return_objs="limits",
+            "key",
+            "n",
+            "d",
+            return_objs="limits",
         )
         actual = funnel(data, "key", "n", "d", return_objs="limits")
         self.assertEqual(actual.limits, expected.limits)

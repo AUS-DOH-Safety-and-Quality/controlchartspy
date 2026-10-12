@@ -4,7 +4,7 @@ build-backend = "uv_build"
 
 [project]
 name = "controlchartspy"
-version = "0.1.0"
+version = "0.1.1"
 description = "Calculate and visualise SPC, funnel, and multi-indicator sigma charts"
 readme = "README.md"
 license = "GPL-3.0-only"
@@ -47,9 +47,11 @@ extend-select = [
     "ANN",
     "B006",
     "B008",
+    "B905",
     "ISC001",
     "ISC002",
     "PGH003",
+    "PGH004",
     "PYI",
     "RUF100",
     "TID251",
@@ -65,6 +67,9 @@ extra-paths = ["typings"]
 
 [tool.ty.src]
 include = ["src", "tools", "tests", "typings"]
+
+[tool.ty.analysis]
+strict-equality-semantics = true
 
 [tool.ty.rules]
 blanket-ignore-comment = "error"

@@ -113,7 +113,9 @@ class Engine:
 
     def call(self, name: str, *args: object) -> object:
         try:
-            result: object = json.loads(self._call(name, json.dumps(args, allow_nan=False)))
+            result: object = json.loads(
+                self._call(name, json.dumps(args, allow_nan=False))
+            )
         except quickjs.JSException as error:
             raise ValueError(str(error)) from error
         return result

@@ -27,18 +27,28 @@ class OutlierSettingsTests(unittest.TestCase):
                     assert isinstance(expected.limits, list)
                     self.assertEqual(column in expected.limits[0], enabled)
                     for value in (
-                        [enabled], [enabled] * 12, [enabled] + [not enabled] * 11
+                        [enabled],
+                        [enabled] * 12,
+                        [enabled] + [not enabled] * 11,
                     ):
-                        with self.subTest(chart=constructor.__name__, flag=flag, value=value):
+                        with self.subTest(
+                            chart=constructor.__name__, flag=flag, value=value
+                        ):
                             actual = constructor(
                                 data, "key", "n", "d", outlier_settings={flag: value}
                             )
                             self.assertEqual(actual.limits, expected.limits)
                             assert actual.static_plot is not None
                             assert expected.static_plot is not None
-                            self.assertEqual(actual.static_plot.svg, expected.static_plot.svg)
+                            self.assertEqual(
+                                actual.static_plot.svg, expected.static_plot.svg
+                            )
                             limits_only = constructor(
-                                data, "key", "n", "d", outlier_settings={flag: value},
+                                data,
+                                "key",
+                                "n",
+                                "d",
+                                outlier_settings={flag: value},
                                 return_objs="limits",
                             )
                             self.assertEqual(limits_only.limits, expected.limits)
@@ -56,8 +66,13 @@ class OutlierSettingsTests(unittest.TestCase):
                         data, "key", "n", "d", outlier_settings={flag: enabled}
                     )
                     actual = constructor(
-                        data, "key", "n", "d",
-                        outlier_settings={flag: [not enabled, enabled, not enabled, not enabled]},
+                        data,
+                        "key",
+                        "n",
+                        "d",
+                        outlier_settings={
+                            flag: [not enabled, enabled, not enabled, not enabled]
+                        },
                     )
                     self.assertEqual(actual.limits, expected.limits)
                     assert actual.static_plot is not None
@@ -71,7 +86,11 @@ class OutlierSettingsTests(unittest.TestCase):
             "n": [90, 10, 10, 90],
         }
         chart = spc(
-            data, "key", "n", indicators="indicator", return_objs="limits",
+            data,
+            "key",
+            "n",
+            indicators="indicator",
+            return_objs="limits",
             outlier_settings={
                 "astronomical": [False, False, True, True],
                 "shift": [True, True, False, False],
@@ -82,7 +101,9 @@ class OutlierSettingsTests(unittest.TestCase):
             with self.subTest(indicator=indicator):
                 expected = spc(
                     {"key": ["2024-01-01", "2024-02-01"], "n": [10, 90]},
-                    "key", "n", return_objs="limits",
+                    "key",
+                    "n",
+                    return_objs="limits",
                     outlier_settings={"astronomical": enabled, "shift": not enabled},
                 )
                 self.assertEqual(chart.limits[indicator], expected.limits)
