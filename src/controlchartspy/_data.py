@@ -12,6 +12,7 @@ Columns = Column | Mapping[str, Column]
 Data = Mapping[str, object] | Sequence[Mapping[str, object]]
 Settings = Mapping[str, object]
 SettingsGroup = dict[str, Scalar]
+Title = str | Mapping[str, object] | None
 TitleSettings = dict[str, Scalar]
 InputSettings = dict[str, dict[str, Scalar | dict[str, Scalar]]]
 Record = dict[str, Scalar]
@@ -22,7 +23,7 @@ ValueName = Literal["numerators", "denominators", "groupings", "xbar_sds", "labe
 
 class _RawData(TypedDict):
     crosstalk_identities: list[str]
-    categories: list[str | None]
+    categories: list[Scalar]
 
 
 class RawData(_RawData, total=False):
@@ -48,29 +49,6 @@ class DataView(TypedDict):
     categorical: Categorical
 
 
-AGGREGATIONS: dict[str, str] = {
-    "numerators": "sum",
-    "denominators": "sum",
-    "groupings": "first",
-    "xbar_sds": "first",
-    "tooltips": "first",
-    "labels": "first",
-}
-TITLE: TitleSettings = {
-    "text": None,
-    "font_size": "16px",
-    "font_weight": "bold",
-    "font_family": "'Arial', sans-serif",
-    "x": "50%",
-    "y": 5,
-    "text_anchor": "middle",
-    "dominant_baseline": "hanging",
-    "subtitle": None,
-    "subtitle_font_size": "12px",
-    "subtitle_font_weight": "normal",
-}
-
-
 def missing(value: object) -> bool:
     return value is None or (isinstance(value, Real) and math.isnan(value))
 
@@ -86,13 +64,6 @@ def is_mapping(value: object) -> TypeGuard[Mapping[object, object]]:
 def validate_mapping(value: object, message: str) -> None:
     if not isinstance(value, Mapping):
         raise TypeError(message)
-
-
-def number(settings: Mapping[str, Scalar], name: str) -> float:
-    value = settings[name]
-    if not isinstance(value, (int, float)):
-        raise TypeError(f"Setting '{name}' must be a number.")
-    return value
 
 
 def scalar(value: object) -> Scalar:
@@ -123,6 +94,13 @@ def label(value: object) -> str | None:
     if isinstance(value, Real):
         return format(value, ".15g")
     return str(value)
+
+
+# Numbers stay numeric so that the engine orders them by value
+def category(value: object) -> Scalar:
+    if isinstance(value, Real) and not isinstance(value, bool):
+        return scalar(value)
+    return label(value)
 
 
 def column(
@@ -169,7 +147,7 @@ def prepare_data(
     indicators: Columns | None,
     tooltips: Columns | None,
     date_keys: bool,
-) -> tuple[RawData, list[int]]:
+) -> RawData:
     key_values = column(data, keys, "keys")
     n = len(key_values)
     if n == 0:
@@ -180,19 +158,9 @@ def prepare_data(
                 raise TypeError("SPC keys must be dates or strings.")
     groups = named_columns(data, indicators, "indicators", n)
     tips = named_columns(data, tooltips, "tooltips", n)
-
-    def sort_key(index: int) -> tuple[tuple[bool, object], ...]:
-        values: list[object] = [values[index] for values in groups.values()]
-        key = key_values[index]
-        if date_keys:
-            key = label(key)
-        values.append(key)
-        return tuple((missing(value), value) for value in values)
-
-    order = sorted(range(n), key=sort_key)
     raw: RawData = {
-        "crosstalk_identities": [str(i + 1) for i in order],
-        "categories": [label(key_values[i]) for i in order],
+        "crosstalk_identities": [str(i + 1) for i in range(n)],
+        "categories": [category(value) for value in key_values],
     }
     fields: dict[ValueName, Column | None] = {"numerators": numerators, **optional}
     for name, value in fields.items():
@@ -209,26 +177,20 @@ def prepare_data(
                 for item in values
             ):
                 raise TypeError(f"{name} must contain numeric values.")
-        raw[name] = [values[i] for i in order]
+        raw[name] = values
     if groups:
-        raw["indicators"] = {
-            name: [values[i] for i in order] for name, values in groups.items()
-        }
+        raw["indicators"] = groups
     if tips:
-        raw["tooltips"] = {
-            name: [values[i] for i in order] for name, values in tips.items()
-        }
-    return raw, order
+        raw["tooltips"] = tips
+    return raw
 
 
 def prepare_settings(
     settings: Mapping[str, Settings | None],
     defaults: Mapping[str, SettingsGroup],
-    order: Sequence[int],
-) -> tuple[InputSettings, bool]:
+    n: int,
+) -> InputSettings:
     result: InputSettings = {}
-    conditional = False
-    n = len(order)
     for group, entries in settings.items():
         if entries is None:
             continue
@@ -242,66 +204,18 @@ def prepare_settings(
                 if len(items) == 1:
                     value = items[0]
                 elif len(items) == n:
-                    conditional = True
-                    result[group][name] = {str(i + 1): scalar(items[i]) for i in order}
+                    result[group][name] = {
+                        str(i + 1): scalar(item) for i, item in enumerate(items)
+                    }
                     continue
                 else:
                     raise ValueError(f"Setting '{name}' must have one or {n} values.")
             result[group][name] = scalar(value)
-    return result, conditional
-
-
-def prepare_aggregations(aggregations: Mapping[str, str] | None) -> dict[str, str]:
-    result = AGGREGATIONS.copy()
-    if aggregations is None:
-        return result
-    validate_mapping(aggregations, "aggregations must be a mapping.")
-    valid = {"first", "last", "sum", "mean", "min", "max", "median", "count"}
-    for name, value in aggregations.items():
-        if name not in result:
-            raise ValueError(f"'{name}' is not a valid variable to aggregate.")
-        if value not in valid:
-            raise ValueError(f"'{value}' is not a valid aggregation.")
-        result[name] = value
     return result
 
 
-def prepare_title(title: str | Mapping[str, object] | None) -> TitleSettings:
-    result = TITLE.copy()
-    if isinstance(title, str):
-        result["text"] = title
-    elif title is not None:
-        validate_mapping(title, "title must be a string or a mapping.")
-        for name, value in title.items():
-            if name not in result:
-                raise ValueError(f"Invalid title setting '{name}'.")
-            if value is not None:
-                result[name] = scalar(value)
-    return result
-
-
-def apply_padding(
-    chart_type: ChartType,
-    views: list[DataView],
-    defaults: Mapping[str, SettingsGroup],
-    title: TitleSettings,
-) -> None:
-    title_padding = 0.0
-    if title["text"] is not None:
-        title_padding = float(str(title["font_size"]).removesuffix("px")) + number(
-            title, "y"
-        )
-        if title["subtitle"] is not None:
-            title_padding += float(str(title["subtitle_font_size"]).removesuffix("px"))
-    for settings in views[0]["categorical"]["categories"][0]["objects"]:
-        canvas = {**defaults["canvas"], **settings.get("canvas", {})}
-        axis = {**defaults["x_axis"], **settings.get("x_axis", {})}
-        canvas["upper_padding"] = number(canvas, "upper_padding") + title_padding
-        canvas["left_padding"] = number(canvas, "left_padding") + 50
-        pad = 10 + number(axis, "xlimit_tick_size")
-        if axis["xlimit_tick_rotation"] != 0:
-            pad += 15
-        if chart_type == "spc" and axis["xlimit_label"]:
-            pad += 20
-        canvas["lower_padding"] = number(canvas, "lower_padding") + pad
-        settings["canvas"] = canvas
+def prepare_title(title: Title) -> str | dict[str, Scalar] | None:
+    if title is None or isinstance(title, str):
+        return title
+    validate_mapping(title, "title must be a string or a mapping.")
+    return {name: scalar(value) for name, value in title.items()}

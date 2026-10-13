@@ -34,7 +34,6 @@ classifiers = [
 Documentation = "https://github.com/AUS-DOH-Safety-and-Quality/controlchartspy#readme"
 Repository = "https://github.com/AUS-DOH-Safety-and-Quality/controlchartspy"
 Issues = "https://github.com/AUS-DOH-Safety-and-Quality/controlchartspy/issues"
-Changelog = "https://github.com/AUS-DOH-Safety-and-Quality/controlchartspy/blob/main/CHANGELOG.md"
 
 [tool.uv.build-backend]
 source-include = ["tests/**", "tools/**", "CHANGELOG.md"]

@@ -5,7 +5,7 @@ import threading
 import warnings
 from collections.abc import Callable, Mapping
 from importlib.resources import files
-from typing import Literal, TypedDict, cast, overload
+from typing import TypedDict, cast
 
 import quickjs
 
@@ -13,8 +13,10 @@ from ._data import (
     ChartType,
     DataView,
     InputSettings,
+    Limits,
     RawData,
     Record,
+    Scalar,
     SettingsGroup,
     TitleSettings,
 )
@@ -29,49 +31,21 @@ SCRIPTS = (
     "headlessUtils.js",
 )
 
-FunnelLimit = dict[str, float | None]
 
-
-class FunnelPoint(TypedDict):
-    x: float
-    numerator: float
-    value: float
-    z: float | None
-    group_text: str
-    two_sigma: str
-    three_sigma: str
-    limits: FunnelLimit
-
-
-class MiscPoint(FunnelPoint):
-    indicator: str
-    score: float | None
-
-
-class SPCPoint(TypedDict):
-    table_row: Record
-
-
-class _Result(TypedDict, total=False):
-    error: str
-
-
-# Keys other than error are only present for the requested outputs and chart mode.
-class SPCResult(_Result):
+# Keys are only present for the requested outputs and chart mode.
+class Result(TypedDict, total=False):
     svg: str
-    outlierSettings: list[SettingsGroup]
-    plotPoints: list[SPCPoint]
-    spcLimitRows: list[list[Record]]
-    groupNames: list[list[str | None]]
-    indicatorVarNames: list[str]
+    limits: Limits
+    limitLines: list[Record]
+    indicatorNames: list[str]
 
 
-class FunnelResult(_Result):
-    svg: str
-    outlierSettings: list[SettingsGroup]
-    plotPoints: list[FunnelPoint]
-    calculatedLimits: list[FunnelLimit]
-    miscPoints: list[MiscPoint]
+class ChartTitle(TypedDict):
+    settings: TitleSettings
+
+
+class ChartAggregations(TypedDict):
+    aggregations: dict[str, str]
 
 
 class UpdateValues(TypedDict):
@@ -118,6 +92,9 @@ class Engine:
             )
         except quickjs.JSException as error:
             raise ValueError(str(error)) from error
+        # Invalid input is reported as an error object
+        if isinstance(result, dict) and "error" in result:
+            raise ValueError(result["error"])
         return result
 
     def defaults(self, chart_type: ChartType) -> dict[str, SettingsGroup]:
@@ -136,39 +113,21 @@ def update_values(
     raw_data: RawData,
     input_settings: InputSettings,
     aggregations: Mapping[str, str],
-    conditional: bool,
 ) -> list[DataView]:
     updates = cast(
         UpdateValues,
-        engine().call(
-            "makeUpdateValues", raw_data, input_settings, aggregations, conditional
-        ),
+        engine().call("makeUpdateValues", raw_data, input_settings, aggregations),
     )
     return updates["dataViews"]
 
 
-@overload
-def render(
-    chart_type: Literal["spc"],
-    data_views: list[DataView],
-    title: TitleSettings,
-    width: float,
-    height: float,
-    static: bool,
-    limits: bool,
-) -> SPCResult: ...
+def chart_title(title: str | Mapping[str, Scalar] | None) -> TitleSettings:
+    return cast(ChartTitle, engine().call("chartTitle", title))["settings"]
 
 
-@overload
-def render(
-    chart_type: Literal["funnel"],
-    data_views: list[DataView],
-    title: TitleSettings,
-    width: float,
-    height: float,
-    static: bool,
-    limits: bool,
-) -> FunnelResult: ...
+def chart_aggregations(aggregations: Mapping[str, str] | None) -> dict[str, str]:
+    result = engine().call("chartAggregations", aggregations)
+    return cast(ChartAggregations, result)["aggregations"]
 
 
 def render(
@@ -179,9 +138,9 @@ def render(
     height: float,
     static: bool,
     limits: bool,
-) -> SPCResult | FunnelResult:
-    result = cast(
-        SPCResult | FunnelResult,
+) -> Result:
+    return cast(
+        Result,
         engine().call(
             "updateHeadlessVisual",
             chart_type,
@@ -193,6 +152,3 @@ def render(
             limits,
         ),
     )
-    if "error" in result:
-        raise ValueError(result["error"])
-    return result

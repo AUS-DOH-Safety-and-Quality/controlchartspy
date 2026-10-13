@@ -1,11 +1,10 @@
-"""Copy the shared JavaScript assets from an R controlcharts checkout."""
+"""Download the shared JavaScript assets from a controlcharts git ref."""
 
 import argparse
-import hashlib
-import json
-import subprocess
+import urllib.request
 from pathlib import Path
 
+URL = "https://raw.githubusercontent.com/AUS-DOH-Safety-and-Quality/controlcharts"
 ASSETS = {
     "minidom.js": "inst/js/minidom.js",
     "ccCore.js": "inst/htmlwidgets/lib/UTILS/ccCore.js",
@@ -18,36 +17,12 @@ ASSETS = {
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("controlcharts", type=Path)
-    args = parser.parse_args()
-    controlcharts: Path = args.controlcharts
-    root = Path(__file__).resolve().parents[1]
-    destination = root / "src/controlchartspy/_vendor"
-    destination.mkdir(parents=True, exist_ok=True)
-    for path in destination.glob("*.js"):
-        if path.name not in ASSETS:
-            path.unlink()
-    git = ["git", "-C", str(controlcharts)]
-    revision = subprocess.check_output(git + ["rev-parse", "HEAD"], text=True).strip()
-    repository = subprocess.check_output(
-        git + ["remote", "get-url", "origin"], text=True
-    ).strip()
-    assets: dict[str, dict[str, str]] = {}
-    manifest = {"repository": repository, "revision": revision, "assets": assets}
-    for name, relative in ASSETS.items():
-        source = subprocess.check_output(git + ["show", f"{revision}:{relative}"])
-        (destination / name).write_bytes(source)
-        assets[name] = {
-            "source": relative,
-            "sha256": hashlib.sha256(source).hexdigest(),
-        }
-    license_text = subprocess.check_output(git + ["show", f"{revision}:LICENSE.md"])
-    licenses = root / "licenses"
-    licenses.mkdir(exist_ok=True)
-    (licenses / "controlcharts-LICENSE.txt").write_bytes(license_text)
-    (destination / "manifest.json").write_text(
-        json.dumps(manifest, indent=2) + "\n", encoding="utf-8"
-    )
+    parser.add_argument("ref")
+    ref: str = parser.parse_args().ref
+    destination = Path(__file__).resolve().parents[1] / "src/controlchartspy/_vendor"
+    for name, path in ASSETS.items():
+        with urllib.request.urlopen(f"{URL}/{ref}/{path}") as response:
+            (destination / name).write_bytes(response.read())
 
 
 if __name__ == "__main__":
