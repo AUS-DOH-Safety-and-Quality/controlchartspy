@@ -3,7 +3,6 @@ Copyright (c) 2026 Andrew Johnson.
 
 The JavaScript assets in src/controlchartspy/_vendor are distributed from
 https://github.com/AUS-DOH-Safety-and-Quality/controlcharts.
-Their source revision and SHA-256 hashes are recorded in _vendor/manifest.json.
 The controlcharts wrapper is MIT licensed; its copyright and permission notice
 are reproduced in licenses/controlcharts-LICENSE.txt.
 

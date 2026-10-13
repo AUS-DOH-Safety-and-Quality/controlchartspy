@@ -312,8 +312,9 @@ site_a_limits = grouped_chart.limits["A"]
 
 `indicators` create separate series and nested limits. A mapping such as
 `indicators={"Region": "region", "Site": "site"}` creates a nested mapping in
-that order, with names available through `chart.indicator_names`. A single
-indicator group can render a plot; multiple groups require `return_objs="limits"`.
+that order, with names available through `chart.indicator_names`. With
+indicators, `return_objs` defaults to `"limits"`; a single indicator group can
+still render a plot, but multiple groups cannot.
 
 ## Multi-indicator Sigma Charts
 
@@ -361,7 +362,6 @@ pprint(sigma_chart.limits, sort_dicts=False)
   'denominator': 10,
   'value': 80,
   'target': 57.49999999999999,
-  'alt_target': None,
   'll99': 13.216714304122751,
   'll95': 27.39016233134321,
   'll68': 41.84129995477897,
@@ -377,7 +377,6 @@ pprint(sigma_chart.limits, sort_dicts=False)
   'denominator': 10,
   'value': 20,
   'target': 35,
-  'alt_target': None,
   'll99': 2.071914317061943,
   'll95': 10.084383484380846,
   'll68': 20.982115523920374,

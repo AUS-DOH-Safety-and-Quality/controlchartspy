@@ -12,19 +12,17 @@ from ._data import (
     RawData,
     Settings,
     SettingsGroup,
+    Title,
     TitleSettings,
     ValueName,
-    apply_padding,
-    prepare_aggregations,
     prepare_data,
     prepare_settings,
     prepare_title,
+    validate_mapping,
 )
-from ._engine import FunnelResult, SPCResult, engine, render, update_values
-from ._limits import funnel_limits, funnel_lines, misc_limits, spc_limits
+from ._engine import chart_aggregations, chart_title, engine, render, update_values
 from ._result import ControlChart, StaticPlot, dimension
 
-Title = str | Mapping[str, object] | None
 ReturnObjs = str | Iterable[str]
 Defaults = dict[str, SettingsGroup]
 
@@ -104,22 +102,11 @@ def _create(
         outputs = {return_objs}
     else:
         outputs = set(return_objs)
-    prepared = prepare_data(
+    raw_data = prepare_data(
         data, keys, numerators, optional, indicators, tooltips, chart_type == "spc"
     )
-    raw_data = prepared[0]
-    order = prepared[1]
-    indicator_columns = raw_data.get("indicators")
-    if (
-        chart_type == "spc"
-        and "static_plot" in outputs
-        and indicator_columns
-        and any(len(set(column)) > 1 for column in indicator_columns.values())
-    ):
-        raise ValueError(
-            "Grouped SPC charts support limits only; use return_objs='limits'."
-        )
-    aggregations = prepare_aggregations(aggregations)
+    if aggregations is not None:
+        validate_mapping(aggregations, "aggregations must be a mapping.")
     valid = {"static_plot", "limits"}
     if chart_type == "funnel" and not raw_data.get("indicators"):
         valid.add("limit_lines")
@@ -127,9 +114,7 @@ def _create(
         raise ValueError(f"Invalid return_objs: {', '.join(sorted(outputs - valid))}.")
     width = dimension(width, 640)
     height = dimension(height, 400)
-    prepared_views = _prepare_views(
-        chart_type, raw_data, order, aggregations, title, settings
-    )
+    prepared_views = _prepare_views(chart_type, raw_data, aggregations, title, settings)
     views = prepared_views[0]
     title_settings = prepared_views[1]
     result = ControlChart()
@@ -137,22 +122,12 @@ def _create(
         return result
     static = "static_plot" in outputs
     limits = bool(outputs & {"limits", "limit_lines"})
-    raw: SPCResult | FunnelResult
-    if chart_type == "spc":
-        raw = render(chart_type, views, title_settings, width, height, static, limits)
-        if "limits" in outputs:
-            result.limits = spc_limits(raw)
-            result.indicator_names = raw["indicatorVarNames"]
-    else:
-        raw = render(chart_type, views, title_settings, width, height, static, limits)
-        if raw_data.get("indicators"):
-            if "limits" in outputs:
-                result.limits = misc_limits(raw)
-        elif limits:
-            if "limit_lines" in outputs:
-                result.limit_lines = funnel_lines(raw, settings.get("lines") or {})
-            if "limits" in outputs:
-                result.limits = funnel_limits(raw, settings.get("lines") or {})
+    raw = render(chart_type, views, title_settings, width, height, static, limits)
+    if "limits" in outputs:
+        result.limits = raw["limits"]
+        result.indicator_names = raw.get("indicatorNames", [])
+    if "limit_lines" in outputs:
+        result.limit_lines = raw["limitLines"]
     if static:
         result.static_plot = StaticPlot(
             chart_type, raw["svg"], width, height, views, title_settings
@@ -163,18 +138,15 @@ def _create(
 def _prepare_views(
     chart_type: ChartType,
     raw_data: RawData,
-    order: list[int],
-    aggregations: Mapping[str, str],
+    aggregations: Mapping[str, str] | None,
     title: Title,
     settings: Mapping[str, Settings | None],
 ) -> tuple[list[DataView], TitleSettings]:
     defaults = _defaults(chart_type, None)
-    prepared = prepare_settings(settings, defaults, order)
-    input_settings = prepared[0]
-    conditional = prepared[1]
-    title_settings = prepare_title(title)
-    views = update_values(raw_data, input_settings, aggregations, conditional)
-    apply_padding(chart_type, views, defaults, title_settings)
+    n = len(raw_data["categories"])
+    input_settings = prepare_settings(settings, defaults, n)
+    title_settings = chart_title(prepare_title(title))
+    views = update_values(raw_data, input_settings, chart_aggregations(aggregations))
     return views, title_settings
 
 
@@ -202,9 +174,16 @@ def spc(
     label_settings: Settings | None = None,
     width: float | None = None,
     height: float | None = None,
-    return_objs: ReturnObjs = ("static_plot", "limits"),
+    return_objs: ReturnObjs | None = None,
 ) -> ControlChart:
-    """Generate a statistical process control (SPC) chart and calculate control limits."""
+    """Generate a statistical process control (SPC) chart and calculate control limits.
+
+    return_objs defaults to limits only when indicators are supplied.
+    """
+    if return_objs is None:
+        return_objs = ("static_plot", "limits")
+        if indicators is not None:
+            return_objs = "limits"
     return _create(
         "spc",
         data,

@@ -163,15 +163,26 @@ class APITests(unittest.TestCase):
         values = [row["value"] for row in rows]
         expected_values = [10, 12]
         self.assertEqual(values, expected_values)
+        default = spc(data, "month", "value", indicators=indicators)
+        self.assertIsNone(default.static_plot)
+        self.assertEqual(default.limits, chart.limits)
         with self.assertRaisesRegex(
-            ValueError, "Grouped SPC charts support limits only"
+            ValueError, "Static plots are not available for SPC charts with multiple"
         ):
-            spc(data, "month", "value", indicators=indicators)
+            spc(
+                data, "month", "value", indicators=indicators, return_objs="static_plot"
+            )
 
     def test_single_indicator_group_can_render(self) -> None:
         data = sample_data()
         data["site"] = ["A"] * 4
-        chart = spc(data, "month", "value", indicators="site")
+        chart = spc(
+            data,
+            "month",
+            "value",
+            indicators="site",
+            return_objs=("static_plot", "limits"),
+        )
         assert isinstance(chart.limits, dict)
         assert chart.static_plot is not None
         self.assertIn("A", chart.limits)

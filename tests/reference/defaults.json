@@ -358,16 +358,6 @@
       "label_marker_size": 3,
       "label_marker_colour": "#000000",
       "label_marker_outline_colour": "#000000"
-    },
-    "tooltips": {
-      "ttip_font_size": 12,
-      "ttip_font": "Arial, sans-serif",
-      "ttip_font_color": "#000000",
-      "ttip_background_color": "#E0E0E0",
-      "ttip_opacity": 1,
-      "ttip_border_radius": 5,
-      "ttip_border_color": "#000000",
-      "ttip_border_width": 1
     }
   },
   "funnel": {
@@ -590,16 +580,6 @@
       "label_marker_size": 3,
       "label_marker_colour": "#000000",
       "label_marker_outline_colour": "#000000"
-    },
-    "tooltips": {
-      "ttip_font_size": 12,
-      "ttip_font": "Arial, sans-serif",
-      "ttip_font_color": "#000000",
-      "ttip_background_color": "#E0E0E0",
-      "ttip_opacity": 1,
-      "ttip_border_radius": 5,
-      "ttip_border_color": "#000000",
-      "ttip_border_width": 1
     }
   },
   "misc": {
@@ -822,16 +802,6 @@
       "label_marker_size": 3,
       "label_marker_colour": "#000000",
       "label_marker_outline_colour": "#000000"
-    },
-    "tooltips": {
-      "ttip_font_size": 12,
-      "ttip_font": "Arial, sans-serif",
-      "ttip_font_color": "#000000",
-      "ttip_background_color": "#E0E0E0",
-      "ttip_opacity": 1,
-      "ttip_border_radius": 5,
-      "ttip_border_color": "#000000",
-      "ttip_border_width": 1
     }
   }
 }
