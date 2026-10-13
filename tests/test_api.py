@@ -83,13 +83,15 @@ class APITests(unittest.TestCase):
         before = deepcopy((data, settings))
         chart = spc(data, "month", "value", scatter_settings=settings)
         self.assertEqual((data, settings), before)
+        ordered = spc(
+            {"month": sorted(data["month"]), "value": [10, 8, 12, 11]},
+            "month",
+            "value",
+            scatter_settings={"colour": ["#111111", "#222222", "#333333", "#444444"]},
+        )
         assert chart.static_plot is not None
-        objects = chart.static_plot.data_views[0]["categorical"]["categories"][0][
-            "objects"
-        ]
-        colours = [value["scatter"]["colour"] for value in objects]
-        expected_colours = ["#111111", "#222222", "#333333", "#444444"]
-        self.assertEqual(colours, expected_colours)
+        assert ordered.static_plot is not None
+        self.assertEqual(chart.static_plot.svg, ordered.static_plot.svg)
 
     def test_settings_are_independent_copies(self) -> None:
         original = spc_default_settings("canvas")
@@ -231,7 +233,7 @@ class APITests(unittest.TestCase):
             spc(data, "month", [1])
         with self.assertRaisesRegex(ValueError, "Invalid setting"):
             spc(data, "month", "value", spc_settings={"unknown": 1})
-        with self.assertRaisesRegex(ValueError, "one or 4 values"):
+        with self.assertRaisesRegex(ValueError, "one value or 4 values"):
             spc(data, "month", "value", scatter_settings={"colour": ["red", "blue"]})
         with self.assertRaisesRegex(ValueError, "valid aggregation"):
             spc(data, "month", "value", aggregations={"numerators": "unknown"})

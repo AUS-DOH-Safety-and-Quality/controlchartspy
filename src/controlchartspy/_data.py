@@ -13,8 +13,7 @@ Data = Mapping[str, object] | Sequence[Mapping[str, object]]
 Settings = Mapping[str, object]
 SettingsGroup = dict[str, Scalar]
 Title = str | Mapping[str, object] | None
-TitleSettings = dict[str, Scalar]
-InputSettings = dict[str, dict[str, Scalar | dict[str, Scalar]]]
+JSON = Scalar | list["JSON"] | dict[str, "JSON"]
 Record = dict[str, Scalar]
 Limits = list[Record] | dict[str, "Limits"]
 ChartType = Literal["spc", "funnel"]
@@ -22,7 +21,6 @@ ValueName = Literal["numerators", "denominators", "groupings", "xbar_sds", "labe
 
 
 class _RawData(TypedDict):
-    crosstalk_identities: list[str]
     categories: list[Scalar]
 
 
@@ -36,19 +34,6 @@ class RawData(_RawData, total=False):
     tooltips: dict[str, list[str | None]]
 
 
-# Only the key category (index 0) carries objects.
-class Category(TypedDict):
-    objects: list[dict[str, SettingsGroup]]
-
-
-class Categorical(TypedDict):
-    categories: list[Category]
-
-
-class DataView(TypedDict):
-    categorical: Categorical
-
-
 def missing(value: object) -> bool:
     return value is None or (isinstance(value, Real) and math.isnan(value))
 
@@ -59,11 +44,6 @@ def is_sequence(value: object) -> TypeGuard[Iterable[object]]:
 
 def is_mapping(value: object) -> TypeGuard[Mapping[object, object]]:
     return isinstance(value, Mapping)
-
-
-def validate_mapping(value: object, message: str) -> None:
-    if not isinstance(value, Mapping):
-        raise TypeError(message)
 
 
 def scalar(value: object) -> Scalar:
@@ -158,10 +138,7 @@ def prepare_data(
                 raise TypeError("SPC keys must be dates or strings.")
     groups = named_columns(data, indicators, "indicators", n)
     tips = named_columns(data, tooltips, "tooltips", n)
-    raw: RawData = {
-        "crosstalk_identities": [str(i + 1) for i in range(n)],
-        "categories": [category(value) for value in key_values],
-    }
+    raw: RawData = {"categories": [category(value) for value in key_values]}
     fields: dict[ValueName, Column | None] = {"numerators": numerators, **optional}
     for name, value in fields.items():
         if value is None:
@@ -185,37 +162,9 @@ def prepare_data(
     return raw
 
 
-def prepare_settings(
-    settings: Mapping[str, Settings | None],
-    defaults: Mapping[str, SettingsGroup],
-    n: int,
-) -> InputSettings:
-    result: InputSettings = {}
-    for group, entries in settings.items():
-        if entries is None:
-            continue
-        validate_mapping(entries, f"{group} settings must be a mapping.")
-        result[group] = {}
-        for name, value in entries.items():
-            if name not in defaults[group]:
-                raise ValueError(f"Invalid setting '{name}' in group '{group}'.")
-            if is_sequence(value):
-                items = list(value)
-                if len(items) == 1:
-                    value = items[0]
-                elif len(items) == n:
-                    result[group][name] = {
-                        str(i + 1): scalar(item) for i, item in enumerate(items)
-                    }
-                    continue
-                else:
-                    raise ValueError(f"Setting '{name}' must have one or {n} values.")
-            result[group][name] = scalar(value)
-    return result
-
-
-def prepare_title(title: Title) -> str | dict[str, Scalar] | None:
-    if title is None or isinstance(title, str):
-        return title
-    validate_mapping(title, "title must be a string or a mapping.")
-    return {name: scalar(value) for name, value in title.items()}
+def json_value(value: object) -> JSON:
+    if is_mapping(value):
+        return {str(key): json_value(item) for key, item in value.items()}
+    if is_sequence(value):
+        return [json_value(item) for item in value]
+    return scalar(value)

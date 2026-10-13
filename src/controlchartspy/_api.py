@@ -8,22 +8,17 @@ from ._data import (
     Column,
     Columns,
     Data,
-    DataView,
-    RawData,
     Settings,
     SettingsGroup,
     Title,
-    TitleSettings,
     ValueName,
     is_sequence,
+    json_value,
     label,
     missing,
     prepare_data,
-    prepare_settings,
-    prepare_title,
-    validate_mapping,
 )
-from ._engine import chart_aggregations, chart_title, engine, render, update_values
+from ._engine import Inputs, engine, render
 from ._result import ControlChart, StaticPlot, dimension
 
 ReturnObjs = str | Iterable[str]
@@ -108,8 +103,6 @@ def _create(
     raw_data = prepare_data(
         data, keys, numerators, optional, indicators, tooltips, chart_type == "spc"
     )
-    if aggregations is not None:
-        validate_mapping(aggregations, "aggregations must be a mapping.")
     valid = {"static_plot", "limits"}
     if chart_type == "funnel" and not raw_data.get("indicators"):
         valid.add("limit_lines")
@@ -117,40 +110,26 @@ def _create(
         raise ValueError(f"Invalid return_objs: {', '.join(sorted(outputs - valid))}.")
     width = dimension(width, 640)
     height = dimension(height, 400)
-    prepared_views = _prepare_views(chart_type, raw_data, aggregations, title, settings)
-    views = prepared_views[0]
-    title_settings = prepared_views[1]
+    inputs: Inputs = {
+        "raw_data": raw_data,
+        "settings": json_value(settings),
+        "aggregations": json_value(aggregations),
+        "title": json_value(title),
+    }
     result = ControlChart()
     if not outputs:
         return result
     static = "static_plot" in outputs
     limits = bool(outputs & {"limits", "limit_lines"})
-    raw = render(chart_type, views, title_settings, width, height, static, limits)
+    raw = render(chart_type, inputs, width, height, static, limits)
     if "limits" in outputs:
         result.limits = raw["limits"]
         result.indicator_names = raw.get("indicatorNames", [])
     if "limit_lines" in outputs:
         result.limit_lines = raw["limitLines"]
     if static:
-        result.static_plot = StaticPlot(
-            chart_type, raw["svg"], width, height, views, title_settings
-        )
+        result.static_plot = StaticPlot(chart_type, raw["svg"], width, height, inputs)
     return result
-
-
-def _prepare_views(
-    chart_type: ChartType,
-    raw_data: RawData,
-    aggregations: Mapping[str, str] | None,
-    title: Title,
-    settings: Mapping[str, Settings | None],
-) -> tuple[list[DataView], TitleSettings]:
-    defaults = _defaults(chart_type, None)
-    n = len(raw_data["categories"])
-    input_settings = prepare_settings(settings, defaults, n)
-    title_settings = chart_title(prepare_title(title))
-    views = update_values(raw_data, input_settings, chart_aggregations(aggregations))
-    return views, title_settings
 
 
 def spc(

@@ -6,8 +6,8 @@ from dataclasses import dataclass, field
 from numbers import Real
 from pathlib import Path
 
-from ._data import ChartType, DataView, Limits, Record, TitleSettings
-from ._engine import render
+from ._data import ChartType, Limits, Record
+from ._engine import Inputs, render
 
 
 def dimension(value: object, default: float) -> float:
@@ -28,8 +28,7 @@ class StaticPlot:
     svg: str
     width: float
     height: float
-    data_views: list[DataView] = field(repr=False)
-    title_settings: TitleSettings = field(repr=False)
+    inputs: Inputs = field(repr=False)
 
     def to_svg(self, width: float | None = None, height: float | None = None) -> str:
         """Return a complete SVG document, optionally rendered at a new size."""
@@ -37,8 +36,7 @@ class StaticPlot:
             return self.svg
         return render(
             self.type,
-            self.data_views,
-            self.title_settings,
+            self.inputs,
             dimension(width, self.width),
             dimension(height, self.height),
             True,

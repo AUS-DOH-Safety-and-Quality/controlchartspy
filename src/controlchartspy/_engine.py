@@ -3,23 +3,13 @@
 import json
 import threading
 import warnings
-from collections.abc import Callable, Mapping
+from collections.abc import Callable
 from importlib.resources import files
 from typing import TypedDict, cast
 
 import quickjs
 
-from ._data import (
-    ChartType,
-    DataView,
-    InputSettings,
-    Limits,
-    RawData,
-    Record,
-    Scalar,
-    SettingsGroup,
-    TitleSettings,
-)
+from ._data import JSON, ChartType, Limits, RawData, Record, SettingsGroup
 
 _STATE = threading.local()
 SCRIPTS = (
@@ -40,16 +30,11 @@ class Result(TypedDict, total=False):
     indicatorNames: list[str]
 
 
-class ChartTitle(TypedDict):
-    settings: TitleSettings
-
-
-class ChartAggregations(TypedDict):
-    aggregations: dict[str, str]
-
-
-class UpdateValues(TypedDict):
-    dataViews: list[DataView]
+class Inputs(TypedDict):
+    raw_data: RawData
+    settings: JSON
+    aggregations: JSON
+    title: JSON
 
 
 def _warn(message: str) -> None:
@@ -109,31 +94,9 @@ def engine() -> Engine:
     return instance
 
 
-def update_values(
-    raw_data: RawData,
-    input_settings: InputSettings,
-    aggregations: Mapping[str, str],
-) -> list[DataView]:
-    updates = cast(
-        UpdateValues,
-        engine().call("makeUpdateValues", raw_data, input_settings, aggregations),
-    )
-    return updates["dataViews"]
-
-
-def chart_title(title: str | Mapping[str, Scalar] | None) -> TitleSettings:
-    return cast(ChartTitle, engine().call("chartTitle", title))["settings"]
-
-
-def chart_aggregations(aggregations: Mapping[str, str] | None) -> dict[str, str]:
-    result = engine().call("chartAggregations", aggregations)
-    return cast(ChartAggregations, result)["aggregations"]
-
-
 def render(
     chart_type: ChartType,
-    data_views: list[DataView],
-    title: TitleSettings,
+    inputs: Inputs,
     width: float,
     height: float,
     static: bool,
@@ -142,10 +105,12 @@ def render(
     return cast(
         Result,
         engine().call(
-            "updateHeadlessVisual",
+            "headlessChart",
             chart_type,
-            data_views,
-            title,
+            inputs["raw_data"],
+            inputs["settings"],
+            inputs["aggregations"],
+            inputs["title"],
             width,
             height,
             static,

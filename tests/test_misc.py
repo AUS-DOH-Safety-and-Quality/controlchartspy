@@ -261,7 +261,7 @@ class MiscTests(unittest.TestCase):
                 },
                 "one improvement direction",
             ),
-            ({"funnel_settings": {"multiplier": [1, 100]}}, "one or 8 values"),
+            ({"funnel_settings": {"multiplier": [1, 100]}}, "one value or 8 values"),
             ({"funnel_settings": {"unknown": 1}}, "Invalid setting"),
             ({"misc_settings": {"unknown": 1}}, "Invalid setting"),
             ({"misc_settings": {"lower": 0}}, "bounds must span zero"),
