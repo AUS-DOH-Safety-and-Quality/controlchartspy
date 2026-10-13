@@ -25,14 +25,6 @@ ReturnObjs = str | Iterable[str]
 Defaults = dict[str, SettingsGroup]
 
 
-@overload
-def _defaults(chart_type: ChartType, group: None) -> Defaults: ...
-
-
-@overload
-def _defaults(chart_type: ChartType, group: str) -> SettingsGroup: ...
-
-
 def _defaults(chart_type: ChartType, group: str | None) -> Defaults | SettingsGroup:
     settings = engine().defaults(chart_type)
     if group is None:

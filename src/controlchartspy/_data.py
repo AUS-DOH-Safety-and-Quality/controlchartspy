@@ -4,7 +4,7 @@ import math
 from collections.abc import Iterable, Mapping, Sequence
 from datetime import date, datetime
 from numbers import Integral, Real
-from typing import Literal, TypedDict, TypeGuard
+from typing import Literal, TypeGuard
 
 Scalar = str | bool | int | float | None
 Column = str | Iterable[object]
@@ -13,25 +13,12 @@ Data = Mapping[str, object] | Sequence[Mapping[str, object]]
 Settings = Mapping[str, object]
 SettingsGroup = dict[str, Scalar]
 Title = str | Mapping[str, object] | None
-JSON = Scalar | list["JSON"] | dict[str, "JSON"]
+JSON = Scalar | Sequence["JSON"] | Mapping[str, "JSON"]
 Record = dict[str, Scalar]
 Limits = list[Record] | dict[str, "Limits"]
 ChartType = Literal["spc", "funnel"]
 ValueName = Literal["numerators", "denominators", "groupings", "xbar_sds", "labels"]
-
-
-class _RawData(TypedDict):
-    categories: list[Scalar]
-
-
-class RawData(_RawData, total=False):
-    numerators: list[Scalar]
-    denominators: list[Scalar]
-    groupings: list[Scalar]
-    xbar_sds: list[Scalar]
-    labels: list[Scalar]
-    indicators: dict[str, list[str | None]]
-    tooltips: dict[str, list[str | None]]
+RawData = dict[str, JSON]
 
 
 def missing(value: object) -> bool:
