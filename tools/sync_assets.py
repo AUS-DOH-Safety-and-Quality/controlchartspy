@@ -6,12 +6,11 @@ from pathlib import Path
 
 URL = "https://raw.githubusercontent.com/AUS-DOH-Safety-and-Quality/controlcharts"
 ASSETS = {
-    "minidom.js": "inst/js/minidom.js",
-    "ccCore.js": "inst/htmlwidgets/lib/UTILS/ccCore.js",
-    "PBISPC.js": "inst/htmlwidgets/lib/PBISPC/PBISPC.js",
-    "PBIFUN.js": "inst/htmlwidgets/lib/PBIFUN/PBIFUN.js",
-    "commonUtils.js": "inst/htmlwidgets/lib/UTILS/commonUtils.js",
-    "headlessUtils.js": "inst/htmlwidgets/lib/UTILS/headlessUtils.js",
+    "minidom.min.js": "inst/js/minidom.min.js",
+    "ccCore.min.js": "inst/htmlwidgets/lib/UTILS/ccCore.min.js",
+    "PBISPC.min.js": "inst/htmlwidgets/lib/PBISPC/PBISPC.min.js",
+    "PBIFUN.min.js": "inst/htmlwidgets/lib/PBIFUN/PBIFUN.min.js",
+    "ccHeadless.min.js": "inst/htmlwidgets/lib/UTILS/ccHeadless.min.js",
 }
 
 

@@ -166,7 +166,7 @@ class MiscTests(unittest.TestCase):
         expected_colours = ["#112233", "#445566"]
         self.assertEqual(colours, expected_colours)
         payload = engine().context.eval(
-            "JSON.stringify(funnelVisual.viewModel.miscPoints)"
+            "JSON.stringify(ccHeadless.visuals.funnel.viewModel.miscPoints)"
         )
         assert isinstance(payload, str)
         points: list[Point] = json.loads(payload)
@@ -264,7 +264,7 @@ class MiscTests(unittest.TestCase):
             ({"funnel_settings": {"multiplier": [1, 100]}}, "one value or 8 values"),
             ({"funnel_settings": {"unknown": 1}}, "Invalid setting"),
             ({"misc_settings": {"unknown": 1}}, "Invalid setting"),
-            ({"misc_settings": {"lower": 0}}, "bounds must span zero"),
+            ({"misc_settings": {"lower": 0}}, "not a valid value for lower"),
             ({"return_objs": "limit_lines"}, "Invalid return_objs"),
         ]
         for overrides, message in cases:

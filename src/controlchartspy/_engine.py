@@ -13,12 +13,11 @@ from ._data import JSON, ChartType, Limits, RawData, Record, SettingsGroup
 
 _STATE = threading.local()
 SCRIPTS = (
-    "minidom.js",
-    "ccCore.js",
-    "PBISPC.js",
-    "PBIFUN.js",
-    "commonUtils.js",
-    "headlessUtils.js",
+    "minidom.min.js",
+    "ccCore.min.js",
+    "PBISPC.min.js",
+    "PBIFUN.min.js",
+    "ccHeadless.min.js",
 )
 
 
@@ -57,7 +56,7 @@ class Engine:
                 return value;
             }
             function pythonCall(name, payload) {
-                return JSON.stringify(globalThis[name](...JSON.parse(payload)), pythonReplacer);
+                return JSON.stringify(ccHeadless[name](...JSON.parse(payload)), pythonReplacer);
             }
             function pythonDefaults(type) {
                 return JSON.stringify(globalThis[type].defaultSettings, pythonReplacer);
@@ -66,7 +65,7 @@ class Engine:
         assets = files("controlchartspy").joinpath("_vendor")
         for name in SCRIPTS:
             self.context.eval(assets.joinpath(name).read_text(encoding="utf-8"))
-        self.context.eval("initialiseHeadless()")
+        self.context.eval("ccHeadless.initialiseHeadless(minidom.dummyDOM())")
         self._call = cast(Callable[[str, str], str], self.context.get("pythonCall"))
         self._defaults = cast(Callable[[str], str], self.context.get("pythonDefaults"))
 

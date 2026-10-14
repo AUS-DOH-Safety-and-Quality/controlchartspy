@@ -4,7 +4,7 @@ build-backend = "uv_build"
 
 [project]
 name = "controlchartspy"
-version = "0.1.1"
+version = "0.1.2"
 description = "Calculate and visualise SPC, funnel, and multi-indicator sigma charts"
 readme = "README.md"
 license = "GPL-3.0-only"

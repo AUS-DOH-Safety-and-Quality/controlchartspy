@@ -119,6 +119,35 @@ class APITests(unittest.TestCase):
         self.assertGreater(len(chart.limit_lines), 4)
         self.assertIn("denominator", chart.limit_lines[0])
 
+    def test_groupings_and_xbar_sds_are_forwarded(self) -> None:
+        data = {
+            "day": [f"2024-01-0{day}" for day in range(1, 9)],
+            "value": [1, 2, 1, 2, 10, 11, 10, 11],
+            "phase": ["a"] * 4 + ["b"] * 4,
+            "size": [5] * 8,
+        }
+        phases = spc(data, "day", "value", groupings="phase", return_objs="limits")
+        assert isinstance(phases.limits, list)
+        targets = [row["target"] for row in phases.limits]
+        self.assertEqual(targets, [1.5] * 4 + [10.5] * 4)
+        widths: list[float] = []
+        for sd in (1.0, 2.0):
+            xbar = spc(
+                data,
+                "day",
+                "value",
+                denominators="size",
+                xbar_sds=[sd] * 8,
+                spc_settings={"chart_type": "xbar"},
+                return_objs="limits",
+            )
+            assert isinstance(xbar.limits, list)
+            row = xbar.limits[0]
+            assert isinstance(row["ul99"], float)
+            assert isinstance(row["ll99"], float)
+            widths.append(row["ul99"] - row["ll99"])
+        self.assertAlmostEqual(widths[1], 2 * widths[0])
+
     def test_svg_export_and_resize(self) -> None:
         data = sample_data()
         chart = spc(data, "month", "value", title="A < B & C")
