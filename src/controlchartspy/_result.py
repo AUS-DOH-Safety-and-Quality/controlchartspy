@@ -2,11 +2,14 @@
 
 import math
 import os
+import statistics
+from collections.abc import Mapping
 from dataclasses import dataclass, field
+from datetime import date
 from numbers import Real
 from pathlib import Path
 
-from ._data import ChartType, Limits, Record
+from ._data import ChartType, Record, missing
 from ._engine import Inputs, render
 
 
@@ -18,6 +21,54 @@ def dimension(value: object, default: float) -> float:
     if not math.isfinite(value) or value <= 0:
         raise ValueError("Chart dimensions must be positive numbers.")
     return float(value)
+
+
+# Mirrors the engine's tooltip aggregation, keeping Python types
+def reduce_tooltip(values: list[object], aggregation: str) -> object:
+    present = [value for value in values if not missing(value)]
+    if aggregation == "count":
+        return len(present)
+    if not present:
+        return None
+    if aggregation == "first":
+        return present[0]
+    if aggregation == "last":
+        return present[-1]
+    dates = [value for value in present if isinstance(value, date)]
+    if aggregation in ("min", "max") and len(dates) == len(present):
+        if aggregation == "min":
+            return min(dates)
+        return max(dates)
+    numbers = [value for value in present if isinstance(value, Real)]
+    if len(numbers) != len(present):
+        raise TypeError(f"The '{aggregation}' aggregation needs numeric tooltips.")
+    if aggregation == "sum":
+        return sum(numbers)
+    if aggregation == "mean":
+        return statistics.fmean(numbers)
+    if aggregation == "median":
+        return statistics.median([float(value) for value in numbers])
+    if aggregation == "min":
+        return min(numbers)
+    return max(numbers)
+
+
+def tooltip_limits(
+    limits: list[Record],
+    row_ids: list[int],
+    source_rows: Mapping[str, list[int]],
+    tooltips: Mapping[str, list[object]],
+    aggregation: str,
+) -> list[Record]:
+    if limits:
+        conflicting = sorted(set(tooltips) & set(limits[0]))
+        if conflicting:
+            raise ValueError(f"Result column names conflict: {', '.join(conflicting)}.")
+    for record, row_id in zip(limits, row_ids, strict=True):
+        rows = source_rows[str(row_id)]
+        for name, values in tooltips.items():
+            record[name] = reduce_tooltip([values[row] for row in rows], aggregation)
+    return limits
 
 
 @dataclass
@@ -52,9 +103,8 @@ class ControlChart:
     """A control chart containing the requested plot and calculated limits."""
 
     static_plot: StaticPlot | None = None
-    limits: Limits | None = None
+    limits: list[Record] | None = None
     limit_lines: list[Record] | None = None
-    indicator_names: list[str] = field(default_factory=list[str])
 
     def save_plot(
         self,

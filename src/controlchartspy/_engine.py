@@ -9,7 +9,7 @@ from typing import TypedDict, cast
 
 import quickjs
 
-from ._data import JSON, ChartType, Limits, RawData, Record, SettingsGroup
+from ._data import JSON, ChartType, RawData, Record, SettingsGroup
 
 _STATE = threading.local()
 SCRIPTS = (
@@ -24,9 +24,11 @@ SCRIPTS = (
 # Keys are only present for the requested outputs and chart mode.
 class Result(TypedDict, total=False):
     svg: str
-    limits: Limits
+    limits: list[Record]
     limitLines: list[Record]
-    indicatorNames: list[str]
+    rowIds: list[int]
+    source_rows: dict[str, list[int]]
+    warnings: list[str]
 
 
 class Inputs(TypedDict):

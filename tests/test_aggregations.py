@@ -1,6 +1,7 @@
 """Power BI column aggregation semantics for missing observations."""
 
 import unittest
+import warnings
 
 from controlchartspy import funnel, spc
 
@@ -13,7 +14,7 @@ class AggregationTests(unittest.TestCase):
             "min": [10, 0],
             "max": [20, 0],
             "median": [15, 0],
-            "count": [2, 1],
+            "count": [2, 1, 0],
         }
         for missing in (None, float("nan")):
             data = {
@@ -23,20 +24,32 @@ class AggregationTests(unittest.TestCase):
             }
             for method, values in expected.items():
                 with self.subTest(method=method, missing=missing):
-                    spc_chart = spc(
-                        data,
-                        "key",
-                        "n",
-                        aggregations={"numerators": method},
-                        return_objs="limits",
-                    )
-                    funnel_chart = funnel(
-                        data,
-                        "key",
-                        "n",
-                        "d",
-                        aggregations={"numerators": method},
-                        return_objs="limits",
+                    # An all-missing key counts 0 and is kept; other methods drop it
+                    with warnings.catch_warnings(record=True) as caught:
+                        warnings.simplefilter("always")
+                        spc_chart = spc(
+                            data,
+                            "key",
+                            "n",
+                            aggregations={"numerators": method},
+                            return_objs="limits",
+                        )
+                        funnel_chart = funnel(
+                            data,
+                            "key",
+                            "n",
+                            "d",
+                            aggregations={"numerators": method},
+                            return_objs="limits",
+                        )
+                    self.assertEqual(
+                        [str(warning.message) for warning in caught],
+                        []
+                        if method == "count"
+                        else [
+                            "key 01/03/2024 removed due to: Numerator missing.",
+                            "key 2024-03-01 removed due to: Numerator missing.",
+                        ],
                     )
                     assert isinstance(spc_chart.limits, list)
                     assert isinstance(funnel_chart.limits, list)
@@ -76,8 +89,56 @@ class AggregationTests(unittest.TestCase):
             "d",
             return_objs="limits",
         )
-        actual = funnel(data, "key", "n", "d", return_objs="limits")
+        with self.assertWarnsRegex(
+            UserWarning, r"^key C removed due to: Denominator missing\.$"
+        ):
+            actual = funnel(data, "key", "n", "d", return_objs="limits")
         self.assertEqual(actual.limits, expected.limits)
+
+
+    def test_first_and_last_skip_missing_values_and_tooltips(self) -> None:
+        data = {
+            "key": ["A"] * 3 + ["B"] * 3,
+            "n": [None, 10, 20, 30, None, None],
+            "note": [None, "a1", "a2", "b1", None, None],
+        }
+        expected = {
+            "first": ([10, 30], ["a1", "b1"]),
+            "last": ([20, 30], ["a2", "b1"]),
+        }
+        for method, (values, notes) in expected.items():
+            with self.subTest(method=method):
+                chart = spc(
+                    data,
+                    "key",
+                    "n",
+                    tooltips="note",
+                    aggregations={"numerators": method, "tooltips": method},
+                    return_objs="limits",
+                )
+                assert isinstance(chart.limits, list)
+                self.assertEqual([row["value"] for row in chart.limits], values)
+                self.assertEqual([row["note"] for row in chart.limits], notes)
+        counted = spc(
+            data,
+            "key",
+            "n",
+            tooltips="note",
+            aggregations={"numerators": "count", "tooltips": "count"},
+            return_objs="limits",
+        )
+        assert isinstance(counted.limits, list)
+        self.assertEqual([row["note"] for row in counted.limits], [2, 1])
+        none = spc(
+            {"key": ["A", "A"], "n": [1, 2], "note": [None, None]},
+            "key",
+            "n",
+            tooltips="note",
+            aggregations={"tooltips": "count"},
+            return_objs="limits",
+        )
+        assert isinstance(none.limits, list)
+        self.assertEqual([row["note"] for row in none.limits], [0])
 
 
 if __name__ == "__main__":

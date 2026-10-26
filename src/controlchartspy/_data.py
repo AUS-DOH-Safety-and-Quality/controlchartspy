@@ -14,8 +14,7 @@ Settings = Mapping[str, object]
 SettingsGroup = dict[str, Scalar]
 Title = str | Mapping[str, object] | None
 JSON = Scalar | Sequence["JSON"] | Mapping[str, "JSON"]
-Record = dict[str, Scalar]
-Limits = list[Record] | dict[str, "Limits"]
+Record = dict[str, object]
 ChartType = Literal["spc", "funnel"]
 ValueName = Literal["numerators", "denominators", "groupings", "xbar_sds", "labels"]
 RawData = dict[str, JSON]
@@ -88,7 +87,7 @@ def column(
 
 def named_columns(
     data: Data, value: Columns | None, name: str, length: int
-) -> dict[str, list[str | None]]:
+) -> dict[str, list[object]]:
     if value is None:
         return {}
     columns: Mapping[object, object]
@@ -101,9 +100,12 @@ def named_columns(
     if not columns:
         raise ValueError(f"{name} must contain at least one column.")
     return {
-        str(key): [label(item) for item in column(data, values, name, length)]
-        for key, values in columns.items()
+        str(key): column(data, values, name, length) for key, values in columns.items()
     }
+
+
+def labelled(columns: Mapping[str, list[object]]) -> dict[str, list[str | None]]:
+    return {key: [label(item) for item in values] for key, values in columns.items()}
 
 
 def prepare_data(
@@ -114,7 +116,7 @@ def prepare_data(
     indicators: Columns | None,
     tooltips: Columns | None,
     date_keys: bool,
-) -> RawData:
+) -> tuple[RawData, dict[str, list[object]]]:
     key_values = column(data, keys, "keys")
     n = len(key_values)
     if n == 0:
@@ -125,7 +127,11 @@ def prepare_data(
                 raise TypeError("SPC keys must be dates or strings.")
     groups = named_columns(data, indicators, "indicators", n)
     tips = named_columns(data, tooltips, "tooltips", n)
-    raw: RawData = {"categories": [category(value) for value in key_values]}
+    # Names the rows in the chart's warnings, as other unnamed columns take their argument's name
+    raw: RawData = {
+        "categories": [category(value) for value in key_values],
+        "category_name": keys if isinstance(keys, str) else "keys",
+    }
     fields: dict[ValueName, Column | None] = {"numerators": numerators, **optional}
     for name, value in fields.items():
         if value is None:
@@ -143,10 +149,10 @@ def prepare_data(
                 raise TypeError(f"{name} must contain numeric values.")
         raw[name] = values
     if groups:
-        raw["indicators"] = groups
+        raw["indicators"] = labelled(groups)
     if tips:
-        raw["tooltips"] = tips
-    return raw
+        raw["tooltips"] = labelled(tips)
+    return raw, tips
 
 
 def json_value(value: object) -> JSON:

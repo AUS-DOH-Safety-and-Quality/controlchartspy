@@ -103,7 +103,7 @@ class MiscTests(unittest.TestCase):
         sequences["keys"] = data["organisation"]
         sequences["numerators"] = data["numerator"]
         sequences["denominators"] = data["denominator"]
-        sequences["indicators"] = data["indicator"]
+        sequences["indicators"] = {"indicator": data["indicator"]}
         self.assertEqual(misc(**sequences).limits, expected.limits)
         records: list[dict[str, object]] = [
             {
@@ -150,10 +150,11 @@ class MiscTests(unittest.TestCase):
         self.assertEqual(arguments, before)
         assert isinstance(chart.limits, list)
         assert chart.static_plot is not None
-        indicators = [row["indicator"] for row in chart.limits]
+        selected = [row for row in chart.limits if row["group"] == "A"]
+        indicators = [row["indicator"] for row in selected]
         expected_indicators = ["Higher is better", "Lower is better"]
         self.assertEqual(indicators, expected_indicators)
-        classifications = [row["three_sigma"] for row in chart.limits]
+        classifications = [row["three_sigma"] for row in selected]
         expected_classifications = ["improvement"] * 2
         self.assertEqual(classifications, expected_classifications)
         root = ElementTree.fromstring(chart.static_plot.to_svg())
@@ -178,6 +179,7 @@ class MiscTests(unittest.TestCase):
         ]
         expected_notes = ["row-15", "row-7"]
         self.assertEqual(notes, expected_notes)
+        self.assertEqual([row["Note"] for row in selected], expected_notes)
 
     def test_svg_export_and_resize(self) -> None:
         arguments = chart_arguments(comparison_data())
@@ -207,7 +209,7 @@ class MiscTests(unittest.TestCase):
         chart = misc(**arguments)
         self.assertIsNone(chart.static_plot)
         assert isinstance(chart.limits, list)
-        self.assertEqual(len(chart.limits), 2)
+        self.assertEqual(len(chart.limits), 8)
         self.assertIsNone(chart.limit_lines)
         arguments["return_objs"] = (name for name in ["static_plot"])
         chart = misc(**arguments)
@@ -294,14 +296,14 @@ class MiscTests(unittest.TestCase):
         self.assertEqual(wrapped.static_plot.svg, direct.static_plot.svg)
         assert isinstance(wrapped.limits, list)
         groups = [row["group"] for row in wrapped.limits]
-        expected_groups = ["2", "2"]
+        expected_groups = ["1", "2", "3", "4"] * 2
         self.assertEqual(groups, expected_groups)
-        indicators = [row["indicator"] for row in wrapped.limits]
-        expected_indicators = [
-            "Effectiveness / Higher is better",
-            "Safety / Lower is better",
-        ]
-        self.assertEqual(indicators, expected_indicators)
+        domains = [row["Domain"] for row in wrapped.limits]
+        expected_domains = ["Effectiveness"] * 4 + ["Safety"] * 4
+        self.assertEqual(domains, expected_domains)
+        measures = [row["Measure"] for row in wrapped.limits]
+        expected_measures = ["Higher is better"] * 4 + ["Lower is better"] * 4
+        self.assertEqual(measures, expected_measures)
         self.assertEqual(misc_default_settings(), funnel_default_settings())
 
     def test_funnel_uses_first_group_when_none_is_selected(self) -> None:
@@ -312,6 +314,47 @@ class MiscTests(unittest.TestCase):
         assert automatic.static_plot is not None
         assert selected.static_plot is not None
         self.assertEqual(automatic.static_plot.svg, selected.static_plot.svg)
+
+    def test_numeric_targets_select_numeric_keys_by_value(self) -> None:
+        data = {
+            "site": [2, 100000, 0.1 + 0.2, 1e16] * 2,
+            "indicator": ["Higher"] * 4 + ["Lower"] * 4,
+            "numerator": [3, 5, 4, 6, 2, 7, 5, 4],
+            "denominator": [10] * 8,
+        }
+
+        def svg(target: object) -> str:
+            chart = misc(
+                data,
+                "site",
+                "numerator",
+                "denominator",
+                "indicator",
+                target,
+                return_objs="static_plot",
+            )
+            assert chart.static_plot is not None
+            return chart.static_plot.svg
+
+        self.assertEqual(svg(100000), svg("100000"))
+        self.assertEqual(svg(1e16), svg("10000000000000000"))
+        drawn = {svg(2), svg(100000), svg(0.1 + 0.2), svg(1e16)}
+        self.assertEqual(len(drawn), 4)
+        self.assertEqual(svg(2.0), svg(2))
+
+    def test_a_group_given_per_row_must_name_one_group(self) -> None:
+        arguments = funnel_arguments(comparison_data())
+        arguments["misc_settings"] = {"group": comparison_data()["organisation"]}
+        with self.assertRaisesRegex(
+            ValueError, "The MISC group must be the same for every row."
+        ):
+            funnel(**arguments)
+        arguments["misc_settings"] = {"group": ["B"] * 8}
+        same = funnel(**arguments)
+        chosen = misc(**chart_arguments(comparison_data()) | {"target": "B"})
+        assert same.static_plot is not None
+        assert chosen.static_plot is not None
+        self.assertEqual(same.static_plot.svg, chosen.static_plot.svg)
 
 
 if __name__ == "__main__":
