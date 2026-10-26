@@ -31,6 +31,7 @@ class _Sample(TypedDict):
 class Sample(_Sample, total=False):
     region: list[str]
     site: list[str]
+    indicator: list[str]
 
 
 def sample_data() -> Sample:
