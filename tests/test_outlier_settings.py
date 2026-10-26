@@ -96,7 +96,7 @@ class OutlierSettingsTests(unittest.TestCase):
                 "shift": [True, True, False, False],
             },
         )
-        assert isinstance(chart.limits, dict)
+        assert chart.limits is not None
         for indicator, enabled in (("A", False), ("B", True)):
             with self.subTest(indicator=indicator):
                 expected = spc(
@@ -106,7 +106,13 @@ class OutlierSettingsTests(unittest.TestCase):
                     return_objs="limits",
                     outlier_settings={"astronomical": enabled, "shift": not enabled},
                 )
-                self.assertEqual(chart.limits[indicator], expected.limits)
+                assert expected.limits is not None
+                actual = [
+                    {name: row[name] for name in expected.limits[0]}
+                    for row in chart.limits
+                    if row["indicator"] == indicator
+                ]
+                self.assertEqual(actual, expected.limits)
 
 
 if __name__ == "__main__":

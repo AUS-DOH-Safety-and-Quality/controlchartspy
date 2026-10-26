@@ -180,7 +180,7 @@ Select a chart type with `spc_settings={"chart_type": ...}` or
 
 | Function | Chart types | Additional required inputs |
 | --- | --- | --- |
-| `spc` | `run`, `i` (default), `i_m`, `i_mm`, `mr`, `c`, `g`, `t` | None |
+| `spc` | `run`, `i` (default), `i_m`, `i_mm`, `mr`, `c`, `g`, `t` | None; `run`, `i`, `i_m`, `i_mm` and `mr` optionally take `denominators` |
 | `spc` | `p`, `pp` (proportions), `u`, `up` (rates) | `denominators` |
 | `spc` | `xbar` (sample means) | `denominators`, `xbar_sds` |
 | `spc` | `s` (sample standard deviations) | `denominators`; supply standard deviations as `numerators` |
@@ -189,6 +189,10 @@ Select a chart type with `spc_settings={"chart_type": ...}` or
 The individuals chart uses moving ranges to calculate control limits. `i_m`
 uses a median centreline; `i_mm` also uses median moving-range limits. `pp` and
 `up` are proportion and rate charts with large-sample correction.
+
+With `denominators`, `run`, `i`, `i_m`, `i_mm` and `mr` charts plot numerators
+divided by denominators. An indicator whose denominators are all missing plots
+its numerators. `xbar` and `s` limits include each group's size as `denominator`.
 
 ## Data and Arguments
 
@@ -199,6 +203,9 @@ accept a column name or a sequence in the original row order:
 - `numerators`: the numeric observations for each category.
 - `denominators`: the denominators for each category, where required.
 - `labels`: optional labels for each category.
+- `tooltips`: optional column, or mapping of names to columns, shown in tooltips.
+  Limit records include them with their original types, reduced within each key
+  by the `tooltips` aggregation.
 
 SPC keys accept Python `date` objects and ISO date strings (`YYYY-MM-DD`),
 including mixtures in one column. Rows are sorted by key, within indicator
@@ -210,10 +217,11 @@ default to `sum`, while other input fields default to `first`. Override these
 with `aggregations`, using `first`, `last`, `sum`, `mean`, `min`, `max`, `median`,
 or `count`.
 
-Numeric aggregations follow Power BI column aggregation: missing values are
-ignored, zeros are included, and an entirely missing group stays missing.
-`count` counts non-missing values. Numerators and denominators are aggregated
-independently. `first` and `last` select by input row order, including missing values.
+Aggregations follow Power BI column aggregation: missing values are ignored by
+every method, zeros are included, and an entirely missing group stays missing
+except that its `count` is 0. `first` and `last` select the first and last
+non-missing value in input row order. Numerators and denominators are
+aggregated independently.
 
 ## Aesthetic Options
 
@@ -221,6 +229,9 @@ Visual adjustments are handled through dedicated settings arguments. Each group
 of settings has its own argument, such as `canvas_settings`, `line_settings`,
 `scatter_settings`, `x_axis_settings`, or `y_axis_settings`. SPC charts also accept
 `date_settings`, while `label_settings` controls observation labels.
+`summary_table_settings` shows the chart as a table (`show_table`) and styles it.
+A table has no static plot, so `return_objs` then defaults to `"limits"`; funnel
+plots with indicators show the sigma chart instead.
 
 To see the full list of available options, retrieve the complete defaults or
 one group:
@@ -307,12 +318,12 @@ grouped_chart = spc(
     indicators="site",
     return_objs="limits",
 )
-site_a_limits = grouped_chart.limits["A"]
+site_a_limits = [row for row in grouped_chart.limits if row["site"] == "A"]
 ```
 
-`indicators` create separate series and nested limits. A mapping such as
-`indicators={"Region": "region", "Site": "site"}` creates a nested mapping in
-that order, with names available through `chart.indicator_names`. With
+`indicators` create separate series. Limit records include one column per
+indicator, named by the column name or by the keys of a mapping such as
+`indicators={"Region": "region", "Site": "site"}`. With
 indicators, `return_objs` defaults to `"limits"`; a single indicator group can
 still render a plot, but multiple groups cannot.
 
@@ -349,18 +360,18 @@ sigma_chart.static_plot
 Inspect the returned records for the selected organisation:
 
 ```python
-pprint(sigma_chart.limits, sort_dicts=False)
+pprint([row for row in sigma_chart.limits if row["group"] == "A"], sort_dicts=False)
 ```
 
 ```text
 [{'indicator': 'Measure A',
+  'denominator': 10,
   'group': 'A',
+  'numerator': 8,
+  'value': 80,
   'z': 1.558790495298732,
   'score': 1.558790495298732,
   'three_sigma': 'none',
-  'numerator': 8,
-  'denominator': 10,
-  'value': 80,
   'target': 57.49999999999999,
   'll99': 13.216714304122751,
   'll95': 27.39016233134321,
@@ -369,13 +380,13 @@ pprint(sigma_chart.limits, sort_dicts=False)
   'ul95': 84.81980066370618,
   'ul99': 95.17325739282423},
  {'indicator': 'Measure B',
+  'denominator': 10,
   'group': 'A',
+  'numerator': 2,
+  'value': 20,
   'z': -1.07140640762028,
   'score': 1.07140640762028,
   'three_sigma': 'none',
-  'numerator': 2,
-  'denominator': 10,
-  'value': 20,
   'target': 35,
   'll99': 2.071914317061943,
   'll95': 10.084383484380846,
@@ -391,8 +402,8 @@ Measure B's score reverses its z-score because decreases indicate improvement.
 `misc_settings={"group": target}`. You can call `funnel()` directly with those
 arguments; omitting `group` selects the first group. `indicators` accepts one
 column or a mapping such as `{"Domain": "domain", "Measure": "indicator"}`.
-Rows are sorted by indicator columns and key; indicators without the selected
-target are omitted. Three-sigma outlier detection is always enabled.
+Rows are sorted by indicator columns and key, and include every group; the plot
+shows the selected target. Three-sigma outlier detection is always enabled.
 
 All settings use the native Funnel options and align with the input rows. Each
 indicator must have one `improvement_direction`. Use `misc_settings` for sigma
@@ -408,18 +419,17 @@ or an iterable; its default is `("static_plot", "limits")`.
 | Attribute | Contents |
 | --- | --- |
 | `static_plot` | `StaticPlot` with `to_svg()` and notebook SVG display |
-| `limits` | A list of records, or nested mappings for grouped SPC series |
+| `limits` | A list of records, with indicator and tooltip columns by name |
 | `limit_lines` | Funnel control limits across the full range of denominators; available without `indicators`, by requesting `"limit_lines"` |
-| `indicator_names` | SPC indicator names in nesting order |
 
 Unrequested outputs are `None`. SPC records include the formatted `date`,
 `value`, `target`, and applicable lower/upper limits (`ll68`, `ll95`, `ll99`,
 `ul68`, `ul95`, `ul99`). Columns depend on chart type and requested signal flags.
 Funnel records include `group`, `numerator`, `denominator`, `value`, `z`, `target`,
 and limits. Proportion charts use percentage values under the default settings.
-Sigma records include `indicator`, `group`, the original `z`, the
+Sigma records include the indicator columns, `group`, the original `z`, the
 direction-adjusted `score`, `three_sigma`, and the corresponding funnel values
-and limits. The selected organisation is recorded in `group`.
+and limits.
 
 Save a plot as SVG with `save_plot()`:
 

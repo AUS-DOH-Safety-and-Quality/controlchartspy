@@ -1,0 +1,118 @@
+name: Update Bundled PBI Visuals
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-libs:
+    runs-on: ubuntu-latest
+    env:
+      BRANCH: ""
+      PBIFUNVER: ""
+      PBISPCVER: ""
+      PBIDEPS: ""
+      PBIPINS: ""
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: astral-sh/setup-uv@v10.3.0
+
+      # npm before 11.12 rewrites the lockfile, dropping its libc fields
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Configure Git
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          BRANCH=update-libs-$(echo $RANDOM | md5sum | head -c 10; echo)
+          echo "BRANCH=$BRANCH" >> $GITHUB_ENV
+          git checkout -b $BRANCH
+
+      - name: Bundle Visuals
+        working-directory: bundle
+        run: |
+          specs=()
+          for dependency in powerbi-visuals-core:PowerBI-Visuals-Core powerbi-spc:PowerBI-SPC powerbi-funnels:PowerBI-Funnels; do
+            repo=AUS-DOH-Safety-and-Quality/${dependency#*:}
+            sha=$(git ls-remote https://github.com/$repo refs/heads/main | cut -c1-7)
+            specs+=("${dependency%%:*}@github:$repo#$sha")
+          done
+          # Naming the specs re-resolves them; npm 10 keeps a git dependency's locked commit when only package.json changes
+          npm install "${specs[@]}"
+          npm run bundle
+
+      - name: Commit funnel changes
+        run: |
+          if [[ -n "$(git status src/controlchartspy/_vendor/PBIFUN.min.js -s)" ]]; then
+            PBIFUNVER=$(jq -r '.visual.version' bundle/node_modules/powerbi-funnels/pbiviz.json)
+            echo "PBIFUNVER=$PBIFUNVER" >> $GITHUB_ENV
+            git add src/controlchartspy/_vendor/PBIFUN.min.js
+            git commit -m "Update PBIFUN library to version $PBIFUNVER"
+          fi
+
+      - name: Commit SPC changes
+        run: |
+          if [[ -n "$(git status src/controlchartspy/_vendor/PBISPC.min.js -s)" ]]; then
+            PBISPCVER=$(jq -r '.visual.version' bundle/node_modules/powerbi-spc/pbiviz.json)
+            echo "PBISPCVER=$PBISPCVER" >> $GITHUB_ENV
+            git add src/controlchartspy/_vendor/PBISPC.min.js
+            git commit -m "Update PBISPC library to version $PBISPCVER"
+          fi
+
+      - name: Commit dependency changes
+        run: |
+          if [[ -n "$(git status src/controlchartspy/_vendor -s)" ]]; then
+            echo "PBIDEPS=true" >> $GITHUB_ENV
+            git add src/controlchartspy/_vendor
+            git commit -m "Update visual dependencies"
+          fi
+
+      - name: Commit bundle pins
+        run: |
+          if [[ -n "$(git status bundle/package.json bundle/package-lock.json -s)" ]]; then
+            echo "PBIPINS=true" >> $GITHUB_ENV
+            git add bundle/package.json bundle/package-lock.json
+            git commit -m "Pin bundled repos"
+          fi
+
+      - name: Generate PR
+        if: env.PBIFUNVER != '' || env.PBISPCVER != '' || env.PBIDEPS != '' || env.PBIPINS != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PARTS=()
+          if [[ -n "$PBISPCVER" ]]; then
+            PARTS+=("PBISPC to $PBISPCVER")
+          fi
+          if [[ -n "$PBIFUNVER" ]]; then
+            PARTS+=("PBIFUN to $PBIFUNVER")
+          fi
+          if [[ -n "$PBIDEPS" ]]; then
+            PARTS+=("Visual dependencies")
+          fi
+          if [[ -n "$PBIPINS" ]]; then
+            PARTS+=("Bundle pins")
+          fi
+          TITLE="Update Bundled Lib(s): ${PARTS[0]}"
+          for part in "${PARTS[@]:1}"; do
+            TITLE+=", $part"
+          done
+
+          # Increment package version when the bundled libs change
+          if [[ -n "$PBISPCVER$PBIFUNVER$PBIDEPS" ]]; then
+            uv version --bump patch
+            git add pyproject.toml uv.lock
+            git commit -m "Increment package version"
+          fi
+
+          git push --set-upstream origin $BRANCH
+          gh pr create \
+            --title "$TITLE" \
+            --body "This PR was automatically created by GitHub Actions." \
+            --base main \
+            --head $BRANCH

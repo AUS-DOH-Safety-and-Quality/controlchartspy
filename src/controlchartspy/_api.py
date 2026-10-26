@@ -1,5 +1,6 @@
 """Public chart constructors mirroring the R package."""
 
+import warnings
 from collections.abc import Iterable, Mapping
 from typing import overload
 
@@ -12,14 +13,14 @@ from ._data import (
     SettingsGroup,
     Title,
     ValueName,
+    category,
     is_sequence,
     json_value,
-    label,
     missing,
     prepare_data,
 )
 from ._engine import Inputs, engine, render
-from ._result import ControlChart, StaticPlot, dimension
+from ._result import ControlChart, StaticPlot, dimension, tooltip_limits
 
 ReturnObjs = str | Iterable[str]
 Defaults = dict[str, SettingsGroup]
@@ -86,13 +87,20 @@ def _create(
     settings: Mapping[str, Settings | None],
     width: float | None,
     height: float | None,
-    return_objs: ReturnObjs,
+    return_objs: ReturnObjs | None,
 ) -> ControlChart:
+    if return_objs is None:
+        # Tables have no static plot; funnel indicators show the MISC chart instead of one
+        table = settings.get("summary_table") or {}
+        shows_table = (chart_type == "spc" and indicators is not None) or (
+            indicators is None and table.get("show_table") is True
+        )
+        return_objs = "limits" if shows_table else ("static_plot", "limits")
     if isinstance(return_objs, str):
         outputs = {return_objs}
     else:
         outputs = set(return_objs)
-    raw_data = prepare_data(
+    raw_data, tooltip_values = prepare_data(
         data, keys, numerators, optional, indicators, tooltips, chart_type == "spc"
     )
     valid = {"static_plot", "limits"}
@@ -114,9 +122,16 @@ def _create(
     static = "static_plot" in outputs
     limits = bool(outputs & {"limits", "limit_lines"})
     raw = render(chart_type, inputs, width, height, static, limits)
+    for message in raw["warnings"]:
+        warnings.warn(message, stacklevel=3)
     if "limits" in outputs:
-        result.limits = raw["limits"]
-        result.indicator_names = raw.get("indicatorNames", [])
+        result.limits = tooltip_limits(
+            raw["limits"],
+            raw["rowIds"],
+            raw["source_rows"],
+            tooltip_values,
+            (aggregations or {}).get("tooltips", "first"),
+        )
     if "limit_lines" in outputs:
         result.limit_lines = raw["limitLines"]
     if static:
@@ -146,18 +161,16 @@ def spc(
     y_axis_settings: Settings | None = None,
     date_settings: Settings | None = None,
     label_settings: Settings | None = None,
+    summary_table_settings: Settings | None = None,
     width: float | None = None,
     height: float | None = None,
     return_objs: ReturnObjs | None = None,
 ) -> ControlChart:
     """Generate a statistical process control (SPC) chart and calculate control limits.
 
-    return_objs defaults to limits only when indicators are supplied.
+    return_objs defaults to limits only when indicators are supplied or a summary
+    table is shown, as tables have no static plot.
     """
-    if return_objs is None:
-        return_objs = ("static_plot", "limits")
-        if indicators is not None:
-            return_objs = "limits"
     return _create(
         "spc",
         data,
@@ -184,6 +197,7 @@ def spc(
             "y_axis": y_axis_settings,
             "dates": date_settings,
             "labels": label_settings,
+            "summary_table": summary_table_settings,
         },
         width,
         height,
@@ -210,11 +224,16 @@ def funnel(
     x_axis_settings: Settings | None = None,
     y_axis_settings: Settings | None = None,
     label_settings: Settings | None = None,
+    summary_table_settings: Settings | None = None,
     width: float | None = None,
     height: float | None = None,
-    return_objs: ReturnObjs = ("static_plot", "limits"),
+    return_objs: ReturnObjs | None = None,
 ) -> ControlChart:
-    """Generate a funnel plot, or a sigma chart when indicators are supplied."""
+    """Generate a funnel plot, or a sigma chart when indicators are supplied.
+
+    return_objs defaults to limits only when a summary table is shown without
+    indicators, as tables have no static plot.
+    """
     return _create(
         "funnel",
         data,
@@ -235,6 +254,7 @@ def funnel(
             "x_axis": x_axis_settings,
             "y_axis": y_axis_settings,
             "labels": label_settings,
+            "summary_table": summary_table_settings,
         },
         width,
         height,
@@ -263,11 +283,15 @@ def misc(
     x_axis_settings: Settings | None = None,
     y_axis_settings: Settings | None = None,
     label_settings: Settings | None = None,
+    summary_table_settings: Settings | None = None,
     width: float | None = None,
     height: float | None = None,
-    return_objs: ReturnObjs = ("static_plot", "limits"),
+    return_objs: ReturnObjs | None = None,
 ) -> ControlChart:
-    """Delegate to funnel with indicator columns and a selected group."""
+    """Delegate to funnel with indicator columns and a selected group.
+
+    Numeric targets match numeric keys by value.
+    """
     if missing(target) or is_sequence(target) or isinstance(target, Mapping):
         raise ValueError("target must be a single non-missing value.")
     return funnel(
@@ -282,13 +306,15 @@ def misc(
         title=title,
         canvas_settings=canvas_settings,
         funnel_settings=funnel_settings,
-        misc_settings={**(misc_settings or {}), "group": label(target)},
+        # Written as the keys are, so the engine names both alike
+        misc_settings={**(misc_settings or {}), "group": category(target)},
         outlier_settings=outlier_settings,
         scatter_settings=scatter_settings,
         line_settings=line_settings,
         x_axis_settings=x_axis_settings,
         y_axis_settings=y_axis_settings,
         label_settings=label_settings,
+        summary_table_settings=summary_table_settings,
         width=width,
         height=height,
         return_objs=return_objs,
