@@ -10,7 +10,13 @@ from pathlib import Path
 from typing import TypedDict
 from xml.etree import ElementTree
 
-from controlchartspy import funnel, funnel_default_settings, misc, spc, spc_default_settings
+from controlchartspy import (
+    funnel,
+    funnel_default_settings,
+    misc,
+    spc,
+    spc_default_settings,
+)
 from controlchartspy._data import Record
 from controlchartspy._result import dimension
 
@@ -345,7 +351,9 @@ class APITests(unittest.TestCase):
         data = sample_data()
         data["region"] = ["North"] * 4
         data["site"] = ["A"] * 4
-        with self.assertWarnsRegex(UserWarning, "value to value_, target to target_[.]"):
+        with self.assertWarnsRegex(
+            UserWarning, "value to value_, target to target_[.]"
+        ):
             chart = spc(
                 data,
                 "month",
@@ -371,7 +379,13 @@ class APITests(unittest.TestCase):
         self.assertEqual({row["group"] for row in misc.limits}, set(data["label"]))
         with warnings.catch_warnings():
             warnings.simplefilter("error")
-            spc(data, "month", "value", indicators={"Region": "region"}, return_objs="limits")
+            spc(
+                data,
+                "month",
+                "value",
+                indicators={"Region": "region"},
+                return_objs="limits",
+            )
 
     def test_chart_warnings_are_raised_once_whatever_is_returned(self) -> None:
         data = sample_data()
@@ -544,7 +558,9 @@ class APITests(unittest.TestCase):
             UserWarning,
             r"^key 10 removed due to: Denominator is zero\.\nkey 40 removed due to: Numerator missing\.$",
         ):
-            chart = funnel(data, "key", "n", "d", tooltips="start", return_objs="limits")
+            chart = funnel(
+                data, "key", "n", "d", tooltips="start", return_objs="limits"
+            )
         assert chart.limits is not None
         self.assertEqual(
             [row["start"] for row in chart.limits], [date(2024, 1, 3), date(2024, 1, 4)]

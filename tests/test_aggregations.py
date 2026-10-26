@@ -95,7 +95,6 @@ class AggregationTests(unittest.TestCase):
             actual = funnel(data, "key", "n", "d", return_objs="limits")
         self.assertEqual(actual.limits, expected.limits)
 
-
     def test_first_and_last_skip_missing_values_and_tooltips(self) -> None:
         data = {
             "key": ["A"] * 3 + ["B"] * 3,
